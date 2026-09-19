@@ -85,23 +85,23 @@ Counts: 4 posts in the feed (no pagination or load-more control observed — the
 
 - **Screen:** Sania Shaheen's post, which has a long text body.
 - **Observed behavior:** Before interaction, the post visually truncates the text (CSS-based; the accessibility tree already exposed the full text even before expansion) and shows a `paragraph "Read More"` link below it. Clicking "Read More" visually expands the full text, and **the "Read More" link itself disappears from the accessibility tree afterward** — there is no "Show Less" or collapse control to re-truncate it.
-- **Evidence:** screenshots `buzz-sania-truncated.png` (before) and `buzz-sania-expanded.png` (after); `paragraph [cursor=pointer]: Read More` present before, absent after.
+- **Evidence:** screenshots `docs/evidence/exploration/buzz-sania-truncated.png` (before) and `docs/evidence/exploration/buzz-sania-expanded.png` (after); `paragraph [cursor=pointer]: Read More` present before, absent after.
 
 ### 3.7 Individual post — Like / Unlike toggle
 
 - **Screen:** tested on manda akhil user's post (0 Likes) and, during locator exploration, inadvertently also on Rebecca Harmony's post (0 Likes) — both reversed successfully before moving on, per policy.
 - **Observed behavior:**
   1. Before: "0 Likes", heart icon rendered grey/outline.
-  2. Click heart icon (`#heart-svg`): count becomes "1 Like", heart icon turns solid red. Screenshot confirms the visual state (`buzz-liked-state.png`).
+  2. Click heart icon (`#heart-svg`): count becomes "1 Like", heart icon turns solid red. Screenshot confirms the visual state (`docs/evidence/exploration/buzz-liked-state.png`).
   3. Click the same icon again: count returns to "0 Likes", icon returns to grey/outline. Confirmed via a follow-up accessibility snapshot before proceeding — satisfying the skill's requirement that a reversal must be *confirmed* successful.
 - **Note:** the Like icon element has **no accessible name** and uses `id="heart-svg"` — an id that is **duplicated across every post's Like icon on the page** (an HTML validity issue; ids must be unique). It had to be targeted via `page.locator('#heart-svg').nth(n)` by feed position, which is fragile for automation (position shifts whenever a sort filter is applied).
-- **Evidence:** accessibility snapshots showing `paragraph: 0 Likes` → `paragraph [cursor=pointer]: 1 Like` → `paragraph: 0 Likes`; screenshots `buzz-liked-state.png`.
+- **Evidence:** accessibility snapshots showing `paragraph: 0 Likes` → `paragraph [cursor=pointer]: 1 Like` → `paragraph: 0 Likes`; screenshots `docs/evidence/exploration/buzz-liked-state.png`.
 
 ### 3.8 Individual post — Comment box expand/collapse
 
 - **Screen:** manda akhil user's post.
 - **Observed behavior:** Clicking the "0 Comments" text expands an inline `textbox "Write your comment..."` (with the current user's avatar) directly beneath the Like/Comment/Share row — no existing comments were shown (post has 0 comments). Clicking "0 Comments" a second time collapses the textbox again, with no visible side effects. No text was typed into the box and no comment was submitted.
-- **Evidence:** screenshots `buzz-comments-expanded.png` and `buzz-comments-collapsed-check.png`; snapshot diff showing `textbox "Write your comment..."` appearing then disappearing.
+- **Evidence:** screenshots `docs/evidence/exploration/buzz-comments-expanded.png` and `docs/evidence/exploration/buzz-comments-collapsed-check.png`; snapshot diff showing `textbox "Write your comment..."` appearing then disappearing.
 
 ### 3.9 Individual post — options menu ("...")
 
@@ -113,7 +113,7 @@ Counts: 4 posts in the feed (no pagination or load-more control observed — the
   - This is a consistent, reproducible pattern across all three tested posts, not a one-off.
 - **Not exercised:** clicking either "Edit Post" or "Delete Post" — both are excluded by policy (editing/deleting shared demo records).
 - **Significance:** this directly informs PRD's BR-005 ("Buzz post visibility, moderation, and edit/delete permission rules" — previously `Unknown / Not observed`). It confirms the logged-in Admin-role account can delete *any* post regardless of authorship, but the UI only offers in-place editing for the account's own post. Whether this is enforced server-side (vs. only hidden in the UI) was not tested — see §7 Open Questions.
-- **Evidence:** screenshots `buzz-post-options-menu.png` (own post: Edit+Delete), `buzz-sania-options-menu.png` (Delete only), `buzz-rebecca-options-menu.png` (Delete only).
+- **Evidence:** screenshots `docs/evidence/exploration/buzz-post-options-menu.png` (own post: Edit+Delete), `docs/evidence/exploration/buzz-sania-options-menu.png` (Delete only), `docs/evidence/exploration/buzz-rebecca-options-menu.png` (Delete only).
 
 ### 3.10 Individual post — Share (repost) modal
 
@@ -121,13 +121,13 @@ Counts: 4 posts in the feed (no pagination or load-more control observed — the
 - **Elements:** dialog titled "Share Post"; avatar; `textbox "What's on your mind?"` (for an optional caption); a read-only preview of the original post (author name, timestamp, full text); `button "Share"` (not disabled, even with an empty caption).
 - **Not exercised:** clicking "Share" (would create a new repost, visible to other users).
 - **Closed via:** the "×" button.
-- **Evidence:** screenshot `buzz-share-icon-click.png`; dialog `paragraph "Share Post"`.
+- **Evidence:** screenshot `docs/evidence/exploration/buzz-share-icon-click.png`; dialog `paragraph "Share Post"`.
 
 ### 3.11 Attached photo — lightbox modal
 
 - **Screen:** Rebecca Harmony's post, which has an attached photo.
 - **Observed behavior:** Clicking the photo opens a full-screen lightbox: the image at larger size on the left, and on the right a duplicated post-detail panel — author, timestamp, caption text, Like/Comment/Share row (independently interactive — its own "0 Likes" state matched the feed's), and a "Write your comment..." box. Closing via the "×" (top-left of the lightbox) returned cleanly to the normal feed view with no residual state change.
-- **Evidence:** screenshot `buzz-image-click.png`; dialog/lightbox with `img "photo"`, `button ""` (close, `.orangehrm-photo-viewer-close`).
+- **Evidence:** screenshot `docs/evidence/exploration/buzz-image-click.png`; dialog/lightbox with `img "photo"`, `button ""` (close, `.orangehrm-photo-viewer-close`).
 
 ### 3.12 Author name and avatar — non-interactive
 
@@ -138,13 +138,13 @@ Counts: 4 posts in the feed (no pagination or load-more control observed — the
 
 - **Elements:** panel heading "Upcoming Anniversaries"; one entry showing avatar, name ("manda user"), job title ("HR Manager"), a year-count badge ("36" / "Years"), and a date ("Oct 11").
 - **Observed behavior:** Clicking the entry produced no navigation or visible effect — confirmed static/display-only.
-- **Evidence:** URL unchanged after click; screenshot `buzz-before-readmore.png` shows the panel's baseline appearance.
+- **Evidence:** URL unchanged after click; screenshot `docs/evidence/exploration/buzz-before-readmore.png` shows the panel's baseline appearance.
 
 ### 3.14 Topbar Menu icon — corrected from PRD
 
 - **PRD claim (Section 5):** "Directory and Buzz show only a collapse/hamburger control in the Topbar Menu region."
 - **Observed behavior:** clicking this icon (which carries `title="Help"`, not a hamburger/collapse role) opened a **new browser tab** to `https://starterhelp.orangehrm.com/hc/en-us` — an external OrangeHRM help/support site. It is not a sidebar or sub-navigation collapse toggle. The tab was closed immediately without further navigation on the external site.
-- **Evidence:** screenshot `buzz-help-button.png`; tab list showing tab 1 at `https://starterhelp.orangehrm.com/hc/en-us` before it was closed.
+- **Evidence:** screenshot `docs/evidence/exploration/buzz-help-button.png`; tab list showing tab 1 at `https://starterhelp.orangehrm.com/hc/en-us` before it was closed.
 
 ### 3.15 Profile menu (global, not Buzz-specific, re-verified on the Buzz page)
 
@@ -263,6 +263,6 @@ All of the following fall under the skill's default "not allowed" policy, the ta
 `getByRole('textbox', { name: "What's on your mind?" })`, `getByRole('button', { name: 'Post' })`, `getByRole('button', { name: 'Share Photos' })`, `getByRole('button', { name: 'Share Video' })`, `getByRole('button', { name: ' Most Recent Posts' })`, `getByRole('button', { name: ' Most Liked Posts' })`, `getByRole('button', { name: ' Most Commented Posts' })`, `locator('#heart-svg')`, `getByText('Comments')`, `getByRole('textbox', { name: 'Write your comment...' })`, `locator('.orangehrm-buzz-post-body-picture')`, `locator('.oxd-icon-button.orangehrm-photo-viewer-close')`, `getByRole('button', { name: '×' })`, `getByTitle('Help')`, `menuitem "About"/"Support"/"Change Password"/"Logout"`.
 
 **Screenshots captured this run (local evidence files, project root):**
-`buzz-before-readmore.png`, `buzz-sania-truncated.png`, `buzz-sania-expanded.png`, `buzz-top-after-expand.png`, `buzz-first-post-actions.png`, `buzz-liked-state.png`, `buzz-comments-expanded.png`, `buzz-comments-collapsed-check.png`, `buzz-post-options-menu.png`, `buzz-sania-options-menu.png`, `buzz-rebecca-options-menu.png`, `buzz-image-click.png`, `buzz-share-photos-click.png`, `buzz-share-icon-click.png`, `buzz-help-button.png`, `buzz-feed-bottom.png`.
+`docs/evidence/exploration/buzz-before-readmore.png`, `docs/evidence/exploration/buzz-sania-truncated.png`, `docs/evidence/exploration/buzz-sania-expanded.png`, `docs/evidence/exploration/buzz-top-after-expand.png`, `docs/evidence/exploration/buzz-first-post-actions.png`, `docs/evidence/exploration/buzz-liked-state.png`, `docs/evidence/exploration/buzz-comments-expanded.png`, `docs/evidence/exploration/buzz-comments-collapsed-check.png`, `docs/evidence/exploration/buzz-post-options-menu.png`, `docs/evidence/exploration/buzz-sania-options-menu.png`, `docs/evidence/exploration/buzz-rebecca-options-menu.png`, `docs/evidence/exploration/buzz-image-click.png`, `docs/evidence/exploration/buzz-share-photos-click.png`, `docs/evidence/exploration/buzz-share-icon-click.png`, `docs/evidence/exploration/buzz-help-button.png`, `docs/evidence/exploration/buzz-feed-bottom.png`.
 
 **Final-state verification:** before ending this session, a final accessibility snapshot confirmed the feed's Like counts (0, 1, 0, 2 across the four posts, in original reverse-chronological order) matched the state observed at the very start of this run — confirming no net data changes were left behind despite the two Like→Unlike round-trips performed during exploration (§3.7).

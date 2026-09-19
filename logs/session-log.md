@@ -109,3 +109,12 @@
 - `browser_type` into the post composer was denied by the Claude Code auto-mode permission classifier (reason: "External System Writes"). Not worked around, per instructions to only try reasonable alternatives and otherwise report the limitation.
 - Playwright element refs became stale after several DOM-mutating clicks (filter changes, modal open/close, Read More expand); worked around by re-capturing a full `browser_snapshot` before each subsequent interaction rather than reusing prior refs.
 - No credential values were recorded in this log, in the findings file, or in any evidence file.
+
+---
+
+## Entry: Housekeeping — Evidence Screenshot Reorganization
+
+- **Date/Time:** 2026-09-19
+- **Type:** Housekeeping only — no new browser navigation, no new interactions, no new claims.
+- **What changed:** Moved the 16 screenshot files captured during Milestone 2 (Buzz exploration) from the project root into `docs/evidence/exploration/`, and updated every reference to these filenames throughout `docs/exploration-findings.md` (including the Evidence Index) to the new path. No other content in `exploration-findings.md` was changed.
+- **Why:** The project root had become cluttered with 16 loose evidence PNGs; moved to a dedicated folder for readability. No screenshots were re-taken, added, removed, or altered — only relocated.
