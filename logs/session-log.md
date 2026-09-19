@@ -193,3 +193,12 @@
 ### Note on file write
 
 - The first two attempts to overwrite `test-design/test-design.csv` via the write tool failed with `EPERM` on the temp-file-to-final rename step (likely a transient Windows file lock, e.g. from the file being open in the IDE). A subsequent retry of the same write succeeded without any other change. No partial/corrupt file was left on disk at any point — each failed attempt left the prior valid file untouched.
+
+---
+
+## Entry: Housekeeping — Happy-Path Test Subset
+
+- **Date/Time:** 2026-09-19
+- **Type:** Housekeeping/filtering only — no new test design, no content re-derivation, no edits to `test-design/test-design.csv`.
+- **What changed:** Created `test-design/test-design-happy-path.csv`, a filtered subset of the 27-row v2.1 `test-design.csv` containing only rows where Test Type is UI or Functional AND Source does not start with "Exploration — Excluded Action". Rows copied verbatim (byte-identical); the header and 17 qualifying rows were pulled by exact line match, not retyped.
+- **Why:** To give the QC lead a quick-reference view of confirmed happy-path/structural coverage, separate from Negative/Edge/Security cases and from unconfirmed hypothesis cases (which are excluded even where labeled Functional, since they were never exercised this run).
