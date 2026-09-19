@@ -2,7 +2,7 @@
 name: test-design
 description: "Generate a comprehensive positive/negative/boundary test-case suite as CSV for a target module from a prior PRD and UI exploration document, with explicit scope-validation and automation-classification columns left blank for human QC. WHEN: generate test cases, write the test design, Milestone 3, build a test suite from exploration findings, classify tests for automation."
 metadata:
-  version: "2.0"
+  version: "2.1"
 ---
 
 # UI Test Design
@@ -33,8 +33,8 @@ execute them (test-execution) or automate them (playwright-automation).
 - Never invent expected results, validation messages, numeric limits, or
   business rules. Every expected result must trace back to something the
   PRD or exploration findings actually evidenced, or be explicitly framed
-  as "requires live confirmation" (`Valid in Scope` left for the human to
-  mark, commonly `TBD` in that case).
+  as "requires live confirmation" — never state an unconfirmed behavior as
+  fact.
 - Do not execute any test case in this phase. Live confirmation is
   Milestone 4's job.
 - Do not build automation in this phase.
@@ -66,22 +66,33 @@ execute them (test-execution) or automate them (playwright-automation).
 Coverage must stay proportional to what the module actually supports —
 don't create artificial cases just to check a category box.
 
-## Required CSV columns
+## Required columns
 
-```
-Test Case ID | Module | Feature | Requirement ID | Preconditions | Test Steps | Test Data | Expected Result | Priority | Type | Source | Valid in Scope | Needs Automation | Comments
-```
+Every test case row must have, at minimum:
 
-- **Test Case ID**: unique, stable, module-prefixed (e.g. `BUZZ-TC-001`) —
-  later milestones reference these IDs directly.
+TC ID | Module | Test Type | Title | Requirement ID | Preconditions |
+Test Steps | Test Data | Expected Result | Priority | Severity | Source |
+Valid in Scope | Needs Automation | Comments
+
+- **TC ID**: unique, stable, module-prefixed (e.g. `BUZZ-TC-001`) — later
+  milestones reference these IDs directly.
+- **Module / Test Type / Title**: `Test Type` is one of Functional / UI /
+  Negative / Edge / Security / Performance — don't label Security/
+  Performance without a documented basis. `Title` is a short, specific
+  case name.
 - **Requirement ID**: the exact PRD FR-ID when available; leave empty only
   if the case derives purely from exploration, and give a precise `Source`
   instead.
-- **Source**: specific enough for the QC lead to find the original evidence
-  (e.g. `PRD FR-018`, `Exploration §3.9`, `Exploration — Excluded Action`).
-  No orphan test cases.
-- **Type**: Functional / UI / Negative / Edge / Security / Performance —
-  don't label Security/Performance without a documented basis.
+- **Preconditions / Test Data / Steps / Expected Result**: each must be
+  independently understandable and reproducible without re-reading the
+  PRD or exploration doc.
+- **Priority / Severity**: `Priority` reflects how important this case is
+  to run; `Severity` reflects the impact if the behavior it tests turns
+  out broken (most relevant for defect-candidate/negative cases). Base
+  both on documented evidence, not a default guess.
+- **Source**: specific enough for the QC lead to find the original
+  evidence (e.g. `PRD FR-018`, `Exploration §3.9`, `Exploration —
+  Excluded Action`). No orphan test cases.
 - **Valid in Scope**: leave EMPTY. Human QC field — never populate with
   Yes/No/TBD/V/anything. Exists to evaluate whether the AI understood the
   requirement correctly.
@@ -93,7 +104,8 @@ Test Case ID | Module | Feature | Requirement ID | Preconditions | Test Steps | 
 
 If the project has its own house column standard, preserve its base columns
 and append `Valid in Scope`, `Needs Automation`, and `Comments` (if no
-equivalent exists) as the final columns, in that order.
+equivalent exists) as the final columns, in that order — those two QC
+columns must always stay blank regardless of what standard is used.
 
 ## Method
 
@@ -111,13 +123,15 @@ equivalent exists) as the final columns, in that order.
 5. Verify every row has `Valid in Scope` and `Needs Automation` empty, no
    exceptions.
 6. Validate CSV mechanics: correct headers/order, unique IDs, proper
-   escaping of commas/quotes/multiline steps, no column shifts.
+   escaping of commas/quotes/multiline steps (embedded quotes must be
+   doubled — `""` — never backslash-escaped, which is invalid CSV and can
+   break in Excel), no column shifts.
 7. Save the CSV.
 8. Record this run in the project's session/prompt log.
 
 ## Quality checklist (run before finishing, report the results)
 
-- No duplicate scenarios; no duplicate Test Case IDs.
+- No duplicate scenarios; no duplicate TC IDs.
 - Every applicable PRD FR for the scope module has coverage.
 - Every meaningful exploration discrepancy/new finding has coverage.
 - Excluded actions were reviewed individually (meaningful → hypothesis
@@ -127,12 +141,13 @@ equivalent exists) as the final columns, in that order.
 - Every row has a traceable `Source`.
 - `Valid in Scope` and `Needs Automation` are empty on every row, no
   exceptions.
-- CSV structure is valid (headers, escaping, no shifts).
+- CSV structure is valid: correct headers, no column shifts, embedded
+  quotes properly doubled (not backslash-escaped).
 - Session/prompt log updated.
 
-Report the total test case count, counts by Type, the self-review fix/drop
-count, and anything from the PRD/exploration that could NOT be turned into
-a test case (and why).
+Report the total test case count, counts by Test Type, the self-review
+fix/drop count, and anything from the PRD/exploration that could NOT be
+turned into a test case (and why).
 
 ## Stop condition
 
@@ -144,14 +159,13 @@ create automation, and do not populate `Valid in Scope` or
 
 ## Carrying scope decisions forward
 
-Once a later milestone (Test Execution) actually runs a case whose
-`Valid in Scope` was marked `TBD` and gets a definitive live result, do
-**not** go back and edit this CSV's `Valid in Scope`/`Needs Automation`
-columns to match the outcome. Those columns reflect design-time judgment;
-editing them after the fact erases the audit trail of what was assumed at
-design time vs. confirmed later. Record the reconciliation in the
-execution (or automation) milestone's own report instead — that report,
-not this CSV, becomes the authoritative record of what actually happened.
-Only edit this CSV directly if a genuine test-design defect is found (a
-wrong precondition, an unreachable step) — never to reflect an execution
-outcome.
+Once a later milestone (Test Execution) actually runs a case and gets a
+definitive live result, do **not** go back and edit this CSV's `Valid in
+Scope`/`Needs Automation` columns to match the outcome. Those columns
+reflect human, design-time judgment; editing them after the fact erases
+the audit trail of what was assumed at design time vs. confirmed later.
+Record the reconciliation in the execution (or automation) milestone's own
+report instead — that report, not this CSV, becomes the authoritative
+record of what actually happened. Only edit this CSV directly if a genuine
+test-design defect is found (a wrong precondition, an unreachable step) —
+never to reflect an execution outcome.

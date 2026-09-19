@@ -154,3 +154,42 @@
 
 - No working Python interpreter was available in this environment (`python3`/`python` resolved to non-functional Windows Store stubs, exit code 49); CSV structural validation was performed with a small Node.js script instead.
 - No credential values were recorded in this log or in the test-design CSV.
+
+---
+
+## Entry: Milestone 3 — Test Design Regeneration (v2.1 schema)
+
+- **Date/Time:** 2026-09-19
+- **Skill used:** `test-design` (`.claude/skills/test-design/SKILL.md`, version 2.1 — schema updated from v2.0 after this run started)
+- **Prompt used:** instruction to fully overwrite `test-design/test-design.csv` from scratch under the new v2.1 column schema (`TC ID, Module, Test Type, Title, Requirement ID, Preconditions, Test Steps, Test Data, Expected Result, Priority, Severity, Source, Valid in Scope, Needs Automation, Comments`), re-reading `docs/PRD.md` and `docs/exploration-findings.md` from the start rather than reusing the prior v2.0 output.
+- **Application URL:** https://opensource-demo.orangehrmlive.com/
+- **Module/scope:** Buzz
+- **Inputs re-read in full:** `docs/PRD.md` (245 lines), `docs/exploration-findings.md` (269 lines) — document-synthesis milestone only, no browser tooling used.
+
+### What changed vs. the v2.0 run
+
+- Column schema migrated: `Test Case ID` → `TC ID`; `Feature` removed, replaced by a new `Title` column (short, specific case name) kept separate from `Test Type`; `Type` → `Test Type` (same 6 allowed values); a new `Severity` column added (impact-if-broken, independent of `Priority`).
+- Same 27 test cases, same underlying evidence and coverage decisions as the v2.0 run (BR-005 own/other-post permission pair, Share Video/Share Photos validation-asymmetry Negative case, sort tie-break Edge case, 6 Excluded Actions converted to hypothesis cases, Edit Post row converted to a Security-type hypothesis case, Delete Post and ESS-login rows not converted) — rebuilt against the new schema rather than logically redesigned.
+- Fixed a CSV-escaping defect present in the v2.0 file: two Comments cells containing a literal double quote (around `heart-svg` and around "External System Writes") had been backslash-escaped (`\"`), which is invalid CSV. Both are now correctly doubled (`""`) per the v2.1 skill's explicit CSV-mechanics rule. Verified by parsing the output with a small Node.js RFC4180 parser and decoding both cells back to their intended literal text.
+
+### Self-review fix/drop count
+
+0 dropped, 0 further corrections beyond the CSV-escaping fix described above (the case content itself was unchanged from the reviewed v2.0 set).
+
+### CSV mechanics validation (Node.js parser, no working Python interpreter available)
+
+- 15 columns, matching the v2.1 header exactly.
+- 27 data rows, 27 unique `TC ID` values, 0 rows with a column-count mismatch.
+- 0 rows with non-empty `Valid in Scope` or `Needs Automation`.
+- 0 rows missing `Source` or `Title`.
+- Test Type breakdown: UI 11, Functional 11, Negative 3, Edge 1, Security 1.
+- Severity breakdown: Low 12, Medium 10, High 4, Critical 1.
+- 0 backslash-escaped quotes remaining in the file; both embedded-quote cells confirmed to decode to correct literal text.
+
+### Output
+
+- Test suite fully overwritten at: `test-design/test-design.csv` (27 rows + header, v2.1 schema)
+
+### Note on file write
+
+- The first two attempts to overwrite `test-design/test-design.csv` via the write tool failed with `EPERM` on the temp-file-to-final rename step (likely a transient Windows file lock, e.g. from the file being open in the IDE). A subsequent retry of the same write succeeded without any other change. No partial/corrupt file was left on disk at any point — each failed attempt left the prior valid file untouched.
