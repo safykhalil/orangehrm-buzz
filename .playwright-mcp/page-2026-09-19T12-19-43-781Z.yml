@@ -1,0 +1,217 @@
+- generic [ref=f2e3]:
+  - generic:
+    - complementary [ref=f2e4]:
+      - navigation "Sidepanel" [ref=f2e5]:
+        - generic [ref=f2e6]:
+          - link [ref=f2e7] [cursor=pointer]:
+            - /url: https://www.orangehrm.com/
+            - img "client brand banner" [ref=f2e9]
+          - text: 
+        - generic [ref=f2e10]:
+          - generic [ref=f2e11]:
+            - generic [ref=f2e12]:
+              - textbox "Search" [ref=f2e15]
+              - button "" [ref=f2e16] [cursor=pointer]
+            - separator [ref=f2e18]
+          - list [ref=f2e19]:
+            - listitem [ref=f2e20]:
+              - link "Admin" [ref=f2e21] [cursor=pointer]:
+                - /url: /web/index.php/admin/viewAdminModule
+            - listitem [ref=f2e25]:
+              - link "PIM" [ref=f2e26] [cursor=pointer]:
+                - /url: /web/index.php/pim/viewPimModule
+            - listitem [ref=f2e41]:
+              - link "Leave" [ref=f2e42] [cursor=pointer]:
+                - /url: /web/index.php/leave/viewLeaveModule
+            - listitem [ref=f2e46]:
+              - link "Time" [ref=f2e47] [cursor=pointer]:
+                - /url: /web/index.php/time/viewTimeModule
+            - listitem [ref=f2e54]:
+              - link "Recruitment" [ref=f2e55] [cursor=pointer]:
+                - /url: /web/index.php/recruitment/viewRecruitmentModule
+            - listitem [ref=f2e62]:
+              - link "My Info" [ref=f2e63] [cursor=pointer]:
+                - /url: /web/index.php/pim/viewMyDetails
+            - listitem [ref=f2e70]:
+              - link "Performance" [ref=f2e71] [cursor=pointer]:
+                - /url: /web/index.php/performance/viewPerformanceModule
+            - listitem [ref=f2e80]:
+              - link "Dashboard" [ref=f2e81] [cursor=pointer]:
+                - /url: /web/index.php/dashboard/index
+            - listitem [ref=f2e85]:
+              - link "Directory" [ref=f2e86] [cursor=pointer]:
+                - /url: /web/index.php/directory/viewDirectory
+            - listitem [ref=f2e90]:
+              - link "Maintenance" [ref=f2e91] [cursor=pointer]:
+                - /url: /web/index.php/maintenance/viewMaintenanceModule
+            - listitem [ref=f2e96]:
+              - link "Claim" [ref=f2e97] [cursor=pointer]:
+                - /url: /web/index.php/claim/viewClaimModule
+            - listitem [ref=f2e105]:
+              - link "Buzz" [ref=f2e106] [cursor=pointer]:
+                - /url: /web/index.php/buzz/viewBuzz
+    - banner [ref=f2e110]:
+      - generic [ref=f2e111]:
+        - generic [ref=f2e112]:
+          - text: 
+          - heading "Buzz" [level=6] [ref=f2e114]
+        - link [ref=f2e116]:
+          - /url: https://orangehrm.com/open-source/upgrade-to-advanced
+          - button "Upgrade" [ref=f2e117] [cursor=pointer]
+        - list [ref=f2e123]:
+          - listitem [ref=f2e124]:
+            - generic [ref=f2e125] [cursor=pointer]:
+              - img "profile picture" [ref=f2e126]
+              - paragraph [ref=f2e127]: manda user
+              - generic [ref=f2e128]: 
+      - navigation "Topbar Menu" [ref=f2e130]:
+        - list [ref=f2e131]:
+          - button "" [ref=f2e133] [cursor=pointer]
+  - generic [ref=f2e135]:
+    - generic [ref=f2e137]:
+      - generic [ref=f2e139]:
+        - paragraph [ref=f2e140]: Buzz Newsfeed
+        - generic [ref=f2e851]:
+          - generic [ref=f2e852]:
+            - img "profile picture" [ref=f2e854]
+            - generic [ref=f2e857]:
+              - textbox "What's on your mind?" [ref=f2e858]
+              - button "Post" [ref=f2e860] [cursor=pointer]
+          - separator [ref=f2e861]
+          - generic [ref=f2e862]:
+            - button "Share Photos" [ref=f2e863] [cursor=pointer]
+            - button "Share Video" [ref=f2e865] [cursor=pointer]
+        - generic [ref=f2e157]:
+          - button " Most Recent Posts" [ref=f2e158] [cursor=pointer]:
+            - generic [ref=f2e159]: 
+            - text: Most Recent Posts
+          - button " Most Liked Posts" [ref=f2e160] [cursor=pointer]:
+            - generic [ref=f2e161]: 
+            - text: Most Liked Posts
+          - button " Most Commented Posts" [ref=f2e162] [cursor=pointer]:
+            - generic [ref=f2e163]: 
+            - text: Most Commented Posts
+        - generic [ref=f2e164]:
+          - generic [ref=f2e868]:
+            - generic [ref=f2e869]:
+              - generic [ref=f2e870]:
+                - generic [ref=f2e871]:
+                  - img "profile picture" [ref=f2e873]
+                  - generic [ref=f2e874]:
+                    - paragraph [ref=f2e875]: manda akhil user
+                    - paragraph [ref=f2e876]: 2020-08-10 05:38 AM
+                - listitem [ref=f2e878]:
+                  - button "" [ref=f2e879] [cursor=pointer]
+              - separator [ref=f2e881]
+            - paragraph [ref=f2e884]: "Hi All; Linda has been blessed with a baby boy! Linda: With love, we welcome your dear new baby to this world. Congratulations!"
+            - generic [ref=f2e885]:
+              - generic [ref=f2e886]:
+                - img [ref=f2e888] [cursor=pointer]
+                - button "" [ref=f2e913] [cursor=pointer]
+                - button "" [ref=f2e915] [cursor=pointer]
+              - generic [ref=f2e917]:
+                - generic [ref=f2e918]:
+                  - generic [ref=f2e919]: 
+                  - paragraph [ref=f2e920]: 0 Likes
+                - generic [ref=f2e921]:
+                  - paragraph [ref=f2e922] [cursor=pointer]: 0 Comments
+                  - text: ‚
+                  - paragraph [ref=f2e923]: 0 Shares
+          - generic [ref=f2e925]:
+            - generic [ref=f2e926]:
+              - generic [ref=f2e927]:
+                - generic [ref=f2e928]:
+                  - img "profile picture" [ref=f2e930]
+                  - generic [ref=f2e931]:
+                    - paragraph [ref=f2e932]: Sania Shaheen
+                    - paragraph [ref=f2e933]: 2020-08-10 05:38 AM
+                - listitem [ref=f2e935]:
+                  - button "" [ref=f2e936] [cursor=pointer]
+              - separator [ref=f2e938]
+            - paragraph [ref=f2e941]: "World Championship: What makes the perfect snooker player? Mark Selby: Robertson has one of the best techniques in the game. It is very, very straight and he fully commits to every single shot he plays. John Higgins: Every shot is repetitive. He always keeps the same technique and cues through the ball bang straight. Barry Hawkins: Robertson is textbook with his grip and has a ramrod solid cue action, delivering it in a straight line. Honourable mentions: Shaun Murphy, Ding Junhui, Jack Lisowski."
+            - generic [ref=f2e943]:
+              - generic [ref=f2e944]:
+                - img [ref=f2e946] [cursor=pointer]
+                - button "" [ref=f2e949] [cursor=pointer]
+                - button "" [ref=f2e951] [cursor=pointer]
+              - generic [ref=f2e953]:
+                - generic [ref=f2e954]:
+                  - generic [ref=f2e955]: 
+                  - paragraph [ref=f2e956] [cursor=pointer]: 1 Like
+                - generic [ref=f2e957]:
+                  - paragraph [ref=f2e958] [cursor=pointer]: 0 Comments
+                  - text: ‚
+                  - paragraph [ref=f2e959]: 0 Shares
+          - generic [ref=f2e961]:
+            - generic [ref=f2e962]:
+              - generic [ref=f2e963]:
+                - generic [ref=f2e964]:
+                  - img "profile picture" [ref=f2e966]
+                  - generic [ref=f2e967]:
+                    - paragraph [ref=f2e968]: Rebecca Harmony
+                    - paragraph [ref=f2e969]: 2020-08-10 05:34 AM
+                - listitem [ref=f2e971]:
+                  - button "" [ref=f2e972] [cursor=pointer]
+              - separator [ref=f2e974]
+            - generic [ref=f2e976]:
+              - paragraph [ref=f2e977]: Throwback Thursdays!!
+              - generic [ref=f2e980] [cursor=pointer]
+            - generic [ref=f2e982]:
+              - generic [ref=f2e983]:
+                - img [ref=f2e985] [cursor=pointer]
+                - button "" [ref=f2e1010] [cursor=pointer]
+                - button "" [ref=f2e1012] [cursor=pointer]
+              - generic [ref=f2e1014]:
+                - generic [ref=f2e1015]:
+                  - generic [ref=f2e1016]: 
+                  - paragraph [ref=f2e1017] [cursor=pointer]: 1 Like
+                - generic [ref=f2e1018]:
+                  - paragraph [ref=f2e1019] [cursor=pointer]: 0 Comments
+                  - text: ‚
+                  - paragraph [ref=f2e1020]: 0 Shares
+          - generic [ref=f2e1022]:
+            - generic [ref=f2e1023]:
+              - generic [ref=f2e1024]:
+                - generic [ref=f2e1025]:
+                  - img "profile picture" [ref=f2e1027]
+                  - generic [ref=f2e1028]:
+                    - paragraph [ref=f2e1029]: Russel Hamilton
+                    - paragraph [ref=f2e1030]: 2020-08-10 05:33 AM
+                - listitem [ref=f2e1032]:
+                  - button "" [ref=f2e1033] [cursor=pointer]
+              - separator [ref=f2e1035]
+            - paragraph [ref=f2e1038]: Live SIMPLY Dream BIG Be GREATFULL Give LOVE Laugh LOT.......
+            - generic [ref=f2e1039]:
+              - generic [ref=f2e1040]:
+                - img [ref=f2e1042] [cursor=pointer]
+                - button "" [ref=f2e1067] [cursor=pointer]
+                - button "" [ref=f2e1069] [cursor=pointer]
+              - generic [ref=f2e1071]:
+                - generic [ref=f2e1072]:
+                  - generic [ref=f2e1073]: 
+                  - paragraph [ref=f2e1074] [cursor=pointer]: 2 Likes
+                - generic [ref=f2e1075]:
+                  - paragraph [ref=f2e1076] [cursor=pointer]: 0 Comments
+                  - text: ‚
+                  - paragraph [ref=f2e1077]: 0 Shares
+      - generic [ref=f2e377]:
+        - paragraph [ref=f2e378]: Upcoming Anniversaries
+        - generic [ref=f2e380]:
+          - generic [ref=f2e381]:
+            - img "profile picture" [ref=f2e383]
+            - generic [ref=f2e384]:
+              - paragraph [ref=f2e385]: manda user
+              - paragraph [ref=f2e386]: HR Manager
+          - generic [ref=f2e387]:
+            - img "year celebration" [ref=f2e388]
+            - generic [ref=f2e389]:
+              - paragraph [ref=f2e390]: "36"
+              - paragraph [ref=f2e391]: Years
+              - paragraph [ref=f2e392]: Oct 11
+    - generic [ref=f2e393]:
+      - paragraph [ref=f2e394]: OrangeHRM OS 5.9
+      - paragraph [ref=f2e395]:
+        - text: © 2005 - 2026
+        - link "OrangeHRM, Inc" [ref=f2e396] [cursor=pointer]:
+          - /url: http://www.orangehrm.com
+        - text: . All rights reserved.

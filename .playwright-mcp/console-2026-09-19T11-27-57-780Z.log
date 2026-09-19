@@ -1,0 +1,33 @@
+[   33555ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://opensource-demo.orangehrmlive.com/web/index.php/auth/login:0
+[  211110ms] [ERROR] Failed to load resource: the server responded with a status of 504 () @ https://opensource-demo.orangehrmlive.com/web/index.php/api/v2/dashboard/employees/time-at-work?timezoneOffset=3&currentDate=2026-09-19&currentTime=14:30:0
+[  211227ms] [ERROR] Failed to load resource: the server responded with a status of 504 () @ https://opensource-demo.orangehrmlive.com/web/index.php/pim/viewPhoto/empNumber/7:0
+[  211246ms] [ERROR] Failed to load resource: the server responded with a status of 504 () @ https://opensource-demo.orangehrmlive.com/web/index.php/events/push:0
+[  211248ms] [ERROR] Failed to load resource: the server responded with a status of 504 () @ https://opensource-demo.orangehrmlive.com/web/index.php/api/v2/buzz/feed?limit=5&offset=0&sortOrder=DESC&sortField=share.createdAtUtc:0
+[  211255ms] [ERROR] Failed to load resource: the server responded with a status of 504 () @ https://opensource-demo.orangehrmlive.com/web/index.php/api/v2/dashboard/employees/leaves?date=2026-09-19:0
+[  211263ms] [ERROR] Failed to load resource: the server responded with a status of 504 () @ https://opensource-demo.orangehrmlive.com/web/index.php/api/v2/dashboard/employees/subunit:0
+[  211282ms] [ERROR] Failed to load resource: the server responded with a status of 504 () @ https://opensource-demo.orangehrmlive.com/web/index.php/api/v2/dashboard/employees/locations:0
+[  211297ms] TypeError: Cannot read properties of undefined (reading 'message')
+    at https://opensource-demo.orangehrmlive.com/web/dist/js/app.js?v=1783336755185:1:11003
+    at async ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83035)
+    at ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83131)
+[  211300ms] TypeError: Cannot read properties of undefined (reading 'message')
+    at https://opensource-demo.orangehrmlive.com/web/dist/js/app.js?v=1783336755185:1:11003
+    at async ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83035)
+    at ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83131)
+[  211302ms] TypeError: Cannot read properties of undefined (reading 'message')
+    at https://opensource-demo.orangehrmlive.com/web/dist/js/app.js?v=1783336755185:1:11003
+    at async ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83035)
+    at ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83131)
+[  211305ms] TypeError: Cannot read properties of undefined (reading 'message')
+    at https://opensource-demo.orangehrmlive.com/web/dist/js/app.js?v=1783336755185:1:11003
+    at async ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83035)
+    at ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83131)
+[  211305ms] TypeError: Cannot read properties of undefined (reading 'message')
+    at https://opensource-demo.orangehrmlive.com/web/dist/js/app.js?v=1783336755185:1:11003
+    at async ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83035)
+    at ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83131)
+[  211305ms] TypeError: Cannot read properties of undefined (reading 'message')
+    at https://opensource-demo.orangehrmlive.com/web/dist/js/app.js?v=1783336755185:1:11003
+    at async ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83035)
+    at ln.request (https://opensource-demo.orangehrmlive.com/web/dist/js/chunk-vendors.js?v=1783336755185:144:83131)
+[  214406ms] [ERROR] Failed to load resource: the server responded with a status of 500 () @ https://opensource-demo.orangehrmlive.com/web/index.php/pim/viewPhoto/empNumber/null:0

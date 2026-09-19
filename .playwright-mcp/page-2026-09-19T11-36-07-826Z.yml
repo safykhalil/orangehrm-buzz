@@ -1,0 +1,474 @@
+- generic [ref=f13e3]:
+  - generic:
+    - complementary [ref=f13e4]:
+      - navigation "Sidepanel" [ref=f13e5]:
+        - generic [ref=f13e6]:
+          - link [ref=f13e7] [cursor=pointer]:
+            - /url: https://www.orangehrm.com/
+            - img "client brand banner" [ref=f13e9]
+          - text: 
+        - generic [ref=f13e10]:
+          - generic [ref=f13e11]:
+            - generic [ref=f13e12]:
+              - textbox "Search" [ref=f13e15]
+              - button "" [ref=f13e16] [cursor=pointer]
+            - separator [ref=f13e18]
+          - list [ref=f13e19]:
+            - listitem [ref=f13e20]:
+              - link "Admin" [ref=f13e21] [cursor=pointer]:
+                - /url: /web/index.php/admin/viewAdminModule
+            - listitem [ref=f13e25]:
+              - link "PIM" [ref=f13e26] [cursor=pointer]:
+                - /url: /web/index.php/pim/viewPimModule
+            - listitem [ref=f13e41]:
+              - link "Leave" [ref=f13e42] [cursor=pointer]:
+                - /url: /web/index.php/leave/viewLeaveModule
+            - listitem [ref=f13e46]:
+              - link "Time" [ref=f13e47] [cursor=pointer]:
+                - /url: /web/index.php/time/viewTimeModule
+            - listitem [ref=f13e54]:
+              - link "Recruitment" [ref=f13e55] [cursor=pointer]:
+                - /url: /web/index.php/recruitment/viewRecruitmentModule
+            - listitem [ref=f13e62]:
+              - link "My Info" [ref=f13e63] [cursor=pointer]:
+                - /url: /web/index.php/pim/viewMyDetails
+            - listitem [ref=f13e70]:
+              - link "Performance" [ref=f13e71] [cursor=pointer]:
+                - /url: /web/index.php/performance/viewPerformanceModule
+            - listitem [ref=f13e80]:
+              - link "Dashboard" [ref=f13e81] [cursor=pointer]:
+                - /url: /web/index.php/dashboard/index
+            - listitem [ref=f13e85]:
+              - link "Directory" [ref=f13e86] [cursor=pointer]:
+                - /url: /web/index.php/directory/viewDirectory
+            - listitem [ref=f13e90]:
+              - link "Maintenance" [ref=f13e91] [cursor=pointer]:
+                - /url: /web/index.php/maintenance/viewMaintenanceModule
+            - listitem [ref=f13e96]:
+              - link "Claim" [ref=f13e97] [cursor=pointer]:
+                - /url: /web/index.php/claim/viewClaimModule
+            - listitem [ref=f13e105]:
+              - link "Buzz" [ref=f13e106] [cursor=pointer]:
+                - /url: /web/index.php/buzz/viewBuzz
+    - banner [ref=f13e110]:
+      - generic [ref=f13e111]:
+        - generic [ref=f13e112]:
+          - text: 
+          - heading "Claim" [level=6] [ref=f13e114]
+        - link [ref=f13e116]:
+          - /url: https://orangehrm.com/open-source/upgrade-to-advanced
+          - button "Upgrade" [ref=f13e117] [cursor=pointer]
+        - list [ref=f13e123]:
+          - listitem [ref=f13e124]:
+            - generic [ref=f13e125] [cursor=pointer]:
+              - img "profile picture" [ref=f13e126]
+              - paragraph [ref=f13e127]: NewName OTH5002
+              - generic [ref=f13e128]: 
+      - navigation "Topbar Menu" [ref=f13e130]:
+        - list [ref=f13e131]:
+          - listitem [ref=f13e132] [cursor=pointer]:
+            - generic [ref=f13e133]:
+              - text: Configuration
+              - generic [ref=f13e134]: 
+          - listitem [ref=f13e135] [cursor=pointer]:
+            - link "Submit Claim" [ref=f13e136]:
+              - /url: "#"
+          - listitem [ref=f13e137] [cursor=pointer]:
+            - link "My Claims" [ref=f13e138]:
+              - /url: "#"
+          - listitem [ref=f13e139] [cursor=pointer]:
+            - link "Employee Claims" [ref=f13e140]:
+              - /url: "#"
+          - listitem [ref=f13e141] [cursor=pointer]:
+            - link "Assign Claim" [ref=f13e142]:
+              - /url: "#"
+          - button "" [ref=f13e144] [cursor=pointer]
+  - generic [ref=f13e146]:
+    - generic [ref=f13e147]:
+      - generic [ref=f13e148]:
+        - generic [ref=f13e149]:
+          - heading "Employee Claims" [level=5] [ref=f13e151]
+          - button "" [ref=f13e154] [cursor=pointer]
+        - separator [ref=f13e156]
+        - generic [ref=f13e158]:
+          - generic [ref=f13e160]:
+            - generic [ref=f13e162]:
+              - generic [ref=f13e163]: Employee Name
+              - textbox "Type for hints..." [ref=f13e168]
+            - generic [ref=f13e170]:
+              - generic [ref=f13e171]: Reference Id
+              - textbox "Type for hints..." [ref=f13e176]
+            - generic [ref=f13e178]:
+              - generic [ref=f13e179]: Event Name
+              - generic [ref=f13e183] [cursor=pointer]:
+                - generic [ref=f13e184]: "-- Select --"
+                - generic [ref=f13e185]: 
+            - generic [ref=f13e188]:
+              - generic [ref=f13e189]: Status
+              - generic [ref=f13e193] [cursor=pointer]:
+                - generic [ref=f13e194]: "-- Select --"
+                - generic [ref=f13e195]: 
+          - generic [ref=f13e198]:
+            - generic [ref=f13e200]:
+              - generic [ref=f13e201]: From Date
+              - generic [ref=f13e205]:
+                - textbox "yyyy-dd-mm" [ref=f13e206]
+                - generic [ref=f13e207] [cursor=pointer]: 
+            - generic [ref=f13e209]:
+              - generic [ref=f13e210]: To Date
+              - generic [ref=f13e214]:
+                - textbox "yyyy-dd-mm" [ref=f13e215]
+                - generic [ref=f13e216] [cursor=pointer]: 
+            - generic [ref=f13e218]:
+              - generic [ref=f13e219]: Include
+              - generic [ref=f13e223] [cursor=pointer]:
+                - generic [ref=f13e224]: Current Employees Only
+                - generic [ref=f13e225]: 
+          - separator [ref=f13e227]
+          - generic [ref=f13e228]:
+            - button "Reset" [ref=f13e229] [cursor=pointer]
+            - button "Search" [ref=f13e230] [cursor=pointer]
+      - generic [ref=f13e231]:
+        - button " Assign Claim" [ref=f13e233] [cursor=pointer]:
+          - generic [ref=f13e234]: 
+          - text: Assign Claim
+        - generic [ref=f13e235]:
+          - separator [ref=f13e236]
+          - generic [ref=f13e237]: (27) Records Found
+        - table [ref=f13e240]:
+          - rowgroup [ref=f13e241]:
+            - row [ref=f13e242]:
+              - columnheader "Reference Id " [ref=f13e243]:
+                - text: Reference Id
+                - generic [ref=f13e244]:
+                  - generic [ref=f13e245] [cursor=pointer]: 
+                  - text:  
+              - columnheader "Employee Name " [ref=f13e246]:
+                - text: Employee Name
+                - generic [ref=f13e247]:
+                  - generic [ref=f13e248] [cursor=pointer]: 
+                  - text:  
+              - columnheader "Event Name " [ref=f13e249]:
+                - text: Event Name
+                - generic [ref=f13e250]:
+                  - generic [ref=f13e251] [cursor=pointer]: 
+                  - text:  
+              - columnheader "Description" [ref=f13e252]
+              - columnheader "Currency" [ref=f13e253]
+              - columnheader "Submitted Date " [ref=f13e254]:
+                - text: Submitted Date
+                - generic [ref=f13e255]:
+                  - generic [ref=f13e256] [cursor=pointer]: 
+                  - text:  
+              - columnheader "Status " [ref=f13e257]:
+                - text: Status
+                - generic [ref=f13e258]:
+                  - generic [ref=f13e259] [cursor=pointer]: 
+                  - text:  
+              - columnheader "Amount" [ref=f13e260]
+              - columnheader "Actions" [ref=f13e261]
+          - rowgroup [ref=f13e262]:
+            - row [ref=f13e264]:
+              - cell "202609190000030" [ref=f13e265]
+              - cell "Test Employee" [ref=f13e267]
+              - cell "Travel Allowance" [ref=f13e269]
+              - cell [ref=f13e272]
+              - cell "Russian Rouble" [ref=f13e273]
+              - cell [ref=f13e275]
+              - cell "Initiated" [ref=f13e276]
+              - cell "400.00" [ref=f13e278]
+              - cell [ref=f13e280]:
+                - button "View Details" [ref=f13e282] [cursor=pointer]
+            - row [ref=f13e284]:
+              - cell "202609190000029" [ref=f13e285]
+              - cell "Test Employee" [ref=f13e287]
+              - cell "Travel Allowance" [ref=f13e289]
+              - cell [ref=f13e292]
+              - cell "Euro" [ref=f13e293]
+              - cell [ref=f13e295]
+              - cell "Initiated" [ref=f13e296]
+              - cell "500.00" [ref=f13e298]
+              - cell [ref=f13e300]:
+                - button "View Details" [ref=f13e302] [cursor=pointer]
+            - row [ref=f13e304]:
+              - cell "202609190000028" [ref=f13e305]
+              - cell "Test Employee" [ref=f13e307]
+              - cell "Travel Allowance" [ref=f13e309]
+              - cell [ref=f13e312]
+              - cell "Russian Rouble" [ref=f13e313]
+              - cell [ref=f13e315]
+              - cell "Initiated" [ref=f13e316]
+              - cell "400.00" [ref=f13e318]
+              - cell [ref=f13e320]:
+                - button "View Details" [ref=f13e322] [cursor=pointer]
+            - row [ref=f13e324]:
+              - cell "202609190000027" [ref=f13e325]
+              - cell "Test Employee" [ref=f13e327]
+              - cell "Travel Allowance" [ref=f13e329]
+              - cell [ref=f13e332]
+              - cell "Euro" [ref=f13e333]
+              - cell [ref=f13e335]
+              - cell "Initiated" [ref=f13e336]
+              - cell "500.00" [ref=f13e338]
+              - cell [ref=f13e340]:
+                - button "View Details" [ref=f13e342] [cursor=pointer]
+            - row [ref=f13e344]:
+              - cell "202609190000026" [ref=f13e345]
+              - cell "Test Employee" [ref=f13e347]
+              - cell "Travel Allowance" [ref=f13e349]
+              - cell [ref=f13e352]
+              - cell "Russian Rouble" [ref=f13e353]
+              - cell [ref=f13e355]
+              - cell "Initiated" [ref=f13e356]
+              - cell "400.00" [ref=f13e358]
+              - cell [ref=f13e360]:
+                - button "View Details" [ref=f13e362] [cursor=pointer]
+            - row [ref=f13e364]:
+              - cell "202609190000025" [ref=f13e365]
+              - cell "Test Employee" [ref=f13e367]
+              - cell "Travel Allowance" [ref=f13e369]
+              - cell [ref=f13e372]
+              - cell "Euro" [ref=f13e373]
+              - cell [ref=f13e375]
+              - cell "Initiated" [ref=f13e376]
+              - cell "500.00" [ref=f13e378]
+              - cell [ref=f13e380]:
+                - button "View Details" [ref=f13e382] [cursor=pointer]
+            - row [ref=f13e384]:
+              - cell "202609190000024" [ref=f13e385]
+              - cell "Test Employee" [ref=f13e387]
+              - cell "Travel Allowance" [ref=f13e389]
+              - cell [ref=f13e392]
+              - cell "Russian Rouble" [ref=f13e393]
+              - cell [ref=f13e395]
+              - cell "Initiated" [ref=f13e396]
+              - cell "400.00" [ref=f13e398]
+              - cell [ref=f13e400]:
+                - button "View Details" [ref=f13e402] [cursor=pointer]
+            - row [ref=f13e404]:
+              - cell "202609190000023" [ref=f13e405]
+              - cell "Test Employee" [ref=f13e407]
+              - cell "Travel Allowance" [ref=f13e409]
+              - cell [ref=f13e412]
+              - cell "Euro" [ref=f13e413]
+              - cell [ref=f13e415]
+              - cell "Initiated" [ref=f13e416]
+              - cell "500.00" [ref=f13e418]
+              - cell [ref=f13e420]:
+                - button "View Details" [ref=f13e422] [cursor=pointer]
+            - row [ref=f13e424]:
+              - cell "202609190000022" [ref=f13e425]
+              - cell "Test Employee" [ref=f13e427]
+              - cell "Travel Allowance" [ref=f13e429]
+              - cell [ref=f13e432]
+              - cell "Russian Rouble" [ref=f13e433]
+              - cell [ref=f13e435]
+              - cell "Initiated" [ref=f13e436]
+              - cell "400.00" [ref=f13e438]
+              - cell [ref=f13e440]:
+                - button "View Details" [ref=f13e442] [cursor=pointer]
+            - row [ref=f13e444]:
+              - cell "202609190000021" [ref=f13e445]
+              - cell "Test Employee" [ref=f13e447]
+              - cell "Travel Allowance" [ref=f13e449]
+              - cell [ref=f13e452]
+              - cell "Euro" [ref=f13e453]
+              - cell [ref=f13e455]
+              - cell "Initiated" [ref=f13e456]
+              - cell "500.00" [ref=f13e458]
+              - cell [ref=f13e460]:
+                - button "View Details" [ref=f13e462] [cursor=pointer]
+            - row [ref=f13e464]:
+              - cell "202609190000020" [ref=f13e465]
+              - cell "Test Employee" [ref=f13e467]
+              - cell "Travel Allowance" [ref=f13e469]
+              - cell [ref=f13e472]
+              - cell "Russian Rouble" [ref=f13e473]
+              - cell [ref=f13e475]
+              - cell "Initiated" [ref=f13e476]
+              - cell "400.00" [ref=f13e478]
+              - cell [ref=f13e480]:
+                - button "View Details" [ref=f13e482] [cursor=pointer]
+            - row [ref=f13e484]:
+              - cell "202609190000019" [ref=f13e485]
+              - cell "Test Employee" [ref=f13e487]
+              - cell "Travel Allowance" [ref=f13e489]
+              - cell [ref=f13e492]
+              - cell "Euro" [ref=f13e493]
+              - cell [ref=f13e495]
+              - cell "Initiated" [ref=f13e496]
+              - cell "500.00" [ref=f13e498]
+              - cell [ref=f13e500]:
+                - button "View Details" [ref=f13e502] [cursor=pointer]
+            - row [ref=f13e504]:
+              - cell "202609190000018" [ref=f13e505]
+              - cell "Test Employee" [ref=f13e507]
+              - cell "Travel Allowance" [ref=f13e509]
+              - cell [ref=f13e512]
+              - cell "Russian Rouble" [ref=f13e513]
+              - cell [ref=f13e515]
+              - cell "Initiated" [ref=f13e516]
+              - cell "400.00" [ref=f13e518]
+              - cell [ref=f13e520]:
+                - button "View Details" [ref=f13e522] [cursor=pointer]
+            - row [ref=f13e524]:
+              - cell "202609190000017" [ref=f13e525]
+              - cell "Test Employee" [ref=f13e527]
+              - cell "Travel Allowance" [ref=f13e529]
+              - cell [ref=f13e532]
+              - cell "Euro" [ref=f13e533]
+              - cell [ref=f13e535]
+              - cell "Initiated" [ref=f13e536]
+              - cell "500.00" [ref=f13e538]
+              - cell [ref=f13e540]:
+                - button "View Details" [ref=f13e542] [cursor=pointer]
+            - row [ref=f13e544]:
+              - cell "202609190000016" [ref=f13e545]
+              - cell "Test Employee" [ref=f13e547]
+              - cell "Travel Allowance" [ref=f13e549]
+              - cell [ref=f13e552]
+              - cell "Russian Rouble" [ref=f13e553]
+              - cell [ref=f13e555]
+              - cell "Initiated" [ref=f13e556]
+              - cell "400.00" [ref=f13e558]
+              - cell [ref=f13e560]:
+                - button "View Details" [ref=f13e562] [cursor=pointer]
+            - row [ref=f13e564]:
+              - cell "202609190000015" [ref=f13e565]
+              - cell "Test Employee" [ref=f13e567]
+              - cell "Travel Allowance" [ref=f13e569]
+              - cell [ref=f13e572]
+              - cell "Euro" [ref=f13e573]
+              - cell [ref=f13e575]
+              - cell "Initiated" [ref=f13e576]
+              - cell "500.00" [ref=f13e578]
+              - cell [ref=f13e580]:
+                - button "View Details" [ref=f13e582] [cursor=pointer]
+            - row [ref=f13e584]:
+              - cell "202609190000014" [ref=f13e585]
+              - cell "Test Employee" [ref=f13e587]
+              - cell "Travel Allowance" [ref=f13e589]
+              - cell [ref=f13e592]
+              - cell "Russian Rouble" [ref=f13e593]
+              - cell [ref=f13e595]
+              - cell "Initiated" [ref=f13e596]
+              - cell "400.00" [ref=f13e598]
+              - cell [ref=f13e600]:
+                - button "View Details" [ref=f13e602] [cursor=pointer]
+            - row [ref=f13e604]:
+              - cell "202609190000013" [ref=f13e605]
+              - cell "Test Employee" [ref=f13e607]
+              - cell "Travel Allowance" [ref=f13e609]
+              - cell [ref=f13e612]
+              - cell "Euro" [ref=f13e613]
+              - cell [ref=f13e615]
+              - cell "Initiated" [ref=f13e616]
+              - cell "500.00" [ref=f13e618]
+              - cell [ref=f13e620]:
+                - button "View Details" [ref=f13e622] [cursor=pointer]
+            - row [ref=f13e624]:
+              - cell "202609190000012" [ref=f13e625]
+              - cell "Test Employee" [ref=f13e627]
+              - cell "Travel Allowance" [ref=f13e629]
+              - cell [ref=f13e632]
+              - cell "Russian Rouble" [ref=f13e633]
+              - cell [ref=f13e635]
+              - cell "Initiated" [ref=f13e636]
+              - cell "400.00" [ref=f13e638]
+              - cell [ref=f13e640]:
+                - button "View Details" [ref=f13e642] [cursor=pointer]
+            - row [ref=f13e644]:
+              - cell "202609190000011" [ref=f13e645]
+              - cell "Test Employee" [ref=f13e647]
+              - cell "Travel Allowance" [ref=f13e649]
+              - cell [ref=f13e652]
+              - cell "Euro" [ref=f13e653]
+              - cell [ref=f13e655]
+              - cell "Initiated" [ref=f13e656]
+              - cell "500.00" [ref=f13e658]
+              - cell [ref=f13e660]:
+                - button "View Details" [ref=f13e662] [cursor=pointer]
+            - row [ref=f13e664]:
+              - cell "202609190000010" [ref=f13e665]
+              - cell "Test Employee" [ref=f13e667]
+              - cell "Travel Allowance" [ref=f13e669]
+              - cell [ref=f13e672]
+              - cell "Russian Rouble" [ref=f13e673]
+              - cell [ref=f13e675]
+              - cell "Initiated" [ref=f13e676]
+              - cell "400.00" [ref=f13e678]
+              - cell [ref=f13e680]:
+                - button "View Details" [ref=f13e682] [cursor=pointer]
+            - row [ref=f13e684]:
+              - cell "202609190000009" [ref=f13e685]
+              - cell "Test Employee" [ref=f13e687]
+              - cell "Travel Allowance" [ref=f13e689]
+              - cell [ref=f13e692]
+              - cell "Euro" [ref=f13e693]
+              - cell [ref=f13e695]
+              - cell "Initiated" [ref=f13e696]
+              - cell "500.00" [ref=f13e698]
+              - cell [ref=f13e700]:
+                - button "View Details" [ref=f13e702] [cursor=pointer]
+            - row [ref=f13e704]:
+              - cell "202609190000008" [ref=f13e705]
+              - cell "Test Employee" [ref=f13e707]
+              - cell "Travel Allowance" [ref=f13e709]
+              - cell [ref=f13e712]
+              - cell "Russian Rouble" [ref=f13e713]
+              - cell [ref=f13e715]
+              - cell "Initiated" [ref=f13e716]
+              - cell "400.00" [ref=f13e718]
+              - cell [ref=f13e720]:
+                - button "View Details" [ref=f13e722] [cursor=pointer]
+            - row [ref=f13e724]:
+              - cell "202609190000007" [ref=f13e725]
+              - cell "Test Employee" [ref=f13e727]
+              - cell "Travel Allowance" [ref=f13e729]
+              - cell [ref=f13e732]
+              - cell "Euro" [ref=f13e733]
+              - cell [ref=f13e735]
+              - cell "Initiated" [ref=f13e736]
+              - cell "500.00" [ref=f13e738]
+              - cell [ref=f13e740]:
+                - button "View Details" [ref=f13e742] [cursor=pointer]
+            - row [ref=f13e744]:
+              - cell "202307180000003" [ref=f13e745]
+              - cell "NewName OTH5002" [ref=f13e747]
+              - cell "Travel Allowance" [ref=f13e749]
+              - cell [ref=f13e752]
+              - cell "Algerian Dinar" [ref=f13e753]
+              - cell "2023-18-07" [ref=f13e755]
+              - cell "Submitted" [ref=f13e757]
+              - cell "7,300.32" [ref=f13e759]
+              - cell [ref=f13e761]:
+                - button "View Details" [ref=f13e763] [cursor=pointer]
+            - row [ref=f13e765]:
+              - cell "202307180000002" [ref=f13e766]
+              - cell "NewName OTH5002" [ref=f13e768]
+              - cell "Medical Reimbursement" [ref=f13e770]
+              - cell [ref=f13e773]
+              - cell "Canadian Dollar" [ref=f13e774]
+              - cell "2023-18-07" [ref=f13e776]
+              - cell "Submitted" [ref=f13e778]
+              - cell "1,250.12" [ref=f13e780]
+              - cell [ref=f13e782]:
+                - button "View Details" [ref=f13e784] [cursor=pointer]
+            - row [ref=f13e786]:
+              - cell "202307180000001" [ref=f13e787]
+              - cell "NewName OTH5002" [ref=f13e789]
+              - cell "Accommodation" [ref=f13e791]
+              - cell [ref=f13e794]
+              - cell "Afghanistan Afghani" [ref=f13e795]
+              - cell [ref=f13e797]
+              - cell "Initiated" [ref=f13e798]
+              - cell "0.00" [ref=f13e800]
+              - cell [ref=f13e802]:
+                - button "View Details" [ref=f13e804] [cursor=pointer]
+    - generic [ref=f13e806]:
+      - paragraph [ref=f13e807]: OrangeHRM OS 5.9
+      - paragraph [ref=f13e808]:
+        - text: © 2005 - 2026
+        - link "OrangeHRM, Inc" [ref=f13e809] [cursor=pointer]:
+          - /url: http://www.orangehrm.com
+        - text: . All rights reserved.
