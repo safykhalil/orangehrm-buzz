@@ -118,3 +118,39 @@
 - **Type:** Housekeeping only — no new browser navigation, no new interactions, no new claims.
 - **What changed:** Moved the 16 screenshot files captured during Milestone 2 (Buzz exploration) from the project root into `docs/evidence/exploration/`, and updated every reference to these filenames throughout `docs/exploration-findings.md` (including the Evidence Index) to the new path. No other content in `exploration-findings.md` was changed.
 - **Why:** The project root had become cluttered with 16 loose evidence PNGs; moved to a dedicated folder for readability. No screenshots were re-taken, added, removed, or altered — only relocated.
+
+---
+
+## Entry: Milestone 3 — Test Design (Buzz scope)
+
+- **Date/Time:** 2026-09-19
+- **Skill used:** `test-design` (`.claude/skills/test-design/SKILL.md`, version 2.0)
+- **Prompt used:** M3 task prompt instructing generation of a traceable test-case suite for the Buzz module from `docs/PRD.md` (v1.0) and `docs/exploration-findings.md`, with specific attention to the BR-005 permission pattern (§3.9), the Share Video vs. Share Photos validation asymmetry (§3.4), the Excluded Actions table (§6), and the sort tie-break inconsistency (§3.5).
+- **Application URL:** https://opensource-demo.orangehrmlive.com/
+- **Module/scope:** Buzz
+- **Inputs read in full:** `docs/PRD.md` (245 lines), `docs/exploration-findings.md` (269 lines) — no navigation or browser tooling was used this run; this is a document-synthesis milestone only.
+
+### Method followed
+
+1. Read both source documents in full and built an internal requirement/exploration coverage map (PRD FR-016–FR-020, BR-005; all 15 exploration screen-by-screen findings §3.1–§3.15; all 9 Excluded Actions §6 rows; all 6 Open Questions §7) before drafting any case.
+2. Generated 27 test cases covering Positive/Functional, UI, Negative, Edge, and Security categories per the skill's Required scenario coverage. No Boundary-type cases were created — no numeric limit (e.g. text length, file size) is evidenced anywhere in the PRD or exploration findings for Buzz, and the skill explicitly forbids inventing one.
+3. Judged each of the 9 Excluded Actions rows individually per the skill's Hard rules: 6 meaningful content-creation actions (publish post, upload photo, submit Share Video with a URL, submit Share Video with an empty URL, submit a comment, submit a repost) became hypothesis cases (BUZZ-TC-021–026) with `Source = "Exploration — Excluded Action"` and expected results explicitly framed as "requires live confirmation"; the Edit Post row became a Security-type hypothesis case (BUZZ-TC-027) tied to Exploration §7 Open Question 1; the Delete Post row (deliberately excluded, destructive on shared demo data) and the ESS cross-role login row (missing confirmed credentials) were **not** converted to cases — see report below.
+4. Self-reviewed all 27 cases for atomicity, determinism, traceability, and source-supported expected results — 0 dropped, 0 corrections needed.
+5. Validated CSV mechanics programmatically (Node.js RFC4180 parser, since no working Python interpreter was available in this environment): 14 columns matching the required header exactly, 27 unique Test Case IDs, 0 rows with a column-count mismatch, 0 rows with non-empty `Valid in Scope`/`Needs Automation`, 0 rows missing a `Source`.
+
+### Output
+
+- Test suite saved to: `test-design/test-design.csv` (27 rows + header)
+
+### Unresolved items / could not be converted to test cases
+
+- ESS-role login/permission comparison (Excluded Actions row 9): not converted — would require assuming ESS demo credentials exist and are known, which is unconfirmed (PRD §14 assumption only).
+- Delete Post (Excluded Actions row 7): deliberately excluded per policy — destructive/irreversible on shared demo data; will remain excluded on any run against this instance.
+- Composer validation for empty/whitespace/very-long text (Exploration §7 Open Question 3): folded into BUZZ-TC-021's Comments/Test Data rather than given a separate Boundary case, since no character limit is evidenced.
+- Display-name discrepancy between Milestone 1 and Milestone 2 sessions (Exploration §7 Open Question 6): an environmental/data-drift note, not a testable product requirement — not converted.
+- Dashboard → Buzz cross-module dependency (PRD §12): out of scope for this Buzz-only run.
+
+### Errors / limitations encountered
+
+- No working Python interpreter was available in this environment (`python3`/`python` resolved to non-functional Windows Store stubs, exit code 49); CSV structural validation was performed with a small Node.js script instead.
+- No credential values were recorded in this log or in the test-design CSV.
