@@ -193,3 +193,43 @@
 ### Note on file write
 
 - The first two attempts to overwrite `test-design/test-design.csv` via the write tool failed with `EPERM` on the temp-file-to-final rename step (likely a transient Windows file lock, e.g. from the file being open in the IDE). A subsequent retry of the same write succeeded without any other change. No partial/corrupt file was left on disk at any point — each failed attempt left the prior valid file untouched.
+
+---
+
+## Entry: Milestone 3 — Test Design Regeneration (v3.0 schema)
+
+- **Date/Time:** 2026-09-22
+- **Skill used:** `test-design` (`.claude/skills/test-design/SKILL.md`, version 3.0 — schema updated from v2.1: `Requirement ID`, `Source`, and `Comments` columns removed per QC-lead decision; a new 12-column set now applies: `TC ID, Module, Test Type, Title, Preconditions, Test Steps, Test Data, Expected Result, Priority, Severity, Valid in Scope, Needs Automation`).
+- **Prompt used:** instruction to fully overwrite `test-design/test-design.csv` from scratch under the v3.0 schema, re-reading `docs/PRD.md` and `docs/exploration-findings.md` from the start, folding evidence attribution inline into `Preconditions`/`Expected Result` (e.g. "per PRD FR-018", "per Exploration §3.9") since there is no longer a dedicated `Source` column, and giving every hypothesis-case `Title` a "(requires live confirmation)" signal.
+- **Application URL:** https://opensource-demo.orangehrmlive.com/
+- **Module/scope:** Buzz
+- **PRD sections used as input:** Section 6 (Module: Buzz), FR-016–FR-020, BR-005, Section 12's Dashboard→Buzz dependency note. Full document (245 lines) re-read in this run.
+- **Exploration sections used as input:** all of §1–§8 (Executive Summary through Evidence Index), specifically §3.1–3.15 (screen-by-screen findings), §4 (Locator Reference Table), §5 (Reconciliation, all 9 discrepancies), §6 (Excluded Actions, all 9 rows), §7 (all 6 Open Questions). Full document (269 lines) re-read in this run. This log entry is now the only remaining formal record of these citations, since the CSV itself no longer carries a per-row `Source` column per v3.0.
+
+### What changed vs. the v2.1 run
+
+- Same 27 test cases, same underlying evidence and coverage decisions as the v2.1 run (BR-005 own/other-post permission pair, Share Video/Share Photos validation-asymmetry Negative case, sort tie-break Edge case, 6 Excluded Actions converted to hypothesis cases, Edit Post row converted to a Security-type hypothesis case, Delete Post and ESS-login rows not converted) — rebuilt against the new schema, not logically redesigned.
+- `Requirement ID`, `Source`, and `Comments` columns dropped. Their content was folded inline: PRD/exploration citations now appear as short inline attribution at the end of `Preconditions` (e.g. "- per PRD FR-018; Exploration §3.5"); cross-references between cases (e.g. "see BUZZ-TC-024") and defect/permission notes now appear inline in `Expected Result`.
+- All 7 hypothesis-case titles (`BUZZ-TC-021`–`027`) updated to end with a "(requires live confirmation)" signal, per the v3.0 rule that the title itself must flag unverified cases (previously this was carried only by the `Source = "Exploration — Excluded Action"` value).
+
+### Self-review fix/drop count
+
+0 dropped, 0 corrections needed. One judgment call: `BUZZ-TC-024`'s title reads "...(defect verification, requires live confirmation)" rather than ending with the exact bare parenthetical "(requires live confirmation)" shown as the skill's example — kept as-is since it still ends with and contains that exact phrase, and combining it with "defect verification" is more informative for this specific case than a bare tag would be.
+
+### CSV mechanics validation (Node.js parser, no working Python interpreter available)
+
+- 12 columns, matching the v3.0 header exactly.
+- 27 data rows, 27 unique `TC ID` values, 0 rows with a column-count mismatch.
+- 0 rows with non-empty `Valid in Scope` or `Needs Automation`.
+- 0 rows missing `Title`.
+- Test Type breakdown: UI 11, Functional 11, Negative 3, Edge 1, Security 1 (unchanged from v2.1).
+- Severity breakdown: Low 12, Medium 10, High 4, Critical 1 (unchanged from v2.1).
+- 0 backslash-escaped quotes; the two embedded-quote fields (`id="heart-svg"` in BUZZ-TC-008's Expected Result, `"External System Writes"` in BUZZ-TC-021's Preconditions) confirmed to decode to correct literal text via the same doubled-quote (`""`) CSV escaping used in v2.1.
+
+### Output
+
+- Test suite fully overwritten at: `test-design/test-design.csv` (27 rows + header, v3.0 schema)
+
+### Note on file write
+
+- Unlike the v2.1 regeneration, this write succeeded on the first attempt — no `EPERM`/file-lock issue this time.
