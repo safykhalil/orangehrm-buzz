@@ -1,5 +1,22 @@
 # Prompts Archive — OrangeHRM Buzz QA Project
 
+## Executive Summary (for reviewer)
+
+| Milestone | Skill Used | Prompt(s) Sent | Output | Status |
+|---|---|---|---|---|
+| 1 — PRD Generation | `prd-generation` v1.0 | 1 initial + 1 correction | `docs/PRD.md` | ✅ Complete, QC-reviewed |
+| 2 — UI Exploration | `ui-exploration` v2.0 | 1 initial + 1 cleanup | `docs/exploration-findings.md` | ✅ Complete, QC-reviewed |
+| 3 — Test Design | `test-design` v3.0 | 1 prompt, run twice (schema revision) | `test-design/test-design.csv` (27 cases) | ✅ Complete, QC-reviewed and filled (Valid in Scope / Needs Automation) |
+| 4 — Test Execution | `test-execution` v1.0 | 1 prompt | `execution/execution-report.html` + evidence | ✅ Complete, 20 executed (20 PASS), 7 BLOCKED by policy, 1 defect (DEFECT-001) |
+| 5 — Automation | `playwright-automation` v2.0 | Skill written, not yet run | — | ⏸ Paused by QC lead after Milestone 4 |
+
+**How to read this file:** each milestone section below contains the exact,
+verbatim prompt text sent to Claude Code for that step — not a paraphrase.
+Any follow-up/correction prompts are included immediately after the
+milestone's main prompt, in the order they were actually sent. Full
+supporting detail (actions taken, evidence, findings) lives in
+`logs/session-log.md`, not here — this file is prompts only.
+
 This file contains the **verbatim text** of every prompt sent to Claude
 Code to complete Milestones 1–4, for team lead review. It complements
 `logs/session-log.md`, which records what Claude Code *did* in response
