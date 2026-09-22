@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Buzz Module — Milestone 4 Execution Report</title>
+<style>
+  :root {
+    --pass: #1a7f37; --pass-bg: #dafbe1;
+    --fail: #cf222e; --fail-bg: #ffebe9;
+    --blocked: #9a6700; --blocked-bg: #fff8c5;
+    --border: #d0d7de; --muted: #57606a; --bg: #f6f8fa; --card: #ffffff;
+    --accent: #0969da;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: #1f2328; margin: 0; padding: 0 0 60px; }
+  header { background: #24292f; color: #fff; padding: 28px 32px; }
+  header h1 { margin: 0 0 6px; font-size: 22px; }
+  header p { margin: 2px 0; color: #c9d1d9; font-size: 13.5px; }
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .summary { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin: 28px 0; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .card .num { font-size: 30px; font-weight: 700; }
+  .card .label { font-size: 12.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-top: 4px; }
+  .card.pass .num { color: var(--pass); }
+  .card.blocked .num { color: var(--blocked); }
+  .card.fail .num { color: var(--fail); }
+  section { margin: 36px 0; }
+  h2 { font-size: 18px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  .note { background: #fff8c5; border: 1px solid #d4a72c; border-radius: 6px; padding: 12px 16px; font-size: 14px; margin: 16px 0; }
+  .tc { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+  .tc summary { cursor: pointer; padding: 12px 16px; display: flex; align-items: center; gap: 12px; list-style: none; font-size: 14.5px; }
+  .tc summary::-webkit-details-marker { display: none; }
+  .tc summary .id { font-weight: 600; color: var(--accent); min-width: 92px; }
+  .tc summary .title { flex: 1; }
+  .badge { font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
+  .badge.PASS { background: var(--pass-bg); color: var(--pass); }
+  .badge.BLOCKED { background: var(--blocked-bg); color: var(--blocked); }
+  .badge.FAIL { background: var(--fail-bg); color: var(--fail); }
+  .tc .body { padding: 4px 16px 18px; border-top: 1px solid var(--border); font-size: 13.5px; line-height: 1.55; }
+  .tc .body h4 { margin: 14px 0 4px; font-size: 12.5px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+  .evid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .evid figure { margin: 0; width: 260px; }
+  .evid img { width: 100%; border: 1px solid var(--border); border-radius: 6px; display: block; }
+  .evid figcaption { font-size: 11px; color: var(--muted); margin-top: 3px; word-break: break-all; }
+  code { background: #eef1f4; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+  .defect { background: var(--card); border: 1px solid var(--fail); border-radius: 8px; padding: 18px 20px; margin-bottom: 16px; }
+  .defect h3 { margin-top: 0; color: var(--fail); }
+  .defect dl { display: grid; grid-template-columns: 160px 1fr; gap: 6px 12px; font-size: 13.5px; margin: 0; }
+  .defect dt { font-weight: 600; color: var(--muted); }
+  .defect dd { margin: 0; }
+  ul.tight li { margin-bottom: 6px; }
+  .exit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 720px) { .summary { grid-template-columns: repeat(2,1fr);} .exit-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Buzz Module — Milestone 4: Live Test Execution</h1>
+  <p>Application: <code style="background:#32383f;color:#fff">https://opensource-demo.orangehrmlive.com/</code> (Buzz Newsfeed)</p>
+  <p>Executed: 2026-09-22 · Test-design source: <code style="background:#32383f;color:#fff">test-design/test-design.csv</code> · Method: Playwright MCP, authenticated as demo Admin-role account</p>
+</header>
+
+<div class="container">
+
+  <div class="summary">
+    <div class="card"><div class="num">27</div><div class="label">In scope</div></div>
+    <div class="card pass"><div class="num">20</div><div class="label">Pass</div></div>
+    <div class="card fail"><div class="num">0</div><div class="label">Fail</div></div>
+    <div class="card blocked"><div class="num">7</div><div class="label">Blocked</div></div>
+    <div class="card"><div class="num">1</div><div class="label">Defects raised</div></div>
+  </div>
+
+  <div class="note">
+    <strong>Environmental note — shared public demo.</strong> This is the shared, public OrangeHRM demo instance used by many concurrent users worldwide. Partway through this run (~07:09, after TC-008), a new post ("Enjoy your life" by <em>manda akhil user</em>, with an attached screenshot image) appeared in the feed — created by a real external user, not by this test run (the composer was never used by this execution). The feed grew from 4 posts to 5 mid-run. This changed the literal snapshot-specific data referenced in TC-002 / TC-018 / TC-020's preconditions, but the underlying assertions in each of those cases were re-validated against the live 5-post state and still hold — see each case's notes below.
+  </div>
+
+  <section>
+    <h2>Test Case Results (TC-001 – TC-020, all executed)</h2>
+
+    <details class="tc" open>
+      <summary><span class="id">TC-001</span><span class="title">Post composer displays required controls</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Composer shows "What's on your mind?" textbox, Post button, Share Photos button, Share Video button.</p>
+        <p><strong>Actual:</strong> All four controls present and rendered exactly as expected.</p>
+        <div class="evid"><figure><img src="evidence/TC-001_01_composer.png"><figcaption>TC-001_01_composer.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-002</span><span class="title">Feed post card displays author, timestamp, content, counters</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Each card shows author, avatar, timestamp, content, and Like/Comment/Share counters.</p>
+        <p><strong>Actual:</strong> Confirmed on all cards present at observation time.</p>
+        <p><strong>Note:</strong> Precondition cited the original 4-post snapshot; a 5th post ("Enjoy your life") had already appeared by the time this screenshot was taken (see environmental note above) and also displays all required elements correctly.</p>
+        <div class="evid"><figure><img src="evidence/TC-002_01_feed_cards.png"><figcaption>TC-002_01_feed_cards.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-003</span><span class="title">Default feed filter is 'Most Recent Posts'</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> "Most Recent Posts" active by default; posts in reverse-chronological order.</p>
+        <p><strong>Actual:</strong> Confirmed — button carried the active (<code>label-warn</code>) CSS class and feed order matched timestamps descending (05:38, 05:38, 05:34, 05:33).</p>
+        <div class="evid"><figure><img src="evidence/TC-002_01_feed_cards.png"><figcaption>Shared with TC-002 (same initial state)</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-004</span><span class="title">'Most Liked Posts' filter sorts descending by Like count</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Feed re-sorts descending by Like count; button gains active state.</p>
+        <p><strong>Actual:</strong> Order became Russel Hamilton (2) → Sania Shaheen (1) → Rebecca Harmony (0) → manda akhil user (0); "Most Liked Posts" button gained the active class.</p>
+        <div class="evid"><figure><img src="evidence/TC-004_01_most_liked_sorted.png"><figcaption>TC-004_01_most_liked_sorted.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-005</span><span class="title">'Most Recent Posts' restores original feed order</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Order restored exactly to reverse-chronological; re-sorting is non-destructive.</p>
+        <p><strong>Actual:</strong> Confirmed — order and like counts identical to the pre-filter baseline; "Most Recent Posts" regained active state.</p>
+        <div class="evid"><figure><img src="evidence/TC-005_01_restored_recent.png"><figcaption>TC-005_01_restored_recent.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-006</span><span class="title">Upcoming Anniversaries panel displays and is non-interactive</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Panel shows avatar/name/title/year-badge/date; clicking an entry has no effect.</p>
+        <p><strong>Actual:</strong> Panel displayed correctly (manda user – 36 Years – Oct 11; Russel Hamilton – 28 Years – Oct 22); click on an entry produced no navigation and no visible change (URL unchanged).</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-006_01_anniversaries_before.png"><figcaption>TC-006_01_anniversaries_before.png</figcaption></figure>
+          <figure><img src="evidence/TC-006_02_anniversaries_after_click.png"><figcaption>TC-006_02_anniversaries_after_click.png</figcaption></figure>
+        </div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-007</span><span class="title">'Read More' expands truncated post text</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Full text becomes visible; "Read More" link disappears; no "Show Less" appears afterward.</p>
+        <p><strong>Actual:</strong> Confirmed — Sania Shaheen's full post text is visible after the click, "Read More" link is gone, no collapse control appeared.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-007_01_before_readmore.png"><figcaption>TC-007_01_before_readmore.png</figcaption></figure>
+          <figure><img src="evidence/TC-007_02_after_readmore_click.png"><figcaption>TC-007_02_after_readmore_click.png</figcaption></figure>
+        </div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-008</span><span class="title">Like/Unlike toggle updates count and icon state</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Like → "1 Like" + solid red heart; Unlike → back to "0 Likes" + grey outline heart.</p>
+        <p><strong>Actual:</strong> Confirmed on Rebecca Harmony's post (started at 0 Likes). After Like: "1 Like", solid red heart. After Unlike: "0 Likes", grey outline heart. Reversal confirmed successful.</p>
+        <p><strong>Tooling note:</strong> The heart icon has no accessible name and uses a duplicated, non-unique <code>id="heart-svg"</code> across every post (confirms exploration §4 finding). A generic element click on the icon's wrapper sometimes needed a direct DOM event dispatch to register reliably — an automation-readiness concern for Milestone 5, not a functional defect.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-008_01_before_like.png"><figcaption>TC-008_01_before_like.png</figcaption></figure>
+          <figure><img src="evidence/TC-008_02_after_like.png"><figcaption>TC-008_02_after_like.png</figcaption></figure>
+          <figure><img src="evidence/TC-008_03_after_unlike.png"><figcaption>TC-008_03_after_unlike.png (reversal confirmed)</figcaption></figure>
+        </div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-009</span><span class="title">Comment toggle expands/collapses inline comment box</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Click expands an inline "Write your comment..." textbox with no navigation; clicking again collapses it with no side effects.</p>
+        <p><strong>Actual:</strong> Confirmed on manda akhil user's "Hi All..." post. No text was typed or submitted.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-009_01_before_comment_toggle.png"><figcaption>TC-009_01_before_comment_toggle.png</figcaption></figure>
+          <figure><img src="evidence/TC-009_02_after_comment_expand.png"><figcaption>TC-009_02_after_comment_expand.png</figcaption></figure>
+          <figure><img src="evidence/TC-009_03_after_comment_collapse.png"><figcaption>TC-009_03_after_comment_collapse.png</figcaption></figure>
+        </div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-010</span><span class="title">Options menu on own post shows Edit Post and Delete Post</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Menu shows exactly "Edit Post" and "Delete Post" on the logged-in user's own post.</p>
+        <p><strong>Actual:</strong> Confirmed on the new "Enjoy your life" post authored by manda akhil user (the logged-in account). Neither item was clicked; menu was dismissed via Escape.</p>
+        <div class="evid"><figure><img src="evidence/TC-010_01_own_post_options_menu.png"><figcaption>TC-010_01_own_post_options_menu.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-011</span><span class="title">Options menu on another author's post shows Delete Post only</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Menu shows exactly one item, "Delete Post", no "Edit Post".</p>
+        <p><strong>Actual:</strong> Confirmed on Sania Shaheen's post — only "Delete Post" shown. Item was not clicked.</p>
+        <div class="evid"><figure><img src="evidence/TC-011_01_other_author_options_menu.png"><figcaption>TC-011_01_other_author_options_menu.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-012</span><span class="title">Share Photos 'Share' button disabled until photo attached</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> "Share" button disabled while no photo is attached.</p>
+        <p><strong>Actual:</strong> Confirmed disabled (<code>disabled</code> attribute present) with no photo attached. Modal closed via the "×" button without attaching anything.</p>
+        <div class="evid"><figure><img src="evidence/TC-012_01_share_photos_disabled.png"><figcaption>TC-012_01_share_photos_disabled.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-013</span><span class="title">Clicking attached photo opens full-screen lightbox</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Full-screen lightbox with enlarged image and an independent post-detail panel; closes cleanly with no residual state change.</p>
+        <p><strong>Actual:</strong> Confirmed on Rebecca Harmony's photo post. Lightbox opened with enlarged image plus its own author/timestamp/caption/Like-Comment-Share panel. Closed via "×"; feed returned to its prior state.</p>
+        <p><strong>Tooling note (important):</strong> The visible <code>&lt;img&gt;</code> is not the actual click target — a same-sized overlay <code>&lt;div class="orangehrm-buzz-post-body-picture"&gt;</code> intercepts pointer events and must be targeted instead. During attempts to locate the correct clickable element, two accidental Like-toggles were triggered on this same post by an MCP tool locator-resolution issue (see below); both were detected immediately via a like-count re-check and reversed before proceeding. Net effect on the post after this test case: 0 Likes, matching its original baseline.</p>
+        <p><strong>Test-tooling issue observed:</strong> The Playwright MCP <code>browser_click</code> tool, when given specific element refs (<code>f3e344</code>) for a plain <code>&lt;img&gt;</code>, twice resolved the click to an unrelated cached locator (<code>#heart-svg nth(3)</code>) instead of the element actually referenced — even immediately after a fresh accessibility snapshot. This looks like a locator-resolution/caching bug in the MCP tool rather than an application defect. It was worked around by using an explicit, disambiguated CSS selector for the overlay div. Recommended to flag to whoever maintains the Playwright MCP server.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-013_00_check_after_missclick.png"><figcaption>TC-013_00: mis-click detected (Rebecca 0→1)</figcaption></figure>
+          <figure><img src="evidence/TC-013_00c_rebecca_like_reversed.png"><figcaption>TC-013_00c: reversed back to 0</figcaption></figure>
+          <figure><img src="evidence/TC-013_00d_rebecca_like_reversed2.png"><figcaption>TC-013_00d: reversed again after 2nd mis-click</figcaption></figure>
+          <figure><img src="evidence/TC-013_01_lightbox_open.png"><figcaption>TC-013_01: lightbox opened correctly</figcaption></figure>
+          <figure><img src="evidence/TC-013_02_lightbox_closed.png"><figcaption>TC-013_02: closed cleanly, 0 Likes preserved</figcaption></figure>
+        </div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-014</span><span class="title">Share Post (repost) modal opens with optional caption</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Dialog opens with read-only preview of the original post and optional caption box; "Share" enabled with no caption.</p>
+        <p><strong>Actual:</strong> Confirmed on Russel Hamilton's post — preview shown, "Share" button enabled (solid orange) with the caption field empty. Closed via "×" without submitting.</p>
+        <div class="evid"><figure><img src="evidence/TC-014_01_share_post_modal.png"><figcaption>TC-014_01_share_post_modal.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-015</span><span class="title">Post author name/avatar click produces no navigation</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Neither click navigates away; URL stays on <code>/buzz/viewBuzz</code>.</p>
+        <p><strong>Actual:</strong> Confirmed for both the author name and avatar image (Sania Shaheen's post) — URL unchanged in both cases.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-015_01_author_name_click.png"><figcaption>TC-015_01_author_name_click.png</figcaption></figure>
+          <figure><img src="evidence/TC-015_02_avatar_click.png"><figcaption>TC-015_02_avatar_click.png</figcaption></figure>
+        </div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-016</span><span class="title">Topbar 'Help' button opens external site in new tab</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> New tab opens to <code>https://starterhelp.orangehrm.com/hc/en-us</code>.</p>
+        <p><strong>Actual:</strong> Confirmed — a second browser tab opened to exactly that URL. Tab was closed afterward with no other side effects.</p>
+        <div class="evid"><figure><img src="evidence/TC-016_01_help_new_tab.png"><figcaption>TC-016_01_help_new_tab.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-017</span><span class="title">Profile menu shows About/Support/Change Password/Logout on Buzz page</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> Menu shows About, Support, Change Password, Logout.</p>
+        <p><strong>Actual:</strong> Confirmed, all four items present in that order. No item was selected; menu dismissed via Escape.</p>
+        <div class="evid"><figure><img src="evidence/TC-017_01_profile_menu.png"><figcaption>TC-017_01_profile_menu.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-018</span><span class="title">Feed displays all posts with no pagination at current volume</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> No pagination/infinite-scroll controls; footer appears immediately after the last post.</p>
+        <p><strong>Actual:</strong> Confirmed — footer appears immediately after the last (now 5th, see environmental note) post, with no pagination or "load more" control at any point. The core assertion (no pagination mechanism exists) is volume-independent and was verified against the live 5-post state.</p>
+        <div class="evid"><figure><img src="evidence/TC-018_01_feed_bottom.png"><figcaption>TC-018_01_feed_bottom.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-019</span><span class="title">Share Video 'Share' button not disabled despite empty Video URL (defect candidate)</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected (defect candidate):</strong> "Share" button remains enabled/clickable despite the Video URL field being empty — a validation asymmetry vs. Share Photos.</p>
+        <p><strong>Actual:</strong> Confirmed — <code>disabled</code> attribute is <code>false</code> on the Share button with the Video URL field empty. Defect reproduced as anticipated by the test design. See <strong>DEFECT-001</strong> below. Modal closed via "×" without submitting.</p>
+        <div class="evid"><figure><img src="evidence/TC-019_01_share_video_empty_url.png"><figcaption>TC-019_01_share_video_empty_url.png</figcaption></figure></div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">TC-020</span><span class="title">'Most Liked' vs 'Most Commented' tie-break order differs</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Expected:</strong> The two filters order same-count posts differently, indicating independent secondary sort keys.</p>
+        <p><strong>Actual (re-derived against live 5-post data, see environmental note):</strong></p>
+        <ul class="tight">
+          <li>Most Liked Posts order: Russel Hamilton (2) → Sania Shaheen (1) → Rebecca Harmony (0) → manda akhil user "Hi All" (0) → manda akhil user "Enjoy your life" (0)</li>
+          <li>Most Commented Posts order (all 5 posts tied at 0 Comments): Russel Hamilton → Rebecca Harmony → Sania Shaheen → manda akhil user "Hi All" → manda akhil user "Enjoy your life"</li>
+        </ul>
+        <p>Because all 5 posts are tied at 0 Comments, the "Most Commented" order is entirely the secondary sort key in effect. That key places Sania Shaheen (which has an actual Like) behind Rebecca Harmony (0 Likes) — i.e. it is not influenced by Like count at all — whereas "Most Liked" naturally ranks Sania above Rebecca by Like count. This confirms the two filters use genuinely independent secondary/tie-break keys, matching the original exploration hypothesis, though the specific named example differs from the original 4-post snapshot because of the mid-run 5th post (environmental note above). Filter was reset to "Most Recent Posts" afterward.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-020_01_most_liked_order.png"><figcaption>TC-020_01_most_liked_order.png</figcaption></figure>
+          <figure><img src="evidence/TC-020_02_most_commented_order.png"><figcaption>TC-020_02_most_commented_order.png</figcaption></figure>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section>
+    <h2>Blocked Cases (TC-021 – TC-027) — excluded by Interaction Policy</h2>
+    <p>All seven remaining cases require creating permanent, visible-to-others content on the shared public demo (posting, uploading, commenting, reposting) or a server-side/API-level probe of a permission boundary. Per the ui-exploration skill's Interaction Policy (carried forward by the test-execution skill) and the test-design CSV's own preconditions ("a disposable/sandboxed instance..."), none of these were authorized for this run and none were attempted.</p>
+    <details class="tc">
+      <summary><span class="id">TC-021</span><span class="title">Publish a new text post via composer</span><span class="badge BLOCKED">BLOCKED</span></summary>
+      <div class="body">Requires publishing new content visible to other users of the shared demo. Excluded by policy; not attempted.</div>
+    </details>
+    <details class="tc">
+      <summary><span class="id">TC-022</span><span class="title">Upload a photo via Share Photos and publish</span><span class="badge BLOCKED">BLOCKED</span></summary>
+      <div class="body">Requires a file-upload/content-creating action on the shared demo. Excluded by policy; not attempted.</div>
+    </details>
+    <details class="tc">
+      <summary><span class="id">TC-023</span><span class="title">Submit Share Video with a valid URL</span><span class="badge BLOCKED">BLOCKED</span></summary>
+      <div class="body">Creates new content visible to other users. Excluded by policy; not attempted.</div>
+    </details>
+    <details class="tc">
+      <summary><span class="id">TC-024</span><span class="title">Submit Share Video with an empty URL (defect verification)</span><span class="badge BLOCKED">BLOCKED</span></summary>
+      <div class="body">Would resolve whether TC-019/DEFECT-001's enabled-but-unvalidated Share button produces a broken post or a no-op — but doing so means submitting on the shared demo. Requires a disposable instance or API-level test; not attempted this run. Highest-value follow-up for a future authorized run.</div>
+    </details>
+    <details class="tc">
+      <summary><span class="id">TC-025</span><span class="title">Submit a comment on a post</span><span class="badge BLOCKED">BLOCKED</span></summary>
+      <div class="body">Creates new content visible to other users. Excluded by policy; not attempted.</div>
+    </details>
+    <details class="tc">
+      <summary><span class="id">TC-026</span><span class="title">Submit a repost via Share Post modal</span><span class="badge BLOCKED">BLOCKED</span></summary>
+      <div class="body">Creates a new post visible to other users. Excluded by policy; not attempted.</div>
+    </details>
+    <details class="tc">
+      <summary><span class="id">TC-027</span><span class="title">Verify server-side enforcement of Edit Post permission</span><span class="badge BLOCKED">BLOCKED</span></summary>
+      <div class="body">Requires a direct API/form call bypassing the UI to edit another user's post — a security-relevant probe outside this run's authorization and outside standard UI-level execution. Requires a disposable instance, API-level access, or explicit sign-off for a future run.</div>
+    </details>
+  </section>
+
+  <section>
+    <h2>Formal Defects</h2>
+    <div class="defect">
+      <h3>DEFECT-001 — Share Video allows submission with empty Video URL (Share button not disabled)</h3>
+      <dl>
+        <dt>Affected screen/module</dt><dd>Buzz Newsfeed — Share Video modal (<code>/web/index.php/buzz/viewBuzz</code>)</dd>
+        <dt>Preconditions</dt><dd>Logged in as demo Admin-role user; on Buzz Newsfeed page.</dd>
+        <dt>Reproduction steps</dt>
+        <dd>
+          1. Click "Share Video" in the composer.<br>
+          2. Leave the "Paste Video URL" field empty.<br>
+          3. Observe the "Share" button's enabled/disabled state (do not click Share).
+        </dd>
+        <dt>Actual result</dt><dd>The "Share" button remains enabled (<code>disabled === false</code>) with the Video URL field empty.</dd>
+        <dt>Expected result</dt><dd>By analogy with the equivalent Share Photos flow (TC-012), where "Share" is disabled until a photo is attached, "Share" should be disabled while the Video URL field is empty.</dd>
+        <dt>Evidence</dt><dd><code>execution/evidence/TC-019_01_share_video_empty_url.png</code>, <code>execution/evidence/TC-012_01_share_photos_disabled.png</code> (contrast)</dd>
+        <dt>Reproducibility</dt><dd>1/1 attempts this run; consistent with the original exploration finding (§3.4/§5 discrepancy 2), so effectively 2/2 across sessions.</dd>
+        <dt>Severity / Priority</dt><dd><strong>High / High</strong> — no functional crash, but a client-side validation gap that could let users submit a broken/empty video post; whether the server also rejects it is unknown (see TC-024, blocked this run).</dd>
+        <dt>Affected TC IDs</dt><dd>TC-019 (confirms), TC-024 (blocked follow-up — would determine actual submission outcome)</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section>
+    <h2>Findings Summary — carry into Milestone 5 automation</h2>
+    <ul class="tight">
+      <li><strong>Confirmed stable behaviors</strong> suitable for automation: filter sorting (TC-003/004/005), Read More expand (TC-007), Like/Unlike toggle (TC-008), comment box expand/collapse (TC-009), per-post options-menu permission model (TC-010/011), Share Photos validation (TC-012), photo lightbox (TC-013), repost modal (TC-014), no-navigation on author click (TC-015), Help link (TC-016), profile menu (TC-017).</li>
+      <li><strong>DEFECT-001</strong> (Share Video validation asymmetry) is now a confirmed, reproducible defect — worth a dedicated regression check once fixed, and worth automating the negative case (assert button is/isn't disabled) regardless.</li>
+      <li><strong>Locator hazards for automation:</strong> the Like heart uses a duplicated, non-unique <code>id="heart-svg"</code> across every post (must be selected by DOM structure/ordinal position, not by id or accessible name — none of the icon buttons expose one). The clickable region for a post's photo is a same-sized <em>overlay <code>&lt;div&gt;</code></em>, not the <code>&lt;img&gt;</code> itself — automation must target that div.</li>
+      <li><strong>Modal dismissal:</strong> Escape does not close the Share Photos / Share Video dialogs (confirmed this run); only the "×" button does. Automation should not rely on Escape as a universal modal-close shortcut on this page. (Escape did work for the "..." options menu and the profile dropdown.)</li>
+      <li><strong>Shared-demo volatility:</strong> because this is a public shared demo, post count and content can change between/during runs from unrelated real users. Automated checks should assert on relative structure and named seed posts where possible, rather than hard-coding an exact post count.</li>
+      <li><strong>Tooling reliability (this run's environment, not the app):</strong> the Playwright MCP <code>browser_click</code> tool twice mis-resolved a specific element ref to an unrelated cached locator, causing two accidental Like-toggle side effects that were caught and reversed immediately. Flagged for whoever operates the MCP server; not an application defect.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Exit Assessment</h2>
+    <div class="exit-grid">
+      <div>
+        <h4 style="margin-bottom:4px;color:var(--pass)">Fully validated (20/27)</h4>
+        <p style="font-size:13.5px;margin-top:0">TC-001 through TC-020 — all structural, UI, and functional assertions in scope for this run reached a definitive PASS with screenshot evidence. One defect (DEFECT-001) was formally raised from TC-019.</p>
+        <h4 style="margin-bottom:4px;color:var(--blocked)">Blocked (7/27)</h4>
+        <p style="font-size:13.5px;margin-top:0">TC-021–TC-027 — all excluded by the Interaction Policy (content-creation on the shared public demo) or requiring API-level/security testing outside this run's authorization. None attempted.</p>
+      </div>
+      <div>
+        <h4 style="margin-bottom:4px">Remains untested / out of scope</h4>
+        <p style="font-size:13.5px;margin-top:0">Whether DEFECT-001's enabled-but-unvalidated Share button actually produces a broken post server-side (TC-024); whether the Edit-Post permission model is enforced server-side or only in the UI (TC-027); actual publish/upload/comment/repost submission behavior (TC-021/022/023/025/026). All require either a disposable/sandboxed OrangeHRM instance or explicit run-level authorization to create content on the shared demo.</p>
+        <h4 style="margin-bottom:4px">What should inform Milestone 5</h4>
+        <p style="font-size:13.5px;margin-top:0">Automate the 20 confirmed PASS cases first, using the overlay-div and DOM-structure locator strategies noted above. Prioritize a disposable-instance run to unblock TC-021–027, especially TC-024 and TC-027 given DEFECT-001 and the unresolved server-side-enforcement question.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

@@ -233,3 +233,53 @@
 ### Note on file write
 
 - Unlike the v2.1 regeneration, this write succeeded on the first attempt — no `EPERM`/file-lock issue this time.
+
+---
+
+## Entry: Milestone 4 — Live Test Execution (Buzz scope)
+
+- **Date/Time:** 2026-09-22 (session timestamps ~07:04–07:23 UTC per Playwright MCP trace files)
+- **Skill used:** `test-execution` (`.claude/skills/test-execution/SKILL.md`, version 1.0 — newly authored this session from a pasted skill definition, saved before this run)
+- **Prompt used:** instruction to execute all `Valid in Scope = Yes` rows of `test-design/test-design.csv` (all 27 rows had been human-reviewed and marked `Yes` by this point — 0 empty/TBD rows, confirmed before starting) against the live app, capture evidence, classify PASS/PASS†/FAIL/BLOCKED, raise formal defects, and produce an HTML execution report.
+- **Application URL:** https://opensource-demo.orangehrmlive.com/
+- **Inputs read in full:** `test-design/test-design.csv` (27 rows), `docs/PRD.md`, `docs/exploration-findings.md` (for expected-behavior context).
+- **Report/evidence output paths:** `execution/execution-report.html`, `execution/evidence/*.png`.
+
+### Method followed
+
+1. Filtered the CSV — all 27 rows were `Valid in Scope = Yes`; no rows needed to be skipped for incomplete review.
+2. Logged in with the demo credentials pre-filled on the login page (values not recorded); navigated to `/web/index.php/buzz/viewBuzz`.
+3. Executed TC-001–TC-020 directly against the live app (Playwright MCP), capturing before/after screenshots for every meaningful step. All 20 reached a definitive PASS.
+4. Classified TC-021–TC-027 as `BLOCKED — excluded by interaction policy` without attempting them: all require either creating permanent content visible to other users on the shared public demo (post/comment/upload/repost) or an API-level/security probe of the Edit-Post permission boundary — none authorized for this run.
+5. Raised **DEFECT-001** from TC-019 (Share Video "Share" button not disabled with an empty Video URL — reproduced the exploration-flagged validation asymmetry vs. Share Photos).
+6. Built `execution/execution-report.html` (dashboard summary, 27 collapsible per-case sections, defect section, findings summary, exit assessment) and cross-checked every referenced evidence filename against the files actually on disk before finishing.
+
+### Live-environment complication and how it was handled
+
+- Partway through the run (after TC-008, ~07:09), a **new post appeared in the feed** ("Enjoy your life" by manda akhil user, with an attached screenshot image) that this run did not create — the composer/Post button was never used. Because this is the shared public OrangeHRM demo, a real concurrent external user posted it. The feed grew from 4 to 5 posts mid-run. This was documented as an environmental note in the report; TC-002/TC-018/TC-020 (whose preconditions cited the original 4-post snapshot) were re-validated against the live 5-post state rather than treated as failures, per the skill's "the live result becomes the evidence" rule.
+- While locating the correct clickable element for TC-013 (photo lightbox on Rebecca Harmony's post), the Playwright MCP `browser_click` tool **twice mis-resolved a specific element ref to an unrelated cached locator** (`#heart-svg` index 3) instead of the referenced `<img>`, even immediately after a fresh accessibility snapshot — each time silently toggling Rebecca Harmony's post from 0→1 Like. Both mis-clicks were caught within the same step (via an immediate like-count re-check) and reversed before proceeding; final state confirmed back at 0 Likes, matching the original baseline. Root cause for TC-013 itself: the real click target was not the `<img>` but a same-sized overlay `<div class="orangehrm-buzz-post-body-picture">` intercepting pointer events — found via a Playwright strict-mode-violation error message and used to build an unambiguous CSS selector, which then worked correctly on the first attempt.
+- A final full-page screenshot and a fresh accessibility snapshot were taken at the end of the run to confirm no residual state changes: filter reset to "Most Recent Posts", all Like counts back to their original per-post baselines (0, 0, 1, 0, 2), no comment boxes left expanded, no modals left open.
+
+### MCP usage
+
+- `mcp__playwright__browser_navigate`, `browser_snapshot`, `browser_click`, `browser_evaluate`, `browser_take_screenshot`, `browser_press_key`, `browser_tabs` — all via the Playwright MCP server.
+- `browser_evaluate` (direct DOM event dispatch) was used as a fallback for the Like heart icon and the photo overlay div after `browser_click`'s ref-based targeting proved unreliable for those specific elements (see above).
+
+### Output
+
+- Execution report: `execution/execution-report.html`
+- Evidence screenshots: `execution/evidence/` (34 PNG files; 3 of these are intermediate mis-click/reversal diagnostic captures not referenced in the final report, kept for audit purposes)
+
+### Result summary
+
+- 27 in scope; 20 PASS; 0 FAIL; 7 BLOCKED (interaction-policy exclusion, none attempted); 1 formal defect raised (DEFECT-001).
+
+### Unresolved items / limitations
+
+- TC-024 (Share Video empty-URL submission outcome) and TC-027 (server-side Edit-Post enforcement) remain the highest-value follow-ups for a future run against a disposable/sandboxed instance or via API-level testing — both blocked this run per policy.
+- TC-021/022/023/025/026 (publish/upload/comment/repost submission behavior) remain entirely unexercised, same reason.
+
+### Errors / limitations encountered
+
+- Playwright MCP `browser_click` locator-resolution issue described above (tooling issue, not an application defect) — flagged in the execution report's findings section for whoever operates the MCP server.
+- No credential values were recorded in this log, in the execution report, or in any evidence file.
