@@ -283,3 +283,62 @@
 
 - Playwright MCP `browser_click` locator-resolution issue described above (tooling issue, not an application defect) — flagged in the execution report's findings section for whoever operates the MCP server.
 - No credential values were recorded in this log, in the execution report, or in any evidence file.
+
+---
+
+## Entry: Milestone 4 — Live Test Execution (Buzz scope) — RE-RUN
+
+- **Date/Time:** 2026-09-22 (session timestamps ~12:54–13:05 UTC per Playwright MCP requests)
+- **Skill used:** `test-execution` (`.claude/skills/test-execution/SKILL.md`, version 1.0, unchanged)
+- **Why re-executed:** a separate, earlier attempt at this same re-run (in a different terminal/session outside this one) could not proceed because that session's MCP client had no working `mcp__playwright__*` tools registered. This session's MCP client was confirmed working (tool schemas loaded successfully via `ToolSearch` and a live navigation succeeded), so the user explicitly requested a **full fresh re-run**, discarding the prior same-day execution's evidence and overwriting the report, rather than reusing the already-committed output (commit `cf0064c`, 20 PASS / 7 BLOCKED / DEFECT-001).
+- **Prompt used:** identical Milestone 4 prompt from `.claude/prompts/prompts-archive.md` (execute TC-001–020 live, mark TC-021–027 BLOCKED by policy without attempting, TC-019 explicitly not excluded since it only reads button state).
+- **Application URL:** https://opensource-demo.orangehrmlive.com/
+- **Inputs re-read in full:** `test-design/test-design.csv` (27 rows), `docs/PRD.md` (245 lines), `docs/exploration-findings.md` (269 lines).
+- **Evidence handling:** all 34 PNG files from the prior same-day run's `execution/evidence/` were deleted before this run started (git-tracked, recoverable via history — `git log -- execution/evidence` / commit `cf0064c` if ever needed); 28 new PNG files were captured this run.
+- **Report/evidence output paths:** `execution/execution-report.html` (fully rewritten), `execution/evidence/*.png` (fully regenerated).
+
+### Method followed
+
+1. Confirmed all 27 CSV rows still `Valid in Scope = Yes` (unchanged since the prior run; test-design CSV was not modified).
+2. Logged in with the demo credentials pre-filled on the login page (values not recorded); navigated to `/web/index.php/buzz/viewBuzz`.
+3. Executed TC-001–TC-020 directly against the live app via Playwright MCP, capturing before/after screenshots for every meaningful step.
+4. Classified TC-021–TC-027 `BLOCKED — excluded by interaction policy` without attempting them (unchanged from the prior run's rationale).
+5. Raised **DEFECT-001** again (Share Video Share-button-not-disabled reproduced a second time, TC-019) and a **new DEFECT-002** (Like/Unlike toggle completely non-functional, TC-008 — see below).
+6. Rebuilt `execution/execution-report.html` from scratch (same visual style/CSS as the prior report) and cross-checked every referenced evidence filename against the files actually on disk before finishing.
+
+### Live-environment complications and how they were handled
+
+- **Feed already larger than the CSV's precondition at session start.** Unlike the prior same-day run (which started from the original 4-post baseline and had one new post appear mid-run), this run's feed already held **8 posts** at login: the original 4 baseline posts (2020-08-10) plus 4 new posts ("qa probe", "Assessment 2 - Selenium Testing" ×2, "I am an engineer", all 2026-09-22 03:44–03:52 PM) authored under the same shared login identity by other concurrent users of this public demo — not created by this run. A **9th post** then appeared mid-run (04:00 PM) while executing TC-020. Per the skill's "the live result becomes the evidence" rule, TC-002/TC-018/TC-020 were evaluated against the live state and reported PASS†/FAIL with explicit deviation notes rather than treated as invalid.
+- **Login-identity display name again differs from prior sessions**: "sri venkatadri nivasa balaji shyama madhusudhana lukumisha" this run, vs. "manda user" in the prior same-day run and "NewName OTH5002" in Milestone 1 — same pre-existing environmental drift noted in Exploration §7 Open Question 6, not a new issue.
+- **Like/Unlike toggle found completely non-functional (DEFECT-002, new this run).** Unlike the prior run's documented `browser_click` ref-mis-resolution issue (a tooling artifact, worked around via a corrected selector), this run's Like-icon clicks used genuine Playwright clicks via explicit CSS locators (not just ref-based clicks) on three different posts at three different starting Like counts (0, 0, 1) — none produced any count change, any icon-state change, or any outgoing network request (confirmed via `browser_network_requests`; no like-related POST/PUT/PATCH ever fired). This was ruled a real application-level regression, not a tooling issue, because: (a) the click target was verified correct via DOM inspection each time, (b) a real trusted Playwright click was used (not a synthetic `dispatchEvent`), and (c) the adjacent Comment-toggle control on the same page/post worked correctly when tested immediately after (TC-009), ruling out a page-wide script failure.
+- **Like icon markup changed since Exploration §4's locator table was written**: now a Bootstrap Icons `<i class="oxd-icon bi-heart-fill orangehrm-buzz-stats-like-icon">`, not the `<svg id="heart-svg">` documented previously. Flagged as a Milestone 5 locator-table update needed regardless of DEFECT-002.
+- **TC-014 (Share Post/repost modal) blocked by the Claude Code tool's own permission classifier** ("Modify Shared Resources") on the click itself, before the page was ever reached — same category of tooling restriction as the composer-typing block noted in the original exploration run, but this time affecting a read-only "open the dialog" action that had no trouble in the prior M4 run. No workaround attempted, per the classifier's guidance. Classified BLOCKED, not FAIL/skip.
+- **TC-020 tie-break re-analysis**: with the larger 9-post feed, the "Most Liked" and "Most Commented" filters' tie-break order for genuinely-tied posts was found to be identical (ascending creation time) in both filters — contradicting the test-design CSV's expected result ("independent secondary sort keys"). Re-examination of the original Exploration §3.5 finding suggests that finding conflated a real sort difference (Sania's 1 Like vs. Rebecca's 0, not a tie) with an actual tie-break comparison. Reported as FAIL per the skill's rule against softening an expected result, with a note that this looks like a test-design correction candidate rather than a live product defect.
+- A final full-page screenshot and a fresh DOM query were taken at the end of the run to confirm no residual state changes: filter reset to "Most Recent Posts", all Like counts at their (unchanged, since the toggle never worked) baseline values (0×7, 1, 2), no comment boxes left expanded, no modals left open, no extra browser tabs open.
+
+### MCP usage
+
+- `mcp__playwright__browser_navigate`, `browser_snapshot`, `browser_click`, `browser_evaluate`, `browser_take_screenshot`, `browser_press_key`, `browser_tabs`, `browser_network_requests`, `browser_console_messages` — all via the Playwright MCP server.
+- `browser_evaluate` was used extensively for DOM-level verification (button disabled state, post ordering, menu item text, like/comment counts) after several `browser_snapshot`-only checks proved ambiguous or stale against the actual DOM; also used (unsuccessfully) as a diagnostic fallback for the Like-icon issue (direct `.click()` and dispatched `MouseEvent`), which helped establish DEFECT-002 as a real functional issue rather than a click-targeting problem.
+- `browser_network_requests` and `browser_console_messages` were new additions to this run's toolset (not used in the prior same-day run) — used specifically to confirm DEFECT-002 was a silent client-side no-op rather than a server-side rejection.
+
+### Output
+
+- Execution report: `execution/execution-report.html` (fully rewritten)
+- Evidence screenshots: `execution/evidence/` (28 PNG files, fully regenerated; prior run's 34 PNG files deleted)
+
+### Result summary
+
+- 27 in scope; **15 PASS**, **2 PASS†** (TC-002, TC-018 — environmental feed-size deviation, assertions still hold), **2 FAIL** (TC-008 — DEFECT-002; TC-020 — test-design correction candidate, not a product defect), **8 BLOCKED** (TC-014 — tooling/permission-classifier restriction; TC-021–027 — interaction-policy exclusion, none attempted). **2 formal defects** (DEFECT-001 reproduced, DEFECT-002 new).
+
+### Unresolved items / limitations
+
+- DEFECT-002 (Like toggle non-functional) should be independently re-verified in a plain browser (outside any MCP/agentic tooling) to fully rule out an environment-specific interaction quirk, though the network-request evidence (no request ever fired) makes a pure client-side regression the more likely explanation.
+- TC-020's re-analysis is a test-design observation, not a verified root-cause finding — the original Exploration §3.5 claim was not re-tested against the exact same 4-post dataset it was originally based on (the live data has moved on); a controlled re-test would need a disposable/seeded instance.
+- Same unresolved items as the prior run carry forward unchanged: TC-024/TC-027 remain the highest-value follow-ups for a disposable/sandboxed instance or API-level testing; TC-021/022/023/025/026 remain entirely unexercised.
+
+### Errors / limitations encountered
+
+- Claude Code tool permission classifier blocked the Share Post/repost icon click (TC-014) — tooling restriction, not an application behavior.
+- Several `browser_evaluate` queries against `.orangehrm-buzz-post` returned incomplete/empty results before the correct DOM scoping (`.orangehrm-buzz-stats-row`, `.orangehrm-buzz-stats-like-icon`, `.orangehrm-buzz-post-header-config`) was identified — documented here as a locator-table gap for Milestone 5, not a functional issue.
+- No credential values were recorded in this log, in the execution report, or in any evidence file.
