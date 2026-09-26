@@ -53,12 +53,12 @@ Default structure:
 
 ```
 automation/
-tests/
-pages/
-utils/
-reports/
-automation-execution-report.html
-healing-log.md
+  tests/
+  pages/
+  utils/
+  reports/
+    automation-execution-report.html
+    healing-log.md
 ```
 
 
