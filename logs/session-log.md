@@ -342,3 +342,46 @@
 - Claude Code tool permission classifier blocked the Share Post/repost icon click (TC-014) — tooling restriction, not an application behavior.
 - Several `browser_evaluate` queries against `.orangehrm-buzz-post` returned incomplete/empty results before the correct DOM scoping (`.orangehrm-buzz-stats-row`, `.orangehrm-buzz-stats-like-icon`, `.orangehrm-buzz-post-header-config`) was identified — documented here as a locator-table gap for Milestone 5, not a functional issue.
 - No credential values were recorded in this log, in the execution report, or in any evidence file.
+
+---
+
+## Entry: DEFECT-002 Targeted Re-verification (TC-008 only)
+
+- **Date/Time:** 2026-09-27 (~23:01–23:02 UTC 2026-09-26 per Playwright MCP snapshot timestamps)
+- **Scope:** BUZZ-TC-008 only, following the prior run's open item: "DEFECT-002 should be independently re-verified".
+- **Application URL:** https://opensource-demo.orangehrmlive.com/web/index.php/buzz/viewBuzz
+- **Method:** Playwright MCP. Logged in with the demo credentials shown on the login page (not recorded).
+
+### Key finding: the original FAIL was a test-targeting error
+
+- DOM inspection showed each post card (`.orangehrm-buzz`) has **two** heart elements:
+  1. `<i class="oxd-icon bi-heart-fill orangehrm-buzz-stats-like-icon">` in the stats row next to the "N Likes" text. It is **display-only**.
+  2. `<svg id="heart-svg">` inside `.orangehrm-buzz-post-actions`. This is the **actual Like control**. Its wrapper div gets class `orangehrm-like-animation` when the post is liked.
+- The 2026-09-22 re-run clicked only element 1. Its conclusion that the locator had changed from `#heart-svg` to the `<i>` icon was wrong, because both elements exist.
+
+### Execution
+
+1. The feed was back at the original 4-post baseline, with Like counts 1, 0, 0, 2. The first post (manda akhil user) was already liked by this identity before the session started and was not touched.
+2. Genuine Playwright click on `.orangehrm-buzz >> nth=1 >> .orangehrm-buzz-post-actions #heart-svg` (Sania Shaheen, 0 Likes): the count went to **1 Like**, the heart fill turned red `rgb(226, 38, 77)`, and `POST /api/v2/buzz/shares/9/likes` returned **200**.
+3. Clicked the same control again: the count went back to **0 Likes**, the fill returned to grey `rgb(100, 114, 140)`, and `DELETE /api/v2/buzz/shares/9/likes` returned **200**.
+4. Control check: a genuine click on `.orangehrm-buzz-stats-like-icon` produced no count change and no network request. This reproduces the original "silent no-op" exactly.
+5. Final DOM check: all Like counts were back at baseline (1, 0, 0, 2), so no net change was left on the shared demo.
+
+### Output
+
+- `execution/execution-report.html` was updated in place, keeping the original FAIL narrative as an audit trail:
+  - TC-008 changed from FAIL to **PASS**.
+  - DEFECT-002 was marked **WITHDRAWN (invalid)**.
+  - The summary cards now show 16 PASS / 2 PASS† / 1 FAIL / 8 BLOCKED / 1 open defect.
+  - The Milestone 5 locator guidance was corrected.
+- New evidence files: `execution/evidence/TC-008_R1_01_before_like.png`, `TC-008_R1_02_after_like.png`, `TC-008_R1_03_after_unlike.png`.
+
+### Result
+
+- **TC-008: PASS. DEFECT-002: withdrawn (not a product defect).** DEFECT-001 is the only open defect.
+- Milestone 5 locator for Like: `.orangehrm-buzz >> nth=N >> .orangehrm-buzz-post-actions #heart-svg`. The id is duplicated across posts, so it must be scoped per card. Never click `.orangehrm-buzz-stats-like-icon`.
+
+### Errors / limitations encountered
+
+- The first attempt to apply the report edits failed because of shell heredoc quoting, and the second failed because `python` on PATH is only the Windows Store stub (exit 49). The edits were applied with Node instead. Neither failure modified the report.
+- No credential values were recorded in this log, the report, or any evidence file.

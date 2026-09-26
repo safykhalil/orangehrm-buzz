@@ -69,11 +69,15 @@
 
   <div class="summary">
     <div class="card"><div class="num">27</div><div class="label">In scope</div></div>
-    <div class="card pass"><div class="num">15</div><div class="label">Pass</div></div>
+    <div class="card pass"><div class="num">16</div><div class="label">Pass</div></div>
     <div class="card passt"><div class="num">2</div><div class="label">Pass†</div></div>
-    <div class="card fail"><div class="num">2</div><div class="label">Fail</div></div>
+    <div class="card fail"><div class="num">1</div><div class="label">Fail</div></div>
     <div class="card blocked"><div class="num">8</div><div class="label">Blocked</div></div>
-    <div class="card"><div class="num">2</div><div class="label">Defects raised</div></div>
+    <div class="card"><div class="num">1</div><div class="label">Open defects</div></div>
+  </div>
+
+  <div class="note info">
+    <strong>Update 2026-09-27 — DEFECT-002 targeted re-verification: defect withdrawn, TC-008 now PASS.</strong> TC-008 was re-run in isolation. The original FAIL was a <strong>test-targeting error</strong>, not an application defect: each post has two heart elements, and the original run clicked the small display-only icon in the stats row (<code>.orangehrm-buzz-stats-like-icon</code>) instead of the actual Like control in the post action bar (<code>.orangehrm-buzz-post-actions #heart-svg</code>). Clicking the real control toggled Like/Unlike correctly, with matching API calls. Counts above are updated: previously 15 PASS / 2 FAIL / 2 defects. See TC-008 and DEFECT-002 below.
   </div>
 
   <div class="note">
@@ -158,8 +162,22 @@
     </details>
 
     <details class="tc" open>
-      <summary><span class="id">TC-008</span><span class="title">Like/Unlike toggle updates count and icon state</span><span class="badge FAIL">FAIL</span></summary>
+      <summary><span class="id">TC-008</span><span class="title">Like/Unlike toggle updates count and icon state</span><span class="badge PASS">PASS</span></summary>
       <div class="body">
+        <h4>Re-verification — 2026-09-27 (current result: PASS)</h4>
+        <p><strong>Target:</strong> Sania Shaheen's post (0 Likes at start), feed back at the original 4-post baseline. Genuine Playwright clicks on <code>.orangehrm-buzz &gt;&gt; nth=1 &gt;&gt; .orangehrm-buzz-post-actions #heart-svg</code>.</p>
+        <ol>
+          <li>Click 1 (like): count <strong>0 Likes → 1 Like</strong>; heart fill turned red <code>rgb(226, 38, 77)</code>; wrapper gained class <code>orangehrm-like-animation</code>. Network: <code>POST /api/v2/buzz/shares/9/likes → 200</code>.</li>
+          <li>Click 2 (unlike): count <strong>1 Like → 0 Likes</strong>; heart fill back to grey <code>rgb(100, 114, 140)</code>; wrapper class cleared. Network: <code>DELETE /api/v2/buzz/shares/9/likes → 200</code>.</li>
+          <li>Control check: a genuine click on the stats-row icon <code>.orangehrm-buzz-stats-like-icon</code> (what the original run clicked) caused no count change and sent no request. This reproduces the original "silent no-op" exactly and shows why it happened.</li>
+        </ol>
+        <p><strong>Conclusion:</strong> Like/Unlike works as expected. The stats-row <code>&lt;i class="bi-heart-fill"&gt;</code> icon is a display-only counter decoration. It did not <em>replace</em> <code>#heart-svg</code>; both exist on every post. The original run's claim that the locator had changed was wrong: <code>#heart-svg</code> is still the working Like control. All Like counts were checked afterward and match the pre-test baseline (1, 0, 0, 2).</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-008_R1_01_before_like.png"><figcaption>TC-008_R1_01_before_like.png (0 Likes)</figcaption></figure>
+          <figure><img src="evidence/TC-008_R1_02_after_like.png"><figcaption>TC-008_R1_02_after_like.png (1 Like, red heart)</figcaption></figure>
+          <figure><img src="evidence/TC-008_R1_03_after_unlike.png"><figcaption>TC-008_R1_03_after_unlike.png (0 Likes, grey heart)</figcaption></figure>
+        </div>
+        <h4>Original run — 2026-09-22 (superseded FAIL, kept for audit)</h4>
         <p><strong>Expected:</strong> Clicking the heart icon on a "0 Likes" post increments to "1 Like"; clicking again reverts to "0 Likes".</p>
         <p><strong>Actual:</strong> <strong>No state change occurred on any attempt.</strong> Tried three independent methods, on three different posts at three different starting counts:</p>
         <ol>
@@ -169,7 +187,7 @@
           <li>Direct DOM <code>element.click()</code> and a dispatched <code>MouseEvent('click', {bubbles:true})</code> on both the icon and its parent <code>.orangehrm-buzz-stats-row</code> — no change.</li>
         </ol>
         <p>Checked <code>browser_network_requests</code> after each attempt: <strong>no POST/PUT/PATCH request to any like-related endpoint was ever triggered</strong> — only the initial page-load <code>GET /api/v2/buzz/feed</code> calls appear in the log. No console errors were logged either (silent no-op). This indicates the click handler itself is not firing an action, not a server-side rejection.</p>
-        <p>See <strong>DEFECT-002</strong> below. Raised as a genuine FAIL, not BLOCKED, because a definitive result (no state change, confirmed 3/3 reproducible, on 3 different posts) was reached.</p>
+        <p>Originally raised as <strong>DEFECT-002</strong> (now withdrawn, see above and below). All attempts targeted the display-only stats-row icon, not the action-bar Like control.</p>
         <div class="evid">
           <figure><img src="evidence/TC-008_01_before_like.png"><figcaption>TC-008_01_before_like.png</figcaption></figure>
           <figure><img src="evidence/TC-008_02_after_like_click_no_change.png"><figcaption>TC-008_02_after_like_click_no_change.png (unchanged)</figcaption></figure>
@@ -341,7 +359,8 @@
     </div>
 
     <div class="defect">
-      <h3>DEFECT-002 — Like/Unlike toggle is completely non-functional (new this run)</h3>
+      <h3>DEFECT-002 — Like/Unlike toggle is completely non-functional — WITHDRAWN (invalid)</h3>
+      <p style="font-size:13.5px;margin:0 0 12px"><strong>Status 2026-09-27: Withdrawn, not a product defect.</strong> A targeted re-verification found that every attempt below clicked the display-only stats-row icon (<code>.orangehrm-buzz-stats-like-icon</code>), not the Like control (<code>.orangehrm-buzz-post-actions #heart-svg</code>). The real control toggles Like/Unlike correctly (<code>POST</code>/<code>DELETE /api/v2/buzz/shares/{id}/likes → 200</code>), so there was no regression. The original record is kept below for audit only.</p>
       <dl>
         <dt>Screen / Path</dt><dd>Buzz Newsfeed, post action row — <code>/web/index.php/buzz/viewBuzz</code></dd>
         <dt>Preconditions</dt><dd>Logged in; on Buzz Newsfeed; feed contains posts with 0 and non-zero Like counts.</dd>
@@ -351,7 +370,7 @@
         <dt>Reproducibility</dt><dd>3/3 posts tested this run; 0/3 produced any state change or network call. This is a regression against the same-day earlier M4 run, where the equivalent interaction (TC-008) passed.</dd>
         <dt>Severity / Priority</dt><dd>High / High — a core, previously-working interactive feature (Like) now appears entirely broken. Comment-toggle (TC-009), by contrast, still works correctly on the same page, so this is not a page-wide JS failure.</dd>
         <dt>Root-cause note (not confirmed)</dt><dd>The DOM markup for the Like icon changed since the earlier session: it is now a Bootstrap Icons <code>&lt;i class="oxd-icon bi-heart-fill orangehrm-buzz-stats-like-icon"&gt;</code>, not the <code>&lt;svg id="heart-svg"&gt;</code> element documented in Exploration §4's Locator Reference Table. Possibly a front-end event-binding regression introduced alongside that markup change; not independently verified against server/API logs.</dd>
-        <dt>Affected TCs</dt><dd>TC-008 (FAIL, this run).</dd>
+        <dt>Affected TCs</dt><dd>TC-008 (originally FAIL; PASS on re-verification 2026-09-27).</dd>
       </dl>
     </div>
   </section>
@@ -361,9 +380,9 @@
     <ul class="tight">
       <li>Feed filters (Most Recent / Most Liked / Most Commented) sort correctly; tie-break behavior for genuinely-tied posts is consistent (ascending creation time) across both non-default filters in this run's data — a correction candidate against the original "independent secondary sort keys" exploration finding (see TC-020 above).</li>
       <li>Comment expand/collapse (TC-009), options menu permission pattern (TC-010/TC-011), Share Photos validation (TC-012), photo lightbox (TC-013), and profile/Help menus (TC-016/TC-017) all remain stable and automatable — locators from Exploration §4 still resolve correctly for these.</li>
-      <li><strong>The Like icon locator changed</strong> (SVG → Bootstrap Icon <code>&lt;i&gt;</code> tag) since the exploration/prior-execution locator table was written — any Milestone 5 automation targeting <code>#heart-svg</code> will need to be rewritten regardless of the DEFECT-002 functional issue.</li>
+      <li><strong>Like locator (corrected 2026-09-27):</strong> the Like control is still <code>svg#heart-svg</code>, now scoped as <code>.orangehrm-buzz-post-actions #heart-svg</code> within each <code>.orangehrm-buzz</code> card, because the id is duplicated across posts. The stats-row <code>.orangehrm-buzz-stats-like-icon</code> is display-only and must not be used as a click target. The liked state can be checked through the wrapper class <code>orangehrm-like-animation</code> or the heart path's fill colour.</li>
       <li>The Share (repost) icon click is blocked by the Claude Code tool's own permission classifier in this execution environment (TC-014) — this is specific to this agentic tooling context, not an application behavior; a Milestone 5 Playwright script run outside this MCP tool would not be subject to it.</li>
-      <li>DEFECT-002 (Like toggle non-functional) should be re-verified before any Milestone 5 automation relies on Like/Unlike as a reliable, working interaction — as observed, it would currently make any Like-based automated assertion fail.</li>
+      <li>DEFECT-002 was re-verified and withdrawn. Like/Unlike works and can be automated with the scoped action-bar locator above.</li>
     </ul>
   </section>
 
@@ -375,12 +394,13 @@
         <ul class="tight">
           <li>Composer structural presence, feed sort filters (including tie-break re-analysis), Read More, options-menu permission pattern (BR-005), Share Photos validation, photo lightbox, author/avatar non-interactivity, Help button, profile menu, no-pagination behavior.</li>
           <li>DEFECT-001 (Share Video validation asymmetry) re-confirmed reproducible across two independent runs.</li>
+          <li>Like/Unlike toggle (TC-008). PASS on targeted re-verification 2026-09-27, with count, icon state and API calls all confirmed.</li>
         </ul>
       </div>
       <div>
         <h4 style="margin-bottom:6px;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;">Blocked / Failed / Out of scope</h4>
         <ul class="tight">
-          <li><strong>FAIL:</strong> Like/Unlike toggle (TC-008, new DEFECT-002); tie-break "independent keys" claim (TC-020, test-design correction candidate, not a product defect).</li>
+          <li><strong>FAIL:</strong> tie-break "independent keys" claim (TC-020, test-design correction candidate, not a product defect). <em>TC-008 / DEFECT-002 was withdrawn after re-verification on 2026-09-27; see above.</em></li>
           <li><strong>BLOCKED (tooling):</strong> Share Post/repost modal (TC-014) — Claude Code permission classifier, not an app or policy issue.</li>
           <li><strong>BLOCKED (policy):</strong> BUZZ-TC-021–027 — all content-creating/permission-probing actions on the shared public demo.</li>
         </ul>
