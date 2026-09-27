@@ -385,3 +385,95 @@
 
 - The first attempt to apply the report edits failed because of shell heredoc quoting, and the second failed because `python` on PATH is only the Windows Store stub (exit 49). The edits were applied with Node instead. Neither failure modified the report.
 - No credential values were recorded in this log, the report, or any evidence file.
+
+---
+
+## Entry: Milestone 5 — Playwright Automation (Buzz scope)
+
+- **Date/Time:** 2026-09-27 (final suite run started 23:50 UTC 2026-09-26 per Playwright JSON results)
+- **Skill used:** `playwright-automation` (`.claude/skills/playwright-automation/SKILL.md`, version 3.2)
+- **Prompt used:** Milestone 5 prompt: automate the `Needs Automation = Yes` cases, follow the skill exactly (Pre-Automation Inspection first), treat the execution report as source of truth, build the DEFECT-001 regression probe (button state only, never click Share), tag every test with a scheduling tier, run the credential-leak grep check.
+- **Application URL:** https://opensource-demo.orangehrmlive.com/
+- **Inputs read:** `test-design/test-design.csv` (27 rows; 15 with `Needs Automation = Yes`, all `Valid in Scope = Yes`), `execution/execution-report.html` (final version: 16 PASS / 2 PASS† / 1 FAIL / 8 BLOCKED, DEFECT-001 open, DEFECT-002 withdrawn), `docs/exploration-findings.md` (§3, §4 locator table), this log.
+- **Method:** Real Playwright (`@playwright/test` 1.63.0, Chromium), not MCP. The standalone scripts were run with `npx playwright test`.
+
+### Method followed
+
+1. **Pre-Automation Inspection.** No existing framework (`automation/` held only empty `tests/ pages/ utils/ reports/` folders; no `package.json` or Playwright config), so a new one was created in `automation/`. All 15 approved cases were confirmed in scope. From the execution report: Like locator `.orangehrm-buzz-post-actions #heart-svg` (never the stats-row icon), active filter = `oxd-button--label-warn` class, Escape does not close Share modals, DEFECT-001 boundary (state only), DEFECT-002 withdrawn, TC-014 blocked only by the MCP tool, TC-020 expected result contradicted.
+2. **Read-only DOM probes** (standalone Playwright scripts, nothing clicked that writes) to confirm locators before writing tests. Findings: the banner shows "manda user" but the own post shows "manda akhil user"; every card has a hidden Read More element (`display:none`) unless truncated; the post options and profile menus do not close with Escape; the repost icon has no accessible name (`bi-share-fill`).
+3. **Framework:** `playwright.config.ts` (1 worker, 0 retries, traces off), a `setup` project that logs in once per run by reading the demo credentials shown on the login page (values not recorded) and saves `automation/.auth/state.json` (gitignored), page objects `pages/LoginPage.ts` and `pages/BuzzPage.ts` (`PostCard`), and `utils/fixtures.ts`. The fixtures include an auto **API write guard** that aborts and fails any non-GET API request a test's tier does not allow, plus an evidence helper that refuses to screenshot the login page.
+4. **Tests:** one per approved TC, each tagged `@read-only` (13), `@state-changing` (1: TC-008) or `@regression-probe` (1: TC-019, `defect-001.regression-probe.spec.ts`, inverted assertion + console banner). TC-020 is written as `test.fixme` (BLOCKED — expected behavior requires confirmation).
+5. **Hook-timeout check (Hard Rule 5):** a local experiment on Playwright 1.63 showed `afterEach` runs in its own slot sized by the config timeout and is killed mid-cleanup when it overruns, unless the hook calls `testInfo.setTimeout()`. TC-008's cleanup budget (3 × 33 s + 2 × 2 s = 103 s) exceeds the 60 s config timeout, so its `afterEach` raises its timeout to 130 s, and a load-time check enforces budget < hook timeout.
+6. Ran the suite, triaged failures, healed, re-ran, then did a clean final full run.
+7. Built `automation/reports/automation-execution-report.html` (`utils/build-report.js`) and wrote `automation/reports/healing-log.md`.
+8. Ran `utils/credential-leak-check.js` (after both reports and this entry existed).
+
+### Healing and reconciliation
+
+- **Run 1:** 12 passed, 3 failed, 1 skipped (TC-020). All three failures were Category 1 automation defects in the first draft:
+  - **H-01 (TC-008):** `test.use()` treated the array option as a fixture tuple, so the write guard threw. The Like POST never reached the server, and cleanup confirmed Sania Shaheen's post was left at "0 Likes", not liked. Fixed with an object-shaped option, and the guard now fails closed.
+  - **H-02 (TC-007):** the Read More target was picked by element presence and matched a hidden element. Fixed by selecting on visibility.
+  - **H-03 (TC-007, Run 2):** "Read More disappears" was checked as DOM removal, but the app hides the node with `display:none`. Fixed with `toBeHidden()`; the expected outcome is unchanged.
+- **R-01 (TC-010), not healing:** the draft expected `['Edit Post', 'Delete Post']` from the CSV wording. M4 evidence `TC-010_01` and the live app both show Delete Post first. The expected value was changed to the M4-confirmed order, still an exact match. Recorded as "Was Assertion Changed: Yes", **pending QC confirmation**.
+
+### Output
+
+- Test code: `automation/tests/` (8 spec files), page objects `automation/pages/`, helpers `automation/utils/`, config `automation/playwright.config.ts`, `automation/package.json`.
+- Report: `automation/reports/automation-execution-report.html` (+ `results.json`, `playwright-html/`, `credential-leak-check.json`, `evidence/` with 18 PNG files).
+- Healing log: `automation/reports/healing-log.md`.
+- `.gitignore`: added `automation/node_modules/`, `automation/.auth/`, `automation/test-results/`.
+
+### Result summary
+
+- **15 approved cases: 13 PASS, 0 FAIL, 1 BLOCKED (TC-020), 1 DEFECT (TC-019 probe).**
+- **Tiers:** read-only 13 (12 PASS, 1 BLOCKED; write guard recorded zero API writes); state-changing 1 (TC-008 PASS; exactly one POST and one DELETE to `/api/v2/buzz/shares/9/likes`, reversal re-confirmed after reload); regression probe 1.
+- **DEFECT-001 probe: PASS, so the defect is still present.** This is one automated observation on top of M4's 2/2. Share was never clicked.
+- **TC-014:** BLOCKED in M4 (MCP tool classifier), now automated and passing, asserted from Exploration §3.10. The dialog was opened and closed only.
+- **Environmental drift:** none affected this run. The feed was at the original 4-post baseline, and the banner identity was "manda user" (M4 saw 8–9 posts and a different display name).
+- **Credential-leak check:** see the report's "Credential-Leak Verification" section (`automation/reports/credential-leak-check.json`). Password value: **0 matches**. Every username-value match was reviewed with the value masked. Each is the same word used as the app's module/role label (localStorage UI strings in the gitignored `.auth/state.json`, module/role references in this log, and the CSV's role wording quoted in the report); none is in a credential context.
+
+### Unresolved items / limitations
+
+- **QC decisions needed:** (1) R-01 TC-010 expected-order change; (2) TC-020 expected result (test-design correction candidate), which stays BLOCKED until then; (3) whether H-03's visibility check is acceptable for TC-007.
+- TC-014's expected result rests on exploration evidence only (never confirmed in M4).
+- A single final run; the suite has not yet been run repeatedly to measure flakiness against the shared demo.
+
+### Errors / limitations encountered
+
+- `python` on PATH is still the Windows Store stub, so all CSV and report tooling was written in Node.
+- Bash-tool heredocs collapsed `\\` to `\`, which broke two throwaway regex debug scripts (rewritten with the Write tool), and one heredoc append to this log failed on quoting before writing anything. No project file was affected.
+- My own first DOM probe clicked at page coordinates (5, 500), which navigated away via the sidebar. That was a probe bug, not app behavior, and it was replaced with scoped interactions.
+- No credential values were recorded in this log, the report, the healing log, the code, or any evidence file.
+
+---
+
+## Entry: Milestone 5 follow-up — TC-020 test-design correction and re-run
+
+- **Date/Time:** 2026-09-27 (same session as the Milestone 5 entry above)
+- **Requested by:** the human QC lead, who approved correcting BUZZ-TC-020 as a genuine test-design defect and asked for the Title to be corrected with it.
+- **Skill basis:** `test-design` SKILL.md, "Carrying scope decisions forward", which allows direct CSV edits only for "a genuine test-design defect … never to reflect an execution outcome". It applies because the original expectation came from a misreading: Exploration §3.5 compared Sania Shaheen (1 Like) with Rebecca Harmony (0 Likes), a primary-key difference, not a tie.
+
+### What changed
+
+1. **`test-design/test-design.csv`, row BUZZ-TC-020 only:**
+   - **Title:** "'Most Liked' vs 'Most Commented' tie-break order differs" → "'Most Liked' and 'Most Commented' use the same tie-break order".
+   - **Expected Result:** now says both filters use the same secondary key for genuinely tied posts (ascending chronological, oldest first), and any two posts tied under both filters keep the same relative order. It includes a dated correction note.
+   - A cell-by-cell diff against `HEAD` (line endings normalised) confirmed only those two cells changed. All 28 rows still have 12 fields, and `Valid in Scope`/`Needs Automation` are unchanged (Yes/Yes).
+   - The first write attempt failed with `EPERM` because Excel had the file open (locked). No change was made until you closed Excel without saving.
+2. **TC-020 automation:** `test.fixme` (BLOCKED) was replaced with real assertions (primary counts non-increasing, ascending time within tie groups, same relative order for pairs tied under both filters; no tie group → BLOCKED). The test was renamed to the new Title. Logged as **C-01** in the healing log (Was Assertion Changed: Yes, QC-approved).
+3. **H-04, environmental drift, found by inspecting the first post-correction run:** the shared demo's instance-wide date format changed between runs. It was `Y-m-d` earlier today and `Y-d-m` now (read-only `GET /api/v2/admin/localization`), so the same posts displayed `2020-10-08` earlier and `2020-08-10` now. The timestamp parser hard-coded `YYYY-MM-DD`, which could silently mis-order posts from different dates. It now reads the configured format at runtime (TC-002, TC-003, TC-020), and a 7-case parser check passed. No test result had been affected, because all compared posts are from the same day.
+
+### Result (final clean full run)
+
+- **15 approved cases: 14 PASS, 0 FAIL, 0 BLOCKED, 1 DEFECT (TC-019 probe, DEFECT-001 still present).**
+- **Tiers:** read-only 13 (13 PASS; zero API writes); state-changing 1 (TC-008 PASS; one POST and one DELETE to `/api/v2/buzz/shares/10/likes` on manda akhil user's post, reversal re-confirmed); regression probe 1.
+- **TC-020:** PASS. Most Liked ties: Rebecca 05:34 → manda 05:38. Most Commented ties: Russel 05:33 → Rebecca 05:34 → Sania 05:38 → manda 05:38. One pair tied under both filters, same order in both.
+- **Healing totals:** 4 attempts, 4 successful, 5 tests affected; plus C-01 (QC-approved) and R-01 (TC-010, still **pending QC confirmation**).
+- **Credential-leak check:** re-run after every output and this entry existed. Password value **0 matches**; username-value matches are all the same app module/role label, as before.
+
+### Unresolved items
+
+- R-01 (TC-010 expected item order) still needs QC confirmation.
+- H-03 (TC-007 visibility check) is open to QC review.
+- TC-014's expected result still rests on exploration evidence only.
+- No credential values were recorded in this log, the report, the healing log, the code, or any evidence file.

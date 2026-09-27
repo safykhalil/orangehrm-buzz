@@ -1,0 +1,21 @@
+{
+  "name": "orangehrm-buzz-automation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Milestone 5 Playwright automation for the OrangeHRM Buzz module (shared public demo)",
+  "scripts": {
+    "test": "playwright test",
+    "test:read-only": "playwright test --grep @read-only",
+    "test:state-changing": "playwright test --grep @state-changing",
+    "test:probe": "playwright test --grep @regression-probe",
+    "typecheck": "tsc -p .",
+    "leak-check": "node utils/credential-leak-check.js",
+    "report": "node utils/build-report.js"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.3",
+    "typescript": "^5.9.3"
+  }
+}

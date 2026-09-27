@@ -1,0 +1,1223 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\orangehrm-buzz\\automation\\node_modules\\@playwright\\test\\cli.js",
+      "test"
+    ],
+    "configFile": "D:\\orangehrm-buzz\\automation\\playwright.config.ts",
+    "rootDir": "D:/orangehrm-buzz/automation/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/orangehrm-buzz/automation/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "setup",
+        "name": "setup",
+        "testDir": "D:/orangehrm-buzz/automation/utils",
+        "testIgnore": [],
+        "testMatch": [
+          "/auth\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/orangehrm-buzz/automation/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "buzz",
+        "name": "buzz",
+        "testDir": "D:/orangehrm-buzz/automation/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "reports/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "reports/playwright-html",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "..\\utils\\auth.setup.ts",
+      "file": "../utils/auth.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "authenticate with the demo credentials shown on the login page",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "setup",
+              "projectName": "setup",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5502,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-27T00:09:12.316Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "17e3fe6f4d9d8bd79c6b-fdb5239f3aa5f022ad03",
+          "file": "../utils/auth.setup.ts",
+          "line": 7,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "title": "composer.spec.ts",
+      "file": "composer.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Buzz composer",
+          "file": "composer.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "BUZZ-TC-001 - Post composer displays required controls",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3520,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:09:19.006Z",
+                      "annotations": [
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-001_composer",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\composer-Buzz-composer-BUZ-83fb0--displays-required-controls-buzz\\attachments\\TC-001-composer-7d97fa420ffa15c6969088e3485dd8b42d0a4574.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1662a082f095f370d3d2-a870ae302932ef967425",
+              "file": "composer.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "BUZZ-TC-012 - Share Photos 'Share' button disabled until photo attached",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3444,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:09:22.673Z",
+                      "annotations": [
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-012_share_photos_disabled",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\composer-Buzz-composer-BUZ-3c8b3-sabled-until-photo-attached-buzz\\attachments\\TC-012-share-photos-disabled-6028938dd6d2aa41678fce000e842c35e7bb6a71.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1662a082f095f370d3d2-81a638ab4c02b339fd12",
+              "file": "composer.spec.ts",
+              "line": 13,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "defect-001.regression-probe.spec.ts",
+      "file": "defect-001.regression-probe.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "DEFECT-001 regression probe",
+          "file": "defect-001.regression-probe.spec.ts",
+          "line": 22,
+          "column": 6,
+          "specs": [
+            {
+              "title": "BUZZ-TC-019 - [REGRESSION PROBE, inverted] DEFECT-001 Share Video Share button still enabled with empty URL",
+              "ok": true,
+              "tags": [
+                "regression-probe"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "regression-probe",
+                      "description": "⚠ REGRESSION PROBE (DEFECT-001): PASS = defect still present; FAIL = symptom did not reproduce (human QC decision needed)"
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4110,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "⚠ REGRESSION PROBE (DEFECT-001): PASS = defect still present; FAIL = symptom did not reproduce (human QC decision needed)\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:09:26.131Z",
+                      "annotations": [
+                        {
+                          "type": "regression-probe",
+                          "description": "⚠ REGRESSION PROBE (DEFECT-001): PASS = defect still present; FAIL = symptom did not reproduce (human QC decision needed)"
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-019_share_video_empty_url_enabled",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\defect-001.regression-prob-72de5-till-enabled-with-empty-URL-buzz\\attachments\\TC-019-share-video-empty-url-enabled-29961bf29063f09e1e3b4e4c2730554a6e76e368.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b33cbe9aafaf0a315844-a4e6077baf4f9633de81",
+              "file": "defect-001.regression-probe.spec.ts",
+              "line": 23,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "feed-cards.spec.ts",
+      "file": "feed-cards.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Buzz feed post cards",
+          "file": "feed-cards.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "BUZZ-TC-002 - Feed post card displays author, timestamp, content, and counters",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "feed-size",
+                      "description": "4 post cards at observation time; app date format \"Y-d-m\""
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3665,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:09:30.256Z",
+                      "annotations": [
+                        {
+                          "type": "feed-size",
+                          "description": "4 post cards at observation time; app date format \"Y-d-m\""
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-002_feed_cards",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\feed-cards-Buzz-feed-post--6ce6e-estamp-content-and-counters-buzz\\attachments\\TC-002-feed-cards-49708d345d65bf6470aefe5600204b567ef1b4d6.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "70cf724a0fb8f35d7e86-51e7d3eed6c1b0a4b25c",
+              "file": "feed-cards.spec.ts",
+              "line": 5,
+              "column": 7
+            },
+            {
+              "title": "BUZZ-TC-007 - 'Read More' expands truncated post text",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "target-post",
+                      "description": "Sania Shaheen (2020-08-10 05:38 AM)"
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3957,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:09:33.933Z",
+                      "annotations": [
+                        {
+                          "type": "target-post",
+                          "description": "Sania Shaheen (2020-08-10 05:38 AM)"
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-007_before_readmore",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\feed-cards-Buzz-feed-post--5a804-expands-truncated-post-text-buzz\\attachments\\TC-007-before-readmore-5dfeec4f7eb64d94f49b6eaa061275d1dc417339.png"
+                        },
+                        {
+                          "name": "TC-007_after_readmore",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\feed-cards-Buzz-feed-post--5a804-expands-truncated-post-text-buzz\\attachments\\TC-007-after-readmore-7a7f31400fc418b9fe81cfd99d8b3d919ec66f70.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "70cf724a0fb8f35d7e86-4060ac161301df83915b",
+              "file": "feed-cards.spec.ts",
+              "line": 29,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "feed-filters.spec.ts",
+      "file": "feed-filters.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Buzz feed filters",
+          "file": "feed-filters.spec.ts",
+          "line": 14,
+          "column": 6,
+          "specs": [
+            {
+              "title": "BUZZ-TC-003 - Default feed filter is 'Most Recent Posts'",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "observed-order",
+                      "description": "manda akhil user (2020-08-10 05:38 AM) -> Sania Shaheen (2020-08-10 05:38 AM) -> Rebecca Harmony (2020-08-10 05:34 AM) -> Russel Hamilton (2020-08-10 05:33 AM)"
+                    },
+                    {
+                      "type": "date-format",
+                      "description": "Y-d-m"
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3917,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:09:37.905Z",
+                      "annotations": [
+                        {
+                          "type": "observed-order",
+                          "description": "manda akhil user (2020-08-10 05:38 AM) -> Sania Shaheen (2020-08-10 05:38 AM) -> Rebecca Harmony (2020-08-10 05:34 AM) -> Russel Hamilton (2020-08-10 05:33 AM)"
+                        },
+                        {
+                          "type": "date-format",
+                          "description": "Y-d-m"
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-003_default_filter_active",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\feed-filters-Buzz-feed-fil-5fd27-ilter-is-Most-Recent-Posts--buzz\\attachments\\TC-003-default-filter-active-ba64a3656367ed90ed47b213e8fd20adf172aa65.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9e13c0e75be412b84df7-c99c551c48345d79d05e",
+              "file": "feed-filters.spec.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "BUZZ-TC-004 - 'Most Liked Posts' filter sorts descending by Like count",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "observed-order",
+                      "description": "Russel Hamilton (2) -> Sania Shaheen (1) -> Rebecca Harmony (0) -> manda akhil user (0)"
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5208,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:09:41.831Z",
+                      "annotations": [
+                        {
+                          "type": "observed-order",
+                          "description": "Russel Hamilton (2) -> Sania Shaheen (1) -> Rebecca Harmony (0) -> manda akhil user (0)"
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-004_most_liked_sorted",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\feed-filters-Buzz-feed-fil-6f08d-ts-descending-by-Like-count-buzz\\attachments\\TC-004-most-liked-sorted-ddc3f8545bc0140388e458ee4bc5668c3bf90624.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9e13c0e75be412b84df7-0fc6c6607c27b2965683",
+              "file": "feed-filters.spec.ts",
+              "line": 25,
+              "column": 7
+            },
+            {
+              "title": "BUZZ-TC-005 - 'Most Recent Posts' restores original feed order",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "posts-compared",
+                      "description": "4"
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5017,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:09:47.053Z",
+                      "annotations": [
+                        {
+                          "type": "posts-compared",
+                          "description": "4"
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-005_restored_recent",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\feed-filters-Buzz-feed-fil-2d337-estores-original-feed-order-buzz\\attachments\\TC-005-restored-recent-a4c239be486761a1132b1a87ab666e4cc3e5d2f5.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9e13c0e75be412b84df7-7caa3c02b24dd3ea6c9e",
+              "file": "feed-filters.spec.ts",
+              "line": 35,
+              "column": 7
+            },
+            {
+              "title": "BUZZ-TC-020 - 'Most Liked' and 'Most Commented' use the same tie-break order",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "date-format",
+                      "description": "Y-d-m"
+                    },
+                    {
+                      "type": "most-liked-ties",
+                      "description": "Rebecca Harmony 2020-08-10 05:34 AM -> manda akhil user 2020-08-10 05:38 AM"
+                    },
+                    {
+                      "type": "most-commented-ties",
+                      "description": "Russel Hamilton 2020-08-10 05:33 AM -> Rebecca Harmony 2020-08-10 05:34 AM -> Sania Shaheen 2020-08-10 05:38 AM -> manda akhil user 2020-08-10 05:38 AM"
+                    },
+                    {
+                      "type": "pairs-tied-under-both",
+                      "description": "1"
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4665,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:09:52.082Z",
+                      "annotations": [
+                        {
+                          "type": "date-format",
+                          "description": "Y-d-m"
+                        },
+                        {
+                          "type": "most-liked-ties",
+                          "description": "Rebecca Harmony 2020-08-10 05:34 AM -> manda akhil user 2020-08-10 05:38 AM"
+                        },
+                        {
+                          "type": "most-commented-ties",
+                          "description": "Russel Hamilton 2020-08-10 05:33 AM -> Rebecca Harmony 2020-08-10 05:34 AM -> Sania Shaheen 2020-08-10 05:38 AM -> manda akhil user 2020-08-10 05:38 AM"
+                        },
+                        {
+                          "type": "pairs-tied-under-both",
+                          "description": "1"
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-020_01_most_liked_order",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\feed-filters-Buzz-feed-fil-d7beb-se-the-same-tie-break-order-buzz\\attachments\\TC-020-01-most-liked-order-d2cc9098b9412b619c4b4ccf06cc074ea8230f26.png"
+                        },
+                        {
+                          "name": "TC-020_02_most_commented_order",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\feed-filters-Buzz-feed-fil-d7beb-se-the-same-tie-break-order-buzz\\attachments\\TC-020-02-most-commented-order-ce411001813551d20081b37a6d7d71a89078aa39.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9e13c0e75be412b84df7-738dfc56e1f290cd2a71",
+              "file": "feed-filters.spec.ts",
+              "line": 49,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "like-toggle.spec.ts",
+      "file": "like-toggle.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Buzz Like/Unlike",
+          "file": "like-toggle.spec.ts",
+          "line": 32,
+          "column": 6,
+          "specs": [
+            {
+              "title": "BUZZ-TC-008 - Like/Unlike toggle updates count and icon state",
+              "ok": true,
+              "tags": [
+                "state-changing"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "target-post",
+                      "description": "manda akhil user (2020-08-10 05:38 AM), starting count \"0 Likes\""
+                    },
+                    {
+                      "type": "cleanup",
+                      "description": "attempt 1: reversal confirmed, post not liked by this identity, count \"0 Likes\" (baseline \"0 Likes\")"
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [POST /web/index.php/api/v2/buzz/shares/10/likes, DELETE /web/index.php/api/v2/buzz/shares/10/likes]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8422,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:09:56.781Z",
+                      "annotations": [
+                        {
+                          "type": "target-post",
+                          "description": "manda akhil user (2020-08-10 05:38 AM), starting count \"0 Likes\""
+                        },
+                        {
+                          "type": "cleanup",
+                          "description": "attempt 1: reversal confirmed, post not liked by this identity, count \"0 Likes\" (baseline \"0 Likes\")"
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [POST /web/index.php/api/v2/buzz/shares/10/likes, DELETE /web/index.php/api/v2/buzz/shares/10/likes]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-008_01_before_like",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\like-toggle-Buzz-Like-Unli-a1026-pdates-count-and-icon-state-buzz\\attachments\\TC-008-01-before-like-5110fe47bcd4ee6ba4f4bcab5f4e4cd2c970613a.png"
+                        },
+                        {
+                          "name": "TC-008_02_after_like",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\like-toggle-Buzz-Like-Unli-a1026-pdates-count-and-icon-state-buzz\\attachments\\TC-008-02-after-like-5ba5fe7fd402195d8cb18432207d37105b9e3c3e.png"
+                        },
+                        {
+                          "name": "TC-008_03_after_unlike",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\like-toggle-Buzz-Like-Unli-a1026-pdates-count-and-icon-state-buzz\\attachments\\TC-008-03-after-unlike-195a8ce1c39b775bc494e66ab7a7cc5e15d175c7.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "fd60b5c6ed612fb61f4f-de231ff5ba7f2806c217",
+              "file": "like-toggle.spec.ts",
+              "line": 74,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "post-interactions.spec.ts",
+      "file": "post-interactions.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Buzz post interactions (no submission)",
+          "file": "post-interactions.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "BUZZ-TC-009 - Comment toggle expands/collapses inline comment box",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "target-post",
+                      "description": "manda akhil user (2020-08-10 05:38 AM)"
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4048,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:10:05.239Z",
+                      "annotations": [
+                        {
+                          "type": "target-post",
+                          "description": "manda akhil user (2020-08-10 05:38 AM)"
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-009_comment_box_expanded",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\post-interactions-Buzz-pos-54a99-ollapses-inline-comment-box-buzz\\attachments\\TC-009-comment-box-expanded-30eb7443c0b5fb58c856a788cdf1d8d11f620d97.png"
+                        },
+                        {
+                          "name": "TC-009_comment_box_collapsed",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\post-interactions-Buzz-pos-54a99-ollapses-inline-comment-box-buzz\\attachments\\TC-009-comment-box-collapsed-799446726ac9d8a6e3bc86dbab5f22c46a3b1a62.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "dee49b58fa627d779acb-d7cb5e9706f1433209b2",
+              "file": "post-interactions.spec.ts",
+              "line": 5,
+              "column": 7
+            },
+            {
+              "title": "BUZZ-TC-014 - Share Post (repost) modal opens with optional caption",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "target-post",
+                      "description": "manda akhil user (2020-08-10 05:38 AM)"
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3655,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:10:09.299Z",
+                      "annotations": [
+                        {
+                          "type": "target-post",
+                          "description": "manda akhil user (2020-08-10 05:38 AM)"
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-014_share_post_modal",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\post-interactions-Buzz-pos-74759-opens-with-optional-caption-buzz\\attachments\\TC-014-share-post-modal-5ddc902adfacafde9900ebe3bf2e1750b2409ff7.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "dee49b58fa627d779acb-b28335cd9969cb463ef6",
+              "file": "post-interactions.spec.ts",
+              "line": 27,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "post-options-menu.spec.ts",
+      "file": "post-options-menu.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Buzz post options menu (BR-005)",
+          "file": "post-options-menu.spec.ts",
+          "line": 17,
+          "column": 6,
+          "specs": [
+            {
+              "title": "BUZZ-TC-010 - Options menu on own post shows Edit Post and Delete Post",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "target-post",
+                      "description": "manda akhil user (2020-08-10 05:38 AM); banner user \"manda user\""
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4030,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:10:12.990Z",
+                      "annotations": [
+                        {
+                          "type": "target-post",
+                          "description": "manda akhil user (2020-08-10 05:38 AM); banner user \"manda user\""
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-010_own_post_options_menu",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\post-options-menu-Buzz-pos-a3ba1-s-Edit-Post-and-Delete-Post-buzz\\attachments\\TC-010-own-post-options-menu-02e54fa4b6753b0fedd7e32db12060f13c579d98.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ee8598bcb05ad34fce6e-1169be0e458943eb54a0",
+              "file": "post-options-menu.spec.ts",
+              "line": 18,
+              "column": 7
+            },
+            {
+              "title": "BUZZ-TC-011 - Options menu on another author's post shows Delete Post only",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "target-post",
+                      "description": "Sania Shaheen (2020-08-10 05:38 AM); banner user \"manda user\""
+                    },
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3639,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:10:17.031Z",
+                      "annotations": [
+                        {
+                          "type": "target-post",
+                          "description": "Sania Shaheen (2020-08-10 05:38 AM); banner user \"manda user\""
+                        },
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-011_other_author_options_menu",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\post-options-menu-Buzz-pos-42958-post-shows-Delete-Post-only-buzz\\attachments\\TC-011-other-author-options-menu-d71bc432f07f20ee5cc2e9e3ba9914bc031368b8.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ee8598bcb05ad34fce6e-067affdd6371a9e330b1",
+              "file": "post-options-menu.spec.ts",
+              "line": 31,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "profile-menu.spec.ts",
+      "file": "profile-menu.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Global profile menu on the Buzz page",
+          "file": "profile-menu.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "BUZZ-TC-017 - Profile menu shows About/Support/Change Password/Logout on Buzz page",
+              "ok": true,
+              "tags": [
+                "read-only"
+              ],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "write-guard",
+                      "description": "allowed: [none]; blocked: [none]"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "buzz",
+                  "projectName": "buzz",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3960,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-27T00:10:20.695Z",
+                      "annotations": [
+                        {
+                          "type": "write-guard",
+                          "description": "allowed: [none]; blocked: [none]"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "TC-017_profile_menu",
+                          "contentType": "image/png",
+                          "path": "D:\\orangehrm-buzz\\automation\\test-results\\profile-menu-Global-profil-16e45-assword-Logout-on-Buzz-page-buzz\\attachments\\TC-017-profile-menu-744334fd3c0d4c7ff6ae238fb2356a1ce4f0c208.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ee15e954fa0f14699c87-e4d84b105a1df1db6897",
+              "file": "profile-menu.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-27T00:09:11.161Z",
+    "duration": 73575.92599999999,
+    "expected": 16,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

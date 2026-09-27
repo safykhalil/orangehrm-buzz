@@ -1,1 +1,4 @@
 .playwright-mcp/ 
+automation/node_modules/
+automation/.auth/
+automation/test-results/

@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buzz Automation Report</title>
+<style>
+ :root { --pass:#1a7f37; --pass-bg:#dafbe1; --fail:#cf222e; --fail-bg:#ffebe9; --blocked:#9a6700; --blocked-bg:#fff8c5; --defect:#8250df; --defect-bg:#fbefff; --drift:#0969da; --drift-bg:#ddf4ff; --border:#d0d7de; --muted:#57606a; --bg:#f6f8fa; --card:#fff; --accent:#0969da; --text:#1f2328; --code:#eef1f4; }
+ @media (prefers-color-scheme: dark) { :root { --pass:#3fb950; --pass-bg:#12261e; --fail:#f85149; --fail-bg:#2d1214; --blocked:#d29922; --blocked-bg:#2b2111; --defect:#bc8cff; --defect-bg:#261a3a; --drift:#58a6ff; --drift-bg:#0c2d4a; --border:#30363d; --muted:#8b949e; --bg:#0d1117; --card:#161b22; --accent:#58a6ff; --text:#e6edf3; --code:#21262d; } }
+ * { box-sizing: border-box; }
+ body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0 0 60px; }
+ header { background: #24292f; color: #fff; padding: 28px 32px; }
+ header h1 { margin: 0 0 6px; font-size: 22px; } header p { margin: 2px 0; color: #c9d1d9; font-size: 13.5px; }
+ .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+ .summary { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin: 28px 0 14px; }
+ .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 0 0 28px; }
+ .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+ .card .num { font-size: 30px; font-weight: 700; } .card .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-top: 4px; }
+ .card .sub { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+ .card.pass .num { color: var(--pass); } .card.fail .num { color: var(--fail); } .card.blocked .num { color: var(--blocked); } .card.defect .num { color: var(--defect); } .card.drift .num { color: var(--drift); }
+ .tiers .card { text-align: left; } .tiers .card .num { font-size: 24px; }
+ section { margin: 36px 0; } h2 { font-size: 18px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+ .note { background: var(--blocked-bg); border: 1px solid #d4a72c; border-radius: 6px; padding: 12px 16px; font-size: 14px; margin: 16px 0; }
+ .note.info { background: var(--drift-bg); border-color: #54aeff; } .note.probe { background: var(--defect-bg); border-color: var(--defect); }
+ .tc { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+ .tc summary { cursor: pointer; padding: 12px 16px; display: flex; align-items: center; gap: 12px; list-style: none; font-size: 14.5px; flex-wrap: wrap; }
+ .tc summary::-webkit-details-marker { display: none; }
+ .tc summary .id { font-weight: 600; color: var(--accent); min-width: 64px; } .tc summary .title { flex: 1; min-width: 200px; }
+ .tc summary .tier { font-size: 11.5px; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+ .badge { font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
+ .badge.PASS { background: var(--pass-bg); color: var(--pass); } .badge.FAIL { background: var(--fail-bg); color: var(--fail); } .badge.BLOCKED { background: var(--blocked-bg); color: var(--blocked); } .badge.DEFECT { background: var(--defect-bg); color: var(--defect); } .badge.DRIFT { background: var(--drift-bg); color: var(--drift); }
+ .tc .body { padding: 4px 16px 18px; border-top: 1px solid var(--border); font-size: 13.5px; line-height: 1.55; }
+ .tc .body h4 { margin: 14px 0 4px; font-size: 12.5px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+ dl.kv, .defect dl { display: grid; grid-template-columns: 150px 1fr; gap: 6px 12px; font-size: 13.5px; margin: 12px 0 0; } dt { font-weight: 600; color: var(--muted); } dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+ .evid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; } .evid figure { margin: 0; width: 260px; max-width: 100%; }
+ .evid img { width: 100%; border: 1px solid var(--border); border-radius: 6px; display: block; } .evid figcaption { font-size: 11px; color: var(--muted); margin-top: 3px; word-break: break-all; }
+ code { background: var(--code); padding: 1px 5px; border-radius: 4px; font-size: 12.5px; overflow-wrap: anywhere; }
+ pre { background: var(--code); padding: 10px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+ .muted { color: var(--muted); font-size: 12.5px; } .heal { font-size: 13px; } a { color: var(--accent); }
+ .defect { background: var(--card); border: 1px solid var(--defect); border-radius: 8px; padding: 18px 20px; margin-bottom: 16px; } .defect h3 { margin-top: 0; color: var(--defect); }
+ table.grid { border-collapse: collapse; width: 100%; font-size: 13.5px; background: var(--card); } table.grid th, table.grid td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+ table.grid th { background: var(--bg); } .scroll { overflow-x: auto; }
+ ul.tight li { margin-bottom: 6px; }
+ @media (max-width: 900px) { .summary { grid-template-columns: repeat(3, 1fr); } }
+ @media (max-width: 720px) { .container { padding: 0 16px; } header { padding: 22px 16px; } .summary, .tiers { grid-template-columns: repeat(2, 1fr); } .tiers { grid-template-columns: 1fr; } dl.kv, .defect dl { grid-template-columns: 1fr; } }
+</style></head><body>
+<header><div class="container">
+  <h1>Buzz Module — Milestone 5: Playwright Automation Execution</h1>
+  <p>Application: https://opensource-demo.orangehrmlive.com/ (Buzz Newsfeed)</p>
+  <p>Executed: 2026-09-27 00:09 UTC · Playwright 1.63.0 (<code style="background:#32383f;color:#fff">@playwright/test</code>, Chromium, 1 worker, 0 retries) · Source: test-design/test-design.csv (Needs Automation = Yes: 15 cases)</p>
+  <p>Authenticated once per run (setup project: passed) with the demo credentials shown on the login page. The values are not recorded anywhere.</p>
+</div></header>
+<div class="container">
+
+<div class="summary">
+  <div class="card"><div class="num">15</div><div class="label">Approved cases</div></div>
+  <div class="card pass"><div class="num">14</div><div class="label">Pass</div></div>
+  <div class="card fail"><div class="num">0</div><div class="label">Fail</div></div>
+  <div class="card blocked"><div class="num">0</div><div class="label">Blocked</div></div>
+  <div class="card defect"><div class="num">1</div><div class="label">Defect</div></div>
+  <div class="card drift"><div class="num">0</div><div class="label">Env. drift</div></div>
+</div>
+<div class="tiers">
+  <div class="card"><div class="label">Read-only tier</div><div class="num">13</div><div class="sub">13 PASS. Observe only; API write guard recorded zero writes. Safe to run as often as needed.</div></div>
+  <div class="card"><div class="label">State-changing tier</div><div class="num">1</div><div class="sub">1 PASS. Toggles a real Like on the shared demo and reverses it (reversal confirmed). Leaves more footprint than read-only, so run it less often.</div></div>
+  <div class="card"><div class="label">Regression-probe tier</div><div class="num">1</div><div class="sub">1 DEFECT. DEFECT-001 probe: PASS = defect still present. Not a pass/fail gate.</div></div>
+</div>
+
+<div class="note info"><b>Run tiers separately:</b> <code>npx playwright test --grep @read-only</code>, <code>--grep @state-changing</code>, <code>--grep @regression-probe</code> (from <code>automation/</code>). Total test time for the 15 cases: 65.3 s. The final run's feed was the original 4-post baseline, logged in as "manda user", with the app's date format set to <code>Y-d-m</code>.</div>
+
+<section><h2>Test Results (15 approved cases)</h2>
+
+<details class="tc">
+  <summary><span class="id">TC-001</span><span class="title">Post composer displays required controls</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-001 - Post composer displays required controls</code> (<code>tests/composer.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · UI · Priority Medium</dd>
+      <dt>Execution time</dt><dd>3.5 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-001 PASS</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>Composer displays a 'What's on your mind?' textbox, a 'Post' button, a 'Share Photos' button, and a 'Share Video' button. Structural presence only; typing/publishing behavior not exercised (see BUZZ-TC-021, requires live confirmation).</p>
+    <h4>What the automation asserts</h4><p>Composer textbox, Post, Share Photos and Share Video are all visible.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    
+    
+    <div class="evid"><figure><a href="evidence/TC-001_composer.png"><img src="evidence/TC-001_composer.png" alt="TC-001_composer.png"></a><figcaption>TC-001_composer.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-002</span><span class="title">Feed post card displays author, timestamp, content, and counters</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-002 - Feed post card displays author, timestamp, content, and counters</code> (<code>tests/feed-cards.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · UI · Priority Medium</dd>
+      <dt>Execution time</dt><dd>3.7 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-002 PASS† (structural assertion holds at any feed size)</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>Each post card displays author name, avatar, timestamp, text content and/or image, and Like/Comment/Share counters (e.g. '0 Likes', '1 Like', '0 Comments', '0 Shares').</p>
+    <h4>What the automation asserts</h4><p>For every card in the live feed: author text, avatar, a timestamp that parses as a valid date/time in the app's configured date format, text and/or image, and one Like, Comment and Share counter each. No fixed post count.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    <ul class="tight"><li><b>feed-size:</b> 4 post cards at observation time; app date format &quot;Y-d-m&quot;</li></ul>
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    <p class="heal">Needed healing: <a href="healing-log.md">H-04</a> (see healing-log.md).</p>
+    
+    <div class="evid"><figure><a href="evidence/TC-002_feed_cards.png"><img src="evidence/TC-002_feed_cards.png" alt="TC-002_feed_cards.png"></a><figcaption>TC-002_feed_cards.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-003</span><span class="title">Default feed filter is 'Most Recent Posts'</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-003 - Default feed filter is 'Most Recent Posts'</code> (<code>tests/feed-filters.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · Functional · Priority Medium</dd>
+      <dt>Execution time</dt><dd>3.9 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-003 PASS (active state = oxd-button--label-warn class)</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>'Most Recent Posts' is the default active filter; posts appear in reverse-chronological order by timestamp.</p>
+    <h4>What the automation asserts</h4><p>Only &quot;Most Recent Posts&quot; carries the active class; post timestamps (parsed with the app's configured date format) are non-increasing.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    <ul class="tight"><li><b>observed-order:</b> manda akhil user (2020-08-10 05:38 AM) -&gt; Sania Shaheen (2020-08-10 05:38 AM) -&gt; Rebecca Harmony (2020-08-10 05:34 AM) -&gt; Russel Hamilton (2020-08-10 05:33 AM)</li><li><b>date-format:</b> Y-d-m</li></ul>
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    <p class="heal">Needed healing: <a href="healing-log.md">H-04</a> (see healing-log.md).</p>
+    
+    <div class="evid"><figure><a href="evidence/TC-003_default_filter_active.png"><img src="evidence/TC-003_default_filter_active.png" alt="TC-003_default_filter_active.png"></a><figcaption>TC-003_default_filter_active.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-004</span><span class="title">'Most Liked Posts' filter sorts descending by Like count</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-004 - 'Most Liked Posts' filter sorts descending by Like count</code> (<code>tests/feed-filters.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · Functional · Priority Medium</dd>
+      <dt>Execution time</dt><dd>5.2 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-004 PASS</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>Feed re-sorts posts in descending order by Like count; the 'Most Liked Posts' button gains the active state.</p>
+    <h4>What the automation asserts</h4><p>After clicking Most Liked Posts (feed GET awaited): only that filter is active; Like counts are non-increasing.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    <ul class="tight"><li><b>observed-order:</b> Russel Hamilton (2) -&gt; Sania Shaheen (1) -&gt; Rebecca Harmony (0) -&gt; manda akhil user (0)</li></ul>
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    
+    
+    <div class="evid"><figure><a href="evidence/TC-004_most_liked_sorted.png"><img src="evidence/TC-004_most_liked_sorted.png" alt="TC-004_most_liked_sorted.png"></a><figcaption>TC-004_most_liked_sorted.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-005</span><span class="title">'Most Recent Posts' restores original feed order</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-005 - 'Most Recent Posts' restores original feed order</code> (<code>tests/feed-filters.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · Functional · Priority Low</dd>
+      <dt>Execution time</dt><dd>5.0 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-005 PASS</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>Feed order is restored exactly to the original reverse-chronological order; no underlying post data is altered by re-sorting - confirms filter switching is fully reversible/non-destructive.</p>
+    <h4>What the automation asserts</h4><p>Most Recent → Most Liked → Most Recent gives the identical post sequence and identical Like/Comment/Share counts; Most Recent is active again.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    <ul class="tight"><li><b>posts-compared:</b> 4</li></ul>
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    
+    
+    <div class="evid"><figure><a href="evidence/TC-005_restored_recent.png"><img src="evidence/TC-005_restored_recent.png" alt="TC-005_restored_recent.png"></a><figcaption>TC-005_restored_recent.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-007</span><span class="title">'Read More' expands truncated post text</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-007 - 'Read More' expands truncated post text</code> (<code>tests/feed-cards.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · UI · Priority Medium</dd>
+      <dt>Execution time</dt><dd>4.0 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-007 PASS; CSV expected result</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>The post's full text becomes visible and the 'Read More' link disappears; no collapse/'Show Less' control appears afterward (expansion is one-directional - a detail the PRD did not state).</p>
+    <h4>What the automation asserts</h4><p>On the first post with a visible Read More: text loses --truncate, Read More becomes hidden, and no Show Less / Read Less control appears.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    <ul class="tight"><li><b>target-post:</b> Sania Shaheen (2020-08-10 05:38 AM)</li></ul>
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    <p class="heal">Needed healing: <a href="healing-log.md">H-02</a>, <a href="healing-log.md">H-03</a> (see healing-log.md).</p>
+    
+    <div class="evid"><figure><a href="evidence/TC-007_after_readmore.png"><img src="evidence/TC-007_after_readmore.png" alt="TC-007_after_readmore.png"></a><figcaption>TC-007_after_readmore.png</figcaption></figure><figure><a href="evidence/TC-007_before_readmore.png"><img src="evidence/TC-007_before_readmore.png" alt="TC-007_before_readmore.png"></a><figcaption>TC-007_before_readmore.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-008</span><span class="title">Like/Unlike toggle updates count and icon state</span><span class="tier">State-changing</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-008 - Like/Unlike toggle updates count and icon state</code> (<code>tests/like-toggle.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · Functional · Priority Medium</dd>
+      <dt>Execution time</dt><dd>8.4 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-008 PASS (re-verification 2026-09-27)</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>After step 1: count becomes '1 Like', heart icon turns solid red (liked state). After step 3: count returns to '0 Likes', icon returns to grey/outline (unliked state). Note: the Like icon has no accessible name and uses a duplicated id=&quot;heart-svg&quot; across posts - an automation-readiness concern, not a functional defect (see Exploration §4 Locator Reference Table).</p>
+    <h4>What the automation asserts</h4><p>On a post not already liked by this identity: Like → POST /likes 200, count N→N+1, wrapper gains orangehrm-like-animation; Unlike → DELETE /likes 200, count back to N, class cleared. afterEach reloads and independently confirms the post is left un-liked.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    <ul class="tight"><li><b>target-post:</b> manda akhil user (2020-08-10 05:38 AM), starting count &quot;0 Likes&quot;</li><li><b>cleanup:</b> attempt 1: reversal confirmed, post not liked by this identity, count &quot;0 Likes&quot; (baseline &quot;0 Likes&quot;)</li></ul>
+    <p class="muted">API write guard: allowed: [POST /web/index.php/api/v2/buzz/shares/10/likes, DELETE /web/index.php/api/v2/buzz/shares/10/likes]; blocked: [none]</p>
+    
+    <p class="heal">Needed healing: <a href="healing-log.md">H-01</a> (see healing-log.md).</p>
+    
+    <div class="evid"><figure><a href="evidence/TC-008_01_before_like.png"><img src="evidence/TC-008_01_before_like.png" alt="TC-008_01_before_like.png"></a><figcaption>TC-008_01_before_like.png</figcaption></figure><figure><a href="evidence/TC-008_02_after_like.png"><img src="evidence/TC-008_02_after_like.png" alt="TC-008_02_after_like.png"></a><figcaption>TC-008_02_after_like.png</figcaption></figure><figure><a href="evidence/TC-008_03_after_unlike.png"><img src="evidence/TC-008_03_after_unlike.png" alt="TC-008_03_after_unlike.png"></a><figcaption>TC-008_03_after_unlike.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-009</span><span class="title">Comment toggle expands/collapses inline comment box</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-009 - Comment toggle expands/collapses inline comment box</code> (<code>tests/post-interactions.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · UI · Priority Medium</dd>
+      <dt>Execution time</dt><dd>4.0 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-009 PASS</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>Step 1 expands an inline 'Write your comment...' textbox beneath the post's action row, with no page navigation. Step 3 collapses the textbox again with no visible side effects. No text was typed/submitted; see BUZZ-TC-025 (requires live confirmation) for the comment-submission case.</p>
+    <h4>What the automation asserts</h4><p>On a &quot;0 Comments&quot; post: first click shows &quot;Write your comment...&quot; box, second click removes it; URL unchanged throughout; nothing typed.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    <ul class="tight"><li><b>target-post:</b> manda akhil user (2020-08-10 05:38 AM)</li></ul>
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    
+    
+    <div class="evid"><figure><a href="evidence/TC-009_comment_box_collapsed.png"><img src="evidence/TC-009_comment_box_collapsed.png" alt="TC-009_comment_box_collapsed.png"></a><figcaption>TC-009_comment_box_collapsed.png</figcaption></figure><figure><a href="evidence/TC-009_comment_box_expanded.png"><img src="evidence/TC-009_comment_box_expanded.png" alt="TC-009_comment_box_expanded.png"></a><figcaption>TC-009_comment_box_expanded.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-010</span><span class="title">Options menu on own post shows Edit Post and Delete Post</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-010 - Options menu on own post shows Edit Post and Delete Post</code> (<code>tests/post-options-menu.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · Functional · Priority High</dd>
+      <dt>Execution time</dt><dd>4.0 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-010 PASS + M4 evidence TC-010_01 (item order)</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>Menu shows exactly two items: 'Edit Post' and 'Delete Post'. This is the first direct evidence resolving BR-005 (previously entirely Unknown / Not observed in the PRD). Neither menu item was clicked.</p>
+    <h4>What the automation asserts</h4><p>Own post (first + last name match the banner user): menu items are exactly [&quot;Delete Post&quot;, &quot;Edit Post&quot;]. Neither is clicked.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    <ul class="tight"><li><b>target-post:</b> manda akhil user (2020-08-10 05:38 AM); banner user &quot;manda user&quot;</li></ul>
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    
+    <p class="heal">Expected-value change <a href="healing-log.md">R-01</a>: the expected item order was taken from M4 evidence rather than CSV wording. <b>Needs QC confirmation.</b></p>
+    <div class="evid"><figure><a href="evidence/TC-010_own_post_options_menu.png"><img src="evidence/TC-010_own_post_options_menu.png" alt="TC-010_own_post_options_menu.png"></a><figcaption>TC-010_own_post_options_menu.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-011</span><span class="title">Options menu on another author's post shows Delete Post only</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-011 - Options menu on another author's post shows Delete Post only</code> (<code>tests/post-options-menu.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · Functional · Priority High</dd>
+      <dt>Execution time</dt><dd>3.6 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-011 PASS</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>Menu shows exactly one item: 'Delete Post' (no 'Edit Post' option). Permission/role case confirming the Admin-role account can delete any post but only edit its own, at the UI level. Whether this is also enforced server-side is unconfirmed - see BUZZ-TC-027 (requires live confirmation).</p>
+    <h4>What the automation asserts</h4><p>Another author's post: menu items are exactly [&quot;Delete Post&quot;]. Not clicked.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    <ul class="tight"><li><b>target-post:</b> Sania Shaheen (2020-08-10 05:38 AM); banner user &quot;manda user&quot;</li></ul>
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    
+    
+    <div class="evid"><figure><a href="evidence/TC-011_other_author_options_menu.png"><img src="evidence/TC-011_other_author_options_menu.png" alt="TC-011_other_author_options_menu.png"></a><figcaption>TC-011_other_author_options_menu.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-012</span><span class="title">Share Photos 'Share' button disabled until photo attached</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-012 - Share Photos 'Share' button disabled until photo attached</code> (<code>tests/composer.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · Negative · Priority Medium</dd>
+      <dt>Execution time</dt><dd>3.4 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-012 PASS</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>'Share' button is disabled while no photo is attached. Contrast with BUZZ-TC-019, where the equivalent Share Video flow does not disable Share under an empty-input condition.</p>
+    <h4>What the automation asserts</h4><p>Share Photos dialog opens; its Share button is disabled; closed via × (Escape does not close it).</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    
+    
+    <div class="evid"><figure><a href="evidence/TC-012_share_photos_disabled.png"><img src="evidence/TC-012_share_photos_disabled.png" alt="TC-012_share_photos_disabled.png"></a><figcaption>TC-012_share_photos_disabled.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-014</span><span class="title">Share Post (repost) modal opens with optional caption</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-014 - Share Post (repost) modal opens with optional caption</code> (<code>tests/post-interactions.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · UI · Priority Low</dd>
+      <dt>Execution time</dt><dd>3.7 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>Exploration §3.10 (M4 TC-014 was BLOCKED by the MCP tool's permission classifier)</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>A 'Share Post' dialog opens with a read-only preview of the original post and an optional caption textbox; the 'Share' button is enabled even with no caption entered. Caption appears intentionally optional (unlike Share Video's URL field); not flagged as a validation discrepancy in Exploration §5, unlike BUZZ-TC-019.</p>
+    <h4>What the automation asserts</h4><p>Repost icon opens a &quot;Share Post&quot; dialog previewing the original post's author and timestamp, with an empty &quot;What's on your mind?&quot; caption box and an enabled Share button. Share is never clicked; closed via ×.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    <ul class="tight"><li><b>target-post:</b> manda akhil user (2020-08-10 05:38 AM)</li></ul>
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    
+    
+    <div class="evid"><figure><a href="evidence/TC-014_share_post_modal.png"><img src="evidence/TC-014_share_post_modal.png" alt="TC-014_share_post_modal.png"></a><figcaption>TC-014_share_post_modal.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-017</span><span class="title">Profile menu shows About/Support/Change Password/Logout on Buzz page</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-017 - Profile menu shows About/Support/Change Password/Logout on Buzz page</code> (<code>tests/profile-menu.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · UI · Priority Low</dd>
+      <dt>Execution time</dt><dd>4.0 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>M4 TC-017 PASS</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>Menu shows 'About', 'Support', 'Change Password', and 'Logout' items. No item was selected.</p>
+    <h4>What the automation asserts</h4><p>Profile menu [role=menuitem] texts are exactly About, Support, Change Password, Logout. None selected.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    
+    
+    <div class="evid"><figure><a href="evidence/TC-017_profile_menu.png"><img src="evidence/TC-017_profile_menu.png" alt="TC-017_profile_menu.png"></a><figcaption>TC-017_profile_menu.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc" open>
+  <summary><span class="id">TC-019</span><span class="title">Share Video 'Share' button not disabled despite empty Video URL (defect candidate)</span><span class="tier">Regression probe</span><span class="badge DEFECT">DEFECT</span></summary>
+  <div class="body">
+    <div class="note probe">⚠ <b>REGRESSION PROBE, INVERTED ASSERTION.</b> Runner PASS = DEFECT-001 is <b>still present</b> (expected, not alarming). Runner FAIL = the symptom did not reproduce, which needs a human QC decision. Never flip this probe to expect success.</div>
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-019 - [REGRESSION PROBE, inverted] DEFECT-001 Share Video Share button still enabled with empty URL</code> (<code>tests/defect-001.regression-probe.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · Negative · Priority High</dd>
+      <dt>Execution time</dt><dd>4.1 s</dd>
+      <dt>Classification</dt><dd>Category 2: Product Defect (known, DEFECT-001). Probe PASS = defect still present</dd>
+      <dt>Assertion source</dt><dd>M4 TC-019 + DEFECT-001 (2/2 reproducible)</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>DEFECT CANDIDATE: 'Share' button remains enabled/clickable despite the Video URL field being empty, unlike the equivalent Share Photos flow (BUZZ-TC-012), where Share is disabled with no photo attached. Flag for QC review as a validation asymmetry. The button was not clicked, so whether submission actually succeeds/fails with an empty URL is unconfirmed - see BUZZ-TC-024 (requires live confirmation).</p>
+    <h4>What the automation asserts</h4><p>INVERTED: Share Video dialog with an empty &quot;Paste Video URL&quot; field has an ENABLED Share button (the defect symptom). Share is never clicked; closed via ×.</p>
+    <h4>Actual</h4>
+    <p>Share button was enabled with an empty Video URL field, so the defect symptom is present (probe PASS).</p>
+    
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    
+    
+    <div class="evid"><figure><a href="evidence/TC-019_share_video_empty_url_enabled.png"><img src="evidence/TC-019_share_video_empty_url_enabled.png" alt="TC-019_share_video_empty_url_enabled.png"></a><figcaption>TC-019_share_video_empty_url_enabled.png</figcaption></figure></div>
+  </div>
+</details>
+
+<details class="tc">
+  <summary><span class="id">TC-020</span><span class="title">'Most Liked' and 'Most Commented' use the same tie-break order</span><span class="tier">Read-only</span><span class="badge PASS">PASS</span></summary>
+  <div class="body">
+    
+    <dl class="kv">
+      <dt>Test</dt><dd><code>BUZZ-TC-020 - 'Most Liked' and 'Most Commented' use the same tie-break order</code> (<code>tests/feed-filters.spec.ts</code>)</dd>
+      <dt>Module / type</dt><dd>Buzz · Edge · Priority Low</dd>
+      <dt>Execution time</dt><dd>4.7 s</dd>
+      <dt>Classification</dt><dd>—</dd>
+      <dt>Assertion source</dt><dd>CSV Title + Expected Result corrected 2026-09-27 (QC-approved test-design defect fix), matching M4 TC-020's re-analysis</dd>
+    </dl>
+    <h4>Expected (test-design CSV)</h4><p>Both filters use the same secondary sort key for genuinely tied posts: among posts tied on the filter's primary count (equal Like count under 'Most Liked Posts'; equal Comment count under 'Most Commented Posts'), posts appear in ascending chronological order (oldest first), and any two posts tied under both filters appear in the same relative order in both. Corrected 2026-09-27 per Milestone 4 TC-020 re-analysis: the original expectation ('the two filters order same-count posts differently') compared Sania Shaheen (1 Like) with Rebecca Harmony (0 Likes) under 'Most Liked Posts', which is a primary-key difference, not a tie. Whether the underlying key is creation time or post ID is not determinable from black-box observation at minute-granular timestamps (Exploration §7 Open Question 4).</p>
+    <h4>What the automation asserts</h4><p>After Most Liked, then Most Commented: each filter's primary count is non-increasing; inside every tie group the timestamps are non-decreasing (oldest first); every pair tied under both filters keeps the same relative order in both. No tie group → BLOCKED, not FAIL.</p>
+    <h4>Actual</h4>
+    <p>All assertions above held.</p>
+    <ul class="tight"><li><b>date-format:</b> Y-d-m</li><li><b>most-liked-ties:</b> Rebecca Harmony 2020-08-10 05:34 AM -&gt; manda akhil user 2020-08-10 05:38 AM</li><li><b>most-commented-ties:</b> Russel Hamilton 2020-08-10 05:33 AM -&gt; Rebecca Harmony 2020-08-10 05:34 AM -&gt; Sania Shaheen 2020-08-10 05:38 AM -&gt; manda akhil user 2020-08-10 05:38 AM</li><li><b>pairs-tied-under-both:</b> 1</li></ul>
+    <p class="muted">API write guard: allowed: [none]; blocked: [none]</p>
+    
+    <p class="heal">Needed healing: <a href="healing-log.md">H-04</a> (see healing-log.md).</p>
+    <p class="heal">Expected-value change <a href="healing-log.md">C-01</a>: the CSV Title and Expected Result were corrected with QC approval (previously BLOCKED as a test-design correction candidate).</p>
+    <div class="evid"><figure><a href="evidence/TC-020_01_most_liked_order.png"><img src="evidence/TC-020_01_most_liked_order.png" alt="TC-020_01_most_liked_order.png"></a><figcaption>TC-020_01_most_liked_order.png</figcaption></figure><figure><a href="evidence/TC-020_02_most_commented_order.png"><img src="evidence/TC-020_02_most_commented_order.png" alt="TC-020_02_most_commented_order.png"></a><figcaption>TC-020_02_most_commented_order.png</figcaption></figure></div>
+  </div>
+</details>
+</section>
+
+<section><h2>Formal Defects</h2>
+<div class="defect"><h3>DEFECT-001 — Share Video "Share" button not disabled despite empty Video URL</h3>
+<dl>
+  <dt>Status</dt><dd><b>Open, still present.</b> The regression probe (BUZZ-TC-019) passed this run, meaning the symptom reproduced. That is one more automated observation on top of M4's 2/2 manual reproductions. It is not resolved.</dd>
+  <dt>Screen / path</dt><dd>Buzz Newsfeed, Share Video modal — /web/index.php/buzz/viewBuzz</dd>
+  <dt>Steps</dt><dd>1. Click "Share Video". 2. Leave "Paste Video URL" empty. 3. Observe the Share button's disabled state (do not click it).</dd>
+  <dt>Actual</dt><dd>Share is enabled with an empty URL field (<code>toBeEnabled()</code> held; evidence TC-019).</dd>
+  <dt>Expected</dt><dd>Share disabled while the URL is empty, matching Share Photos (BUZZ-TC-012, which passed this run with Share disabled).</dd>
+  <dt>Probe boundary</dt><dd>Button state only, matching M4's writeup. Share is never clicked (submission is BUZZ-TC-024, policy-excluded), and the API write guard recorded zero write attempts during the probe.</dd>
+  <dt>Severity / priority</dt><dd>High / High (unchanged from M4)</dd>
+</dl></div>
+<p class="muted">DEFECT-002 (Like/Unlike) was withdrawn in M4 re-verification, so it has no probe. BUZZ-TC-008 is automated as an ordinary state-changing test and passed. No new product defects were found by this automation run.</p>
+</section>
+
+<section><h2>Source Reconciliation</h2>
+<div class="scroll"><table class="grid">
+<tr><th>TC</th><th>Discrepancy</th><th>Resolution</th></tr>
+<tr><td>TC-020</td><td>The CSV expected different tie-break orders for Most Liked and Most Commented. M4 observed identical orders (ascending creation time) and showed the original finding had compared a primary-key difference (1 Like vs 0), not a tie.</td><td><b>Resolved:</b> the CSV Title and Expected Result were corrected on 2026-09-27 as a QC-approved test-design defect fix (C-01; only those two cells changed). The test now asserts the corrected behavior and passed. Previously BLOCKED.</td></tr>
+<tr><td>TC-002, TC-003, TC-020</td><td>The shared demo's instance-wide date format changes between runs. Earlier today it was <code>Y-m-d</code>; the final run used <code>Y-d-m</code> (per <code>GET /api/v2/admin/localization</code>), so the same post shows as <code>2020-10-08</code> or <code>2020-08-10</code>.</td><td>Timestamps are parsed with the format the app reports at runtime, never an assumed one (H-04). An unparseable timestamp fails the test instead of being compared wrongly.</td></tr>
+<tr><td>TC-014</td><td>M4 BLOCKED (MCP tool permission classifier), so there is no M4 confirmation.</td><td>Asserted from Exploration §3.10 (precedence #3). Opening and closing the dialog creates no content. Share is never clicked, and the write guard recorded no writes. The standalone Playwright run was not subject to the classifier.</td></tr>
+<tr><td>TC-010</td><td>CSV lists "Edit Post" and "Delete Post" without an order; M4 evidence shows Delete Post first.</td><td>Asserts the exact M4-observed order <code>["Delete Post", "Edit Post"]</code>. Logged as R-01 in healing-log.md. <b>Needs QC confirmation.</b></td></tr>
+<tr><td>TC-007</td><td>M4 said Read More is "removed from the DOM/accessibility tree". The live DOM keeps the node and hides it with <code>display:none</code>.</td><td>Asserts that it is hidden (<code>toBeHidden()</code>), which matches the CSV's "link disappears" and M4's accessibility-tree observation. Logged as H-03.</td></tr>
+<tr><td>TC-002, TC-020</td><td>CSV preconditions cite a 4-post snapshot; M4 saw 8–9 posts.</td><td>No count is asserted; structure is asserted on every card. The final run's feed happened to be back at 4 posts.</td></tr>
+<tr><td>TC-010, TC-011</td><td>The banner shows "manda user" while the own post shows "manda akhil user" (middle name), and the shared login's display name has varied across runs (M4: "sri venkatadri…").</td><td>Own post is identified by matching the first and last name tokens against the banner name at runtime, not by a hard-coded name.</td></tr>
+</table></div>
+</section>
+
+<section><h2>Healing Summary</h2>
+<div class="scroll"><table class="grid">
+<tr><th>Total attempts</th><th>Successful</th><th>Unsuccessful</th><th>Tests affected</th><th>Assertion changed</th></tr>
+<tr><td>4</td><td>4</td><td>0</td><td>5 (TC-007: H-02, H-03 · TC-008: H-01 · TC-002, TC-003, TC-020: H-04)</td><td>No for all 4 healing entries. Separately: C-01 (TC-020) is a <b>QC-approved</b> test-design correction; R-01 (TC-010) changed an expected value and <b>needs QC confirmation</b>.</td></tr>
+</table></div>
+<p>H-01 to H-03 were Category 1 automation defects in the first draft of the scripts: a fixture option shape (H-01), a hidden-element target (H-02) and a DOM-removal check that should have been a visibility check (H-03). H-04 is Category 3 environmental drift: the shared demo's date format changed between runs, and it was caught by inspection before it caused a wrong result. Full before/after and diagnosis: <a href="healing-log.md">healing-log.md</a>.</p>
+</section>
+
+<section><h2>Automation Health</h2>
+<div class="scroll"><table class="grid">
+<tr><th>No changes needed</th><th>Needed healing</th><th>Expected value reconciled</th><th>Surfaced real defects</th><th>Affected by data drift</th><th>Blocked</th></tr>
+<tr><td>9 (TC-001, 004, 005, 009, 011, 012, 014, 017, 019)</td><td>5 (TC-002, 003, 007, 008, 020)</td><td>2 (TC-010: R-01, pending QC · TC-020: C-01, QC-approved)</td><td>1 known, still present (TC-019 / DEFECT-001); 0 new</td><td>Date-format drift detected and handled (TC-002, 003, 020); 0 results affected</td><td>0</td></tr>
+</table></div>
+<p class="muted">Drift resilience built in: no test asserts a fixed post count, position or name. Targets are chosen at runtime by what the test needs (a visibly truncated post, a "0 Comments" post, a post not already liked by this shared identity, own vs. other author), and a missing precondition is reported as BLOCKED rather than FAIL. TC-008's cleanup records drift separately if the Like count after its own reversal differs from baseline.</p>
+<p class="muted">Cleanup timing (Hard Rule 5): the worst-case TC-008 reversal budget is 3 attempts × 33 s + 2 × 2 s delay = 103 s, and the <code>afterEach</code> hook raises its own timeout to 130 s. A check that runs when the spec file loads enforces budget &lt; hook timeout. A probe on Playwright 1.63 confirmed that without this, an <code>afterEach</code> overrunning the config timeout is killed mid-cleanup.</p>
+</section>
+
+<section><h2>Credential-Leak Verification</h2>
+
+<p>Ran <code>node utils/credential-leak-check.js</code> at 2026-09-27T00:12:26.629Z. It read the demo credentials from the live login page at runtime and searched <b>80</b> files: <code>automation/reports/**</code> (this report, healing log, JSON results, Playwright HTML report, evidence), <code>automation/test-results/**</code>, <code>automation/.auth/</code>, all test/page/util source, <code>playwright.config.ts</code> and <code>logs/session-log.md</code>. Zip entries are inflated before searching. Values are never printed; only counts are recorded.</p>
+<div class="scroll"><table class="grid"><tr><th>Credential</th><th>Matches</th><th>Verdict</th></tr>
+<tr><td>Password value</td><td><b>0</b></td><td><span class="badge PASS">clean</span></td></tr>
+<tr><td>Username value</td><td><b>16</b> (automation/reports/automation-execution-report.html (1), automation/.auth/state.json (5), logs/session-log.md (10))</td><td><span class="badge PASS">clean</span> Each match was reviewed with the value masked. The username is spelled the same as the application's module/role name, and every hit is that label: UI translation strings the app caches in localStorage (<code>.auth/state.json</code>, gitignored and never committed) references to that module/role name in the session log, and the CSV's "&lt;role&gt;-role account" wording quoted in this report's TC-011 expected result. None appears in a credential context.</td></tr></table></div>
+<p class="muted">Screenshots cannot be text-searched. Instead, <code>evidence()</code> refuses to capture any page whose URL is the login page (which shows the credentials), and Playwright traces are disabled because they record <code>fill()</code> arguments.</p>
+</section>
+
+</div></body></html>
