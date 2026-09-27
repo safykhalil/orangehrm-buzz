@@ -11,8 +11,6 @@
 | 5 — Playwright Automation | `playwright-automation` v3.2 | 1 prompt + 1 test-design correction follow-up | `automation/tests/*.spec.ts` + `automation-execution-report.html` + `healing-log.md` | ✅ Complete — 14 PASS, 1 defect (regression probe) |
 | 4 — Full Re-run | `test-execution` v1.0 | 1 prompt (sent twice, identical) | `execution/execution-report.html` + evidence (replaced) | ✅ Complete, superseded original evidence |
 | 4 — DEFECT-002 Re-verification | `test-execution` v1.0 | 1 prompt + 1 continuation | `execution/execution-report.html` (TC-008 / DEFECT-002 only) | ✅ Complete, DEFECT-002 withdrawn; TC-008 PASS |
-| 5 — Playwright Automation | `playwright-automation` v3.2 | 1 prompt | `automation/` (tests, report, healing log) | ✅ Complete, 15 cases automated |
-| 5 — TC-020 Correction | `playwright-automation` v3.2 (+ `test-design` edit rule) | 1 prompt + 1 follow-up | `test-design/test-design.csv` (TC-020 row), `automation/reports/` | ✅ Complete, final run 14 PASS / 1 DEFECT (DEFECT-001 probe) |
 
 **How to read this file:** each milestone section below contains the exact,
 verbatim prompt text sent to Claude Code for that step — not a paraphrase.
