@@ -8,7 +8,7 @@
 | 2 — UI Exploration | `ui-exploration` v2.0 | 1 initial + 1 cleanup | `docs/exploration-findings.md` | ✅ Complete, QC-reviewed |
 | 3 — Test Design | `test-design` v3.0 | 1 prompt, run twice (schema revision) | `test-design/test-design.csv` (27 cases) | ✅ Complete, QC-reviewed and filled (Valid in Scope / Needs Automation) |
 | 4 — Test Execution | `test-execution` v1.0 | 1 prompt | `execution/execution-report.html` + evidence | ✅ Complete, 20 executed (20 PASS), 7 BLOCKED by policy, 1 defect (DEFECT-001) |
-| 5 — Automation | `playwright-automation` v2.0 | Skill written, not yet run | — | ⏸ Paused by QC lead after Milestone 4 |
+| 5 — Playwright Automation | `playwright-automation` v3.2 | 1 prompt + 1 test-design correction follow-up | `automation/tests/*.spec.ts` + `automation-execution-report.html` + `healing-log.md` | ✅ Complete — 14 PASS, 1 defect (regression probe) |
 | 4 — Full Re-run | `test-execution` v1.0 | 1 prompt (sent twice, identical) | `execution/execution-report.html` + evidence (replaced) | ✅ Complete, superseded original evidence |
 | 4 — DEFECT-002 Re-verification | `test-execution` v1.0 | 1 prompt + 1 continuation | `execution/execution-report.html` (TC-008 / DEFECT-002 only) | ✅ Complete, DEFECT-002 withdrawn; TC-008 PASS |
 | 5 — Playwright Automation | `playwright-automation` v3.2 | 1 prompt | `automation/` (tests, report, healing log) | ✅ Complete, 15 cases automated |
@@ -22,7 +22,7 @@ supporting detail (actions taken, evidence, findings) lives in
 `logs/session-log.md`, not here — this file is prompts only.
 
 This file contains the **verbatim text** of every prompt sent to Claude
-Code to complete Milestones 1–4, for team lead review. It complements
+Code to complete Milestones 1–5, for team lead review. It complements
 `logs/session-log.md`, which records what Claude Code *did* in response
 to each prompt (actions, evidence, findings) — this file records exactly
 what was *asked*.
