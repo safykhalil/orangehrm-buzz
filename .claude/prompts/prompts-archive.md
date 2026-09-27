@@ -9,6 +9,10 @@
 | 3 — Test Design | `test-design` v3.0 | 1 prompt, run twice (schema revision) | `test-design/test-design.csv` (27 cases) | ✅ Complete, QC-reviewed and filled (Valid in Scope / Needs Automation) |
 | 4 — Test Execution | `test-execution` v1.0 | 1 prompt | `execution/execution-report.html` + evidence | ✅ Complete, 20 executed (20 PASS), 7 BLOCKED by policy, 1 defect (DEFECT-001) |
 | 5 — Automation | `playwright-automation` v2.0 | Skill written, not yet run | — | ⏸ Paused by QC lead after Milestone 4 |
+| 4 — Full Re-run | `test-execution` v1.0 | 1 prompt (sent twice, identical) | `execution/execution-report.html` + evidence (replaced) | ✅ Complete, superseded original evidence |
+| 4 — DEFECT-002 Re-verification | `test-execution` v1.0 | 1 prompt + 1 continuation | `execution/execution-report.html` (TC-008 / DEFECT-002 only) | ✅ Complete, DEFECT-002 withdrawn; TC-008 PASS |
+| 5 — Playwright Automation | `playwright-automation` v3.2 | 1 prompt | `automation/` (tests, report, healing log) | ✅ Complete, 15 cases automated |
+| 5 — TC-020 Correction | `playwright-automation` v3.2 (+ `test-design` edit rule) | 1 prompt + 1 follow-up | `test-design/test-design.csv` (TC-020 row), `automation/reports/` | ✅ Complete, final run 14 PASS / 1 DEFECT (DEFECT-001 probe) |
 
 **How to read this file:** each milestone section below contains the exact,
 verbatim prompt text sent to Claude Code for that step — not a paraphrase.
@@ -372,6 +376,184 @@ not begin automation.
 
 ---
 
+### Milestone 4 — Full Re-run (superseding evidence)
+
+```
+Use the test-execution skill located at:
+
+.claude/skills/test-execution/SKILL.md
+
+to re-run Milestone 4 of the OrangeHRM Buzz QA project from scratch.
+
+## Inputs
+
+Application URL: https://opensource-demo.orangehrmlive.com/
+Test design CSV: test-design/test-design.csv (27 rows, all Valid in Scope = Yes)
+PRD: docs/PRD.md
+Exploration findings: docs/exploration-findings.md
+
+## Objective
+
+This is a full fresh re-execution, replacing the previous run entirely.
+
+Execute BUZZ-TC-001 through BUZZ-TC-020 live via Playwright MCP. Mark
+BUZZ-TC-021 through BUZZ-TC-027 as BLOCKED — excluded by interaction
+policy without attempting them, since they require publishing content
+(post, photo, video, comment, repost) or editing another user's data on
+this shared public demo instance, per the skill's Interaction Policy.
+
+For BUZZ-TC-019 specifically (Share Video button-disabled-state check):
+this one only observes the button's enabled/disabled state and does NOT
+click Share, so it is directly executable, not excluded.
+
+For every state-changing action you do perform (Like, Comment toggle,
+expand/collapse, etc.), reverse it immediately after and confirm the
+reversal succeeded, per the skill's Hard rules.
+
+## Output — overwrite existing
+
+Delete the contents of execution/evidence/ and overwrite
+execution/execution-report.html entirely with this fresh run's results —
+do not merge with or reference the previous run's evidence/screenshots.
+
+## Audit Trail
+
+Add a new entry to logs/session-log.md for this re-run (do not delete the
+prior Milestone 4 entry — keep both, clearly dated, so the history of a
+re-run is visible). Note explicitly that this replaces the previous
+execution-report.html and evidence set.
+
+## Stop Condition
+
+Follow the skill's stop condition: report summary counts (executed/PASS/
+PASS†/FAIL/BLOCKED), formal defects, and exit assessment — and note any
+differences from the previous run's results if you're able to recall or
+infer them (e.g. new DEFECT-001 status, different Like counts due to
+shared-demo drift). Then stop.
+```
+
+- Sent twice with identical text (2026-09-22, 12:33 and 12:50 UTC). The
+  second send is the run that produced the current report and evidence.
+
+---
+
+### DEFECT-002 Targeted Re-verification
+
+```
+Targeted re-verification of DEFECT-002 only (TC-008, Like toggle) — not a
+full re-run.
+
+The QC lead just manually clicked the Like heart on the "manda akhil user"
+post (the original 2020-08-10 baseline post, same batch as the Sania
+Shaheen post this defect was tested against) and observed the count
+change live in her own browser (0→1 or 1→0). This directly contradicts
+DEFECT-002's finding that Like is completely non-functional.
+
+Re-investigate specifically:
+1. Take a fresh accessibility snapshot of the manda akhil user post's Like
+   control. Compare its actual accessible role/name/structure against
+   whatever locator strategy was used in the original DEFECT-002 attempts.
+2. Attempt the Like click on this exact post using a role-based locator
+   (getByRole/accessible name) rather than any ID or icon-structure-based
+   selector, and check whether the count changes and whether a network
+   request fires this time.
+3. If it now works: the likely root cause is that the automation's locator
+   was targeting stale/wrong markup (per the heart-svg → Bootstrap icon
+   change already noted in the report), not a real product defect. State
+   this plainly and prepare to RETRACT DEFECT-002 from the execution
+   report, replacing it with a note explaining it was a tooling/locator
+   false positive, not a confirmed product defect.
+4. If it still fails even with a corrected locator: DEFECT-002 stands as a
+   real defect, but note precisely what locator strategy was used both
+   times so we understand why manual clicking succeeds where automation
+   doesn't.
+
+Remember to reverse the Like back to its original state and confirm the
+reversal, per the skill's Hard rules. Report findings and update
+execution/execution-report.html and logs/session-log.md accordingly, but
+do not touch any other test case's results.
+```
+
+### Follow-up (same session, continuation)
+
+```
+Continue the DEFECT-002 targeted re-verification for TC-008 (Like toggle) on the manda akhil user post.
+```
+
+---
+
+## Milestone 5 — Playwright Automation
+
+```
+Use the playwright-automation skill located at:
+
+.claude/skills/playwright-automation/SKILL.md
+
+to complete Milestone 5 of the OrangeHRM Buzz QA project.
+
+## Inputs
+
+Application URL: https://opensource-demo.orangehrmlive.com/
+Test design CSV: test-design/test-design.csv, filtered to Needs Automation = Yes (15 cases)
+Milestone 4 execution report: execution/execution-report.html (final version — 16 PASS, 2 PASS†, 1 FAIL, 8 BLOCKED, 1 open defect: DEFECT-001; DEFECT-002 was investigated and withdrawn as a test-targeting error)
+PRD: docs/PRD.md
+Exploration findings: docs/exploration-findings.md
+
+## Objective
+
+Follow the skill exactly, including Pre-Automation Inspection first. Use
+the execution report as source of truth per the skill's precedence rules.
+Build DEFECT-001's Regression Probe checking only the Share Video button's
+disabled state (never click Share). Tag every test with its scheduling
+tier. Run the credential-leak grep check before finishing.
+
+## Output
+
+Test code: automation/tests/
+Page objects: automation/pages/
+Shared helpers: automation/utils/
+HTML report: automation/reports/automation-execution-report.html
+Healing log: automation/reports/healing-log.md
+
+## Audit Trail
+
+Record this run in logs/session-log.md, same convention as prior milestones.
+
+## Stop Condition
+
+Follow the skill's stop condition exactly.
+```
+
+---
+
+### Follow-up correction prompt (TC-020 test-design defect fix)
+
+```
+Update test-design/test-design.csv, row TC-020 only: correct its Expected
+Result to reflect the actual confirmed tie-break behavior found in
+Milestone 4 (both "Most Liked Posts" and "Most Commented Posts" use the
+same secondary sort key for genuinely tied posts — ascending chronological
+order — rather than "ordering tied posts differently from each other").
+Do not touch any other column or row, and do not touch Valid in Scope or
+Needs Automation. This is a genuine test-design defect correction, per the
+test-design skill's explicit exception to its own "don't edit after
+execution" rule. Then re-run TC-020 in the playwright-automation suite
+against the corrected expectation, update the automation report/healing
+log accordingly, and commit/push everything together.
+```
+
+### Follow-up (TC-020 Title)
+
+```
+Also update TC-020's Title to match the corrected Expected Result (e.g.
+"'Most Liked' and 'Most Commented' use the same tie-break order" instead
+of "...order differs"), since leaving the old title would directly
+contradict the corrected row. Record this as part of the same QC-approved
+correction in the healing log.
+```
+
+---
+
 ## Notes on process
 
 - Every prompt above references a **skill** (`.claude/skills/<name>/SKILL.md`)
@@ -383,6 +565,3 @@ not begin automation.
   and the skill files' own version history (`prd-generation` v1→v1 final,
   `ui-exploration` v1→v2, `test-design` v2.1→v3.0, `test-execution` v1.0)
   for what changed and why.
-- Milestone 5 (Playwright automation) skill was written and committed
-  (`playwright-automation` v2.0) but execution was paused after Milestone 4
-  by QC lead decision — no automation prompt has been run yet.
