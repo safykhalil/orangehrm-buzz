@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OrangeHRM Buzz — AI QA Pipeline</title>
+<style>
+  :root{
+    --paper:#F3F5F8; --surface:#FFFFFF; --surface-2:#EAEEF4;
+    --ink:#10151F; --ink-2:#45536B; --ink-muted:#7C8AA0;
+    --line:#D9E0EA; --accent:#2A78D6; --accent-ink:#0F3D73;
+    --good:#0CA30C; --warn:#C98A17; --good-wash:#E4F6E4; --warn-wash:#FBF0DA;
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0B0F16; --surface:#121926; --surface-2:#182234;
+      --ink:#ECF1F8; --ink-2:#B7C2D1; --ink-muted:#8290A6; --line:#233047;
+      --accent:#4C93E8; --accent-ink:#BFDBFF;
+      --good:#3FCB4C; --warn:#E5B44A; --good-wash:#123420; --warn-wash:#3A2F12;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-sans);
+       padding:40px 24px 64px;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  h1{font-size:26px;font-weight:700;margin:0 0 6px;}
+  .sub{color:var(--ink-muted);font-size:14px;margin-bottom:36px;}
+  .sub code{font-family:var(--font-mono);background:var(--surface-2);padding:1px 6px;border-radius:4px;}
+
+  /* ---- pipeline row ---- */
+  .pipeline{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:8px;}
+  .stage{
+    flex:1 1 200px;min-width:200px;background:var(--surface);
+    border:1px solid var(--line);border-radius:10px;padding:16px 16px 14px;
+    display:flex;flex-direction:column;gap:8px;position:relative;
+  }
+  .stage.paused{opacity:.72;border-style:dashed;}
+  .stage .num{font-family:var(--font-mono);font-size:11px;color:var(--accent);font-weight:700;}
+  .stage h3{font-size:15px;margin:0;line-height:1.3;}
+  .stage .skill{font-family:var(--font-mono);font-size:11px;color:var(--ink-2);
+    background:var(--surface-2);padding:2px 7px;border-radius:5px;display:inline-block;width:fit-content;}
+  .stage .io{font-size:12px;color:var(--ink-2);line-height:1.5;}
+  .stage .io b{color:var(--ink);font-weight:600;}
+  .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;
+    width:fit-content;letter-spacing:.2px;}
+  .badge.done{background:var(--good-wash);color:var(--good);}
+  .badge.paused{background:var(--warn-wash);color:var(--warn);}
+
+  .arrow{flex:0 0 34px;display:flex;align-items:center;justify-content:center;
+    color:var(--ink-muted);font-size:20px;align-self:center;}
+
+  .gate{
+    flex:0 0 120px;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:6px;text-align:center;
+  }
+  .gate .icon{width:34px;height:34px;border-radius:50%;background:var(--accent);
+    color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;}
+  .gate .label{font-size:11px;color:var(--ink-2);line-height:1.4;}
+
+  /* ---- audit rail ---- */
+  .rail{margin-top:32px;background:var(--surface);border:1px solid var(--line);
+    border-radius:10px;padding:18px 20px;}
+  .rail h4{margin:0 0 4px;font-size:14px;}
+  .rail p{margin:0 0 14px;font-size:12.5px;color:var(--ink-2);}
+  .rail-items{display:flex;gap:14px;flex-wrap:wrap;}
+  .rail-item{flex:1 1 260px;background:var(--surface-2);border-radius:8px;padding:12px 14px;}
+  .rail-item .fname{font-family:var(--font-mono);font-size:12px;color:var(--accent-ink);
+    font-weight:700;margin-bottom:4px;}
+  .rail-item .fdesc{font-size:12px;color:var(--ink-2);line-height:1.5;}
+
+  /* ---- legend / key facts ---- */
+  .facts{margin-top:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+  .fact{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+  .fact .k{font-size:22px;font-weight:700;}
+  .fact .l{font-size:12px;color:var(--ink-muted);margin-top:2px;}
+
+  .qc-note{margin-top:28px;font-size:12.5px;color:var(--ink-muted);line-height:1.6;
+    border-left:3px solid var(--accent);padding:10px 16px;background:var(--surface);border-radius:0 8px 8px 0;}
+
+  @media (max-width:900px){
+    .pipeline{flex-direction:column;}
+    .arrow{transform:rotate(90deg);}
+    .gate{flex-direction:row;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>OrangeHRM Buzz — AI-Assisted QA Pipeline</h1>
+  <div class="sub">How the reusable skill-based solution flows end to end. Each stage is a standalone, generic <code>.claude/skills/*/SKILL.md</code> — reusable on any module or project, parameterized per run.</div>
+
+  <div class="pipeline">
+    <div class="stage">
+      <div class="num">M1</div>
+      <h3>PRD Generation</h3>
+      <span class="skill">prd-generation v1.0</span>
+      <div class="io"><b>In:</b> App URL<br><b>Out:</b> docs/PRD.md</div>
+      <span class="badge done">Complete</span>
+    </div>
+    <div class="arrow">→</div>
+
+    <div class="stage">
+      <div class="num">M2</div>
+      <h3>UI Exploration</h3>
+      <span class="skill">ui-exploration v2.0</span>
+      <div class="io"><b>In:</b> URL + PRD + scope<br><b>Out:</b> exploration-findings.md</div>
+      <span class="badge done">Complete</span>
+    </div>
+    <div class="arrow">→</div>
+
+    <div class="stage">
+      <div class="num">M3</div>
+      <h3>Test Design</h3>
+      <span class="skill">test-design v3.0</span>
+      <div class="io"><b>In:</b> PRD + exploration<br><b>Out:</b> test-design.csv (27)</div>
+      <span class="badge done">Complete</span>
+    </div>
+
+    <div class="gate">
+      <div class="icon">QC</div>
+      <div class="label">Human review:<br>Valid in Scope<br>Needs Automation</div>
+    </div>
+    <div class="arrow">→</div>
+
+    <div class="stage">
+      <div class="num">M4</div>
+      <h3>Test Execution</h3>
+      <span class="skill">test-execution v1.0</span>
+      <div class="io"><b>In:</b> Reviewed CSV<br><b>Out:</b> execution-report.html (v2, re-run)</div>
+      <span class="badge done">Complete</span>
+    </div>
+    <div class="arrow">→</div>
+
+    <div class="stage">
+      <div class="num">M5</div>
+      <h3>Playwright Automation</h3>
+      <span class="skill">playwright-automation v3.2</span>
+      <div class="io"><b>In:</b> Needs Automation = Yes (15)<br><b>Out:</b> automation/tests/ + automation-execution-report.html</div>
+      <span class="badge done">Complete</span>
+    </div>
+  </div>
+
+  <div class="rail">
+    <h4>Cross-cutting audit trail — written to by every stage</h4>
+    <p>Every skill invocation records itself here automatically, independent of milestone.</p>
+    <div class="rail-items">
+      <div class="rail-item">
+        <div class="fname">logs/session-log.md</div>
+        <div class="fdesc">What happened: skill used, actions taken, assumptions, unresolved items, errors — one entry per run.</div>
+      </div>
+      <div class="rail-item">
+        <div class="fname">.claude/prompts/prompts-archive.md</div>
+        <div class="fdesc">What was asked: verbatim text of every prompt sent, in the order it was sent — for team-lead review.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="facts">
+    <div class="fact"><div class="k">27</div><div class="l">test cases designed</div></div>
+    <div class="fact"><div class="k">16 / 2 / 1 / 8</div><div class="l">M4: PASS / PASS† / FAIL / BLOCKED</div></div>
+    <div class="fact"><div class="k">14 / 1</div><div class="l">M5: automated PASS / regression probe (DEFECT-001)</div></div>
+    <div class="fact"><div class="k">1</div><div class="l">confirmed open defect (DEFECT-001)</div></div>
+  </div>
+
+  <div class="rail" style="margin-top:20px;">
+    <h4>Milestone 4 was re-run once — both results are preserved</h4>
+    <p>Live execution against a real, shared, uncontrolled environment can produce genuinely different results between runs — this is expected, and the audit trail keeps both, rather than silently overwriting history.</p>
+    <div class="rail-items">
+      <div class="rail-item">
+        <div class="fname">Run 1 (original)</div>
+        <div class="fdesc">20 PASS / 0 FAIL / 7 BLOCKED (policy). DEFECT-001 raised. Preserved in <code>logs/session-log.md</code>.</div>
+      </div>
+      <div class="rail-item">
+        <div class="fname">Run 2 + DEFECT-002 re-verification (final, active)</div>
+        <div class="fdesc">16 PASS / 2 PASS† / 1 FAIL / 8 BLOCKED. DEFECT-001 reconfirmed. DEFECT-002 (Like/Unlike) was investigated and <b>withdrawn</b> — a test-targeting error (the probe clicked a display-only icon, not the real Like control), not a product defect.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rail" style="margin-top:20px;">
+    <h4>Milestone 5 caught two real issues before they caused wrong results</h4>
+    <div class="rail-items">
+      <div class="rail-item">
+        <div class="fname">3 automation bugs (H-01–H-03)</div>
+        <div class="fdesc">A crashed write-guard, a hidden-vs-visible locator mismatch, an over-strict DOM-removal check. All in the scripts, not the product — healed, logged with before/after.</div>
+      </div>
+      <div class="rail-item">
+        <div class="fname">1 environmental-drift bug, caught pre-emptively (H-04)</div>
+        <div class="fdesc">The shared demo's date format varies between sessions (Y-d-m vs Y-m-d). The parser now reads the app's configured format at runtime instead of assuming one — caught before it silently mis-ordered results.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="qc-note">
+    <b>Interaction Policy note:</b> this is a shared public demo instance. Every skill from M2 onward
+    carries forward the same rule — actions that create permanent, visible-to-others content
+    (posting, commenting, uploading) are excluded by default and logged as such, rather than
+    attempted or silently skipped. This is why 7 of 27 designed cases show as policy-blocked in
+    M4 (plus 1 more blocked by the automation tool's own permission classifier — a tooling
+    limitation, not policy or app behavior), and why 6 of the original automation candidates were
+    reclassified from <i>Needs Automation = Yes</i> to <i>No</i> after QC review. DEFECT-001's
+    Milestone 5 automation is a regression probe with an inverted assertion (PASS = defect still
+    present) — never an ordinary pass/fail gate.
+  </div>
+</div>
+</body>
+</html>
