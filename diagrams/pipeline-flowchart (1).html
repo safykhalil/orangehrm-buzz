@@ -160,8 +160,8 @@
   <div class="facts">
     <div class="fact"><div class="k">27</div><div class="l">test cases designed</div></div>
     <div class="fact"><div class="k">16 / 2 / 1 / 8</div><div class="l">M4: PASS / PASS† / FAIL / BLOCKED</div></div>
-    <div class="fact"><div class="k">14 / 1</div><div class="l">M5: automated PASS / regression probe (DEFECT-001)</div></div>
-    <div class="fact"><div class="k">1</div><div class="l">confirmed open defect (DEFECT-001)</div></div>
+    <div class="fact"><div class="k">14 / 1</div><div class="l">M5: automated PASS / regression probe</div></div>
+    <div class="fact"><div class="k">0</div><div class="l">confirmed functional defects (was 1 — see below)</div></div>
   </div>
 
   <div class="rail" style="margin-top:20px;">
@@ -175,6 +175,21 @@
       <div class="rail-item">
         <div class="fname">Run 2 + DEFECT-002 re-verification (final, active)</div>
         <div class="fdesc">16 PASS / 2 PASS† / 1 FAIL / 8 BLOCKED. DEFECT-001 reconfirmed. DEFECT-002 (Like/Unlike) was investigated and <b>withdrawn</b> — a test-targeting error (the probe clicked a display-only icon, not the real Like control), not a product defect.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rail" style="margin-top:20px;">
+    <h4>DEFECT-001 was reclassified after a QC-authorized live check (2026-09-28)</h4>
+    <p>The Share Video button stays clickable with an empty URL — that fact, first found in Milestone 4, is unchanged. What changed: a live, one-time QC-authorized check (outside the formal milestone runs) monitored the network when Share was clicked with an empty field.</p>
+    <div class="rail-items">
+      <div class="rail-item">
+        <div class="fname">Before</div>
+        <div class="fdesc">Classified as a confirmed functional defect: button not disabled, unlike Share Photos.</div>
+      </div>
+      <div class="rail-item">
+        <div class="fname">After — UX inconsistency, not a functional defect</div>
+        <div class="fdesc">Clicking Share with an empty URL shows an inline "Required" message, fires <b>zero</b> network requests, and creates <b>no post</b>. The two Share dialogs simply use different (each individually valid) client-side validation patterns. Original finding kept in the report for audit, not deleted.</div>
       </div>
     </div>
   </div>
