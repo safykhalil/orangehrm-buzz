@@ -69,11 +69,15 @@
 
   <div class="summary">
     <div class="card"><div class="num">27</div><div class="label">In scope</div></div>
-    <div class="card pass"><div class="num">22</div><div class="label">Pass</div></div>
+    <div class="card pass"><div class="num">23</div><div class="label">Pass</div></div>
     <div class="card passt"><div class="num">2</div><div class="label">Pass†</div></div>
     <div class="card fail"><div class="num">1</div><div class="label">Fail</div></div>
-    <div class="card blocked"><div class="num">2</div><div class="label">Blocked</div></div>
+    <div class="card blocked"><div class="num">1</div><div class="label">Blocked</div></div>
     <div class="card"><div class="num">0</div><div class="label">Confirmed functional defects</div><div class="label" style="text-transform:none;letter-spacing:0">+1 UX inconsistency (DEFECT-001, reclassified)</div></div>
+  </div>
+
+  <div class="note info">
+    <strong>Update 2026-09-28 — BUZZ-TC-027 resolved: BLOCKED → PASS.</strong> In a one-time, QC-authorized live check, a temporary ESS-role account (<code>qa-temp-027</code>) tried to edit a post authored by the demo Admin-role account. The UI offered no Edit option, and a direct <code>PUT /api/v2/buzz/posts/{id}</code> from that account was rejected by the server with HTTP 403. So cross-account Edit Post permission is enforced at both the UI and the server. The test post, the temporary user and its PIM employee record were all deleted afterwards, and each deletion was independently verified. Counts above were previously 22 PASS / 2 PASS† / 1 FAIL / 2 BLOCKED. The one remaining BLOCKED case is TC-014 (tooling only). See the "BUZZ-TC-027 — RESOLVED" note in the BUZZ-TC-027 section below and the matching 2026-09-28 entry in <code>logs/session-log.md</code>.
   </div>
 
   <div class="note info">
@@ -439,7 +443,7 @@
   </section>
 
   <section>
-    <h2>BUZZ-TC-027 — BLOCKED (interaction-policy exclusion; cross-account question only)</h2>
+    <h2>BUZZ-TC-027 — <span class="badge PASS">PASS</span> resolved 2026-09-28 <span style="font-weight:400;color:var(--muted);font-size:14px">(originally BLOCKED — interaction-policy exclusion; cross-account question only)</span></h2>
     <p>In the original formal run, this case was classified <strong>BLOCKED — excluded by interaction policy</strong> without being attempted, together with BUZZ-TC-021–026 (now PASS, see above). It is the only case in that group that remains BLOCKED.</p>
     <ul class="tight">
       <li><strong>BUZZ-TC-027</strong> — Verify server-side enforcement of Edit Post permission.</li>
@@ -451,6 +455,30 @@
         <li><strong>Unconfirmed:</strong> whether the server independently blocks a <em>different</em> authenticated account from editing another account's post. This cross-account authorization check was not performed. It would need a second real demo account or a temporary one, and the QC lead decided not to pursue that at this time.</li>
         <li><strong>QC decision:</strong> TC-027 stays <strong>BLOCKED</strong> for the cross-account question specifically, and the self-edit sub-question is now separately confirmed as working. This is a deliberate, explicit scope boundary, not an oversight.</li>
       </ul>
+    </div>
+    <div class="note info">
+      <strong>BUZZ-TC-027 — RESOLVED (2026-09-28): cross-account Edit Post enforcement confirmed at both UI and server levels.</strong>
+      <ul class="tight" style="margin:8px 0 0;padding-left:18px">
+        <li><strong>Method:</strong> a live, QC-authorized action that created one temporary employee and system user account (<code>qa-temp-027</code>, ESS role, employee "QA TempAccount027"). This account was separate from the test post's author, the demo Admin-role account. The test post was "TC-027 cross-account test post - safe to delete." (post 16 / share 18).</li>
+        <li><strong>UI result:</strong> logged in as the temp account, the test post's card showed <strong>no "…" options button at all</strong>, so there was no Edit and no Delete. The feed API said the same: <code>{canUpdate: false, canDelete: false}</code> for the temp account, compared with <code>{canUpdate: true, canDelete: true}</code> for the actual author.</li>
+        <li><strong>Server result:</strong> since the UI offered no path, the temp account sent the same edit request a genuine self-edit uses, directly: <code>PUT /api/v2/buzz/posts/16</code> with body <code>{"type":"text","text":"… (edited by qa-temp-027)","deletedPhotos":[]}</code>. The server returned <strong>HTTP 403</strong> <code>{"error":{"status":403,"message":"Unauthorized"}}</code>. The post's text was confirmed unchanged afterwards.</li>
+        <li><strong>Conclusion:</strong> the server enforces this rule independently of the UI. This is <strong>not</strong> merely a hidden button. No security finding.</li>
+        <li><strong>Transparency note:</strong> during this run, the shared demo's live feed picked up a comment on the test post that this test did not create. Deleting the post during cleanup necessarily removed that comment too. This was an unavoidable side effect of working on a shared public instance, not something this test could have prevented.</li>
+        <li><strong>Operational notes (for completeness, not defects):</strong> the first live attempt was aborted part-way by a script bug and left one post (post 15) temporarily in the feed. The second attempt had a scoping bug: a self-edit probe that should have been blocked before sending went through, and edited that test post's own text. Both were fully cleaned up. The posts were deleted, and the temporary PIM employee records 429 and 446 were both independently confirmed removed. Direct API lookups returned 422 "Invalid Parameter", and PIM searches came back empty under both the Current and the Past Employees filters, so this does not rest on a UI list alone. The final clean run is the one described above.</li>
+        <li><strong>Evidence:</strong> the 10 <code>TC-027_R1_*</code> screenshots below.</li>
+      </ul>
+      <div class="evid" style="margin-top:10px">
+        <figure><img src="evidence/TC-027_R1_01_post_created_admin.png"><figcaption>TC-027_R1_01_post_created_admin.png</figcaption></figure>
+        <figure><img src="evidence/TC-027_R1_02_temp_employee_created.png"><figcaption>TC-027_R1_02_temp_employee_created.png</figcaption></figure>
+        <figure><img src="evidence/TC-027_R1_03_temp_user_created.png"><figcaption>TC-027_R1_03_temp_user_created.png</figcaption></figure>
+        <figure><img src="evidence/TC-027_R1_04_temp_account_no_options_menu.png"><figcaption>TC-027_R1_04_temp_account_no_options_menu.png</figcaption></figure>
+        <figure><img src="evidence/TC-027_R1_05_direct_api_put_403.png"><figcaption>TC-027_R1_05_direct_api_put_403.png</figcaption></figure>
+        <figure><img src="evidence/TC-027_R1_06_post_unchanged_after_attempt.png"><figcaption>TC-027_R1_06_post_unchanged_after_attempt.png</figcaption></figure>
+        <figure><img src="evidence/TC-027_R1_07_cleanup_post_deleted.png"><figcaption>TC-027_R1_07_cleanup_post_deleted.png</figcaption></figure>
+        <figure><img src="evidence/TC-027_R1_08_cleanup_temp_user_deleted.png"><figcaption>TC-027_R1_08_cleanup_temp_user_deleted.png</figcaption></figure>
+        <figure><img src="evidence/TC-027_R1_09_cleanup_temp_employee_deleted.png"><figcaption>TC-027_R1_09_cleanup_temp_employee_deleted.png</figcaption></figure>
+        <figure><img src="evidence/TC-027_R1_10_pim_verify_current_and_past.png"><figcaption>TC-027_R1_10_pim_verify_current_and_past.png</figcaption></figure>
+      </div>
     </div>
   </section>
 
@@ -531,6 +559,7 @@
           <li>DEFECT-001 (Share Video validation asymmetry) re-confirmed reproducible across two independent runs. <em>Reclassified 2026-09-28 as a UX inconsistency, not a functional defect: an empty-URL submission is blocked on the client with no request sent. See the DEFECT-001 addendum.</em></li>
           <li>Like/Unlike toggle (TC-008). PASS on targeted re-verification 2026-09-27, with count, icon state and API calls all confirmed.</li>
           <li><strong>Content-creating flows (BUZZ-TC-021–026), added 2026-09-28:</strong> text post, photo post, video post, empty-URL video submission (client-blocked), comment and repost. These were originally policy-BLOCKED. Coverage was later extended through a QC-authorized, one-time live verification with immediate cleanup. All 6 are PASS. For the full run detail (steps, IDs, cleanup confirmation), see the 2026-09-28 entries in <code>logs/session-log.md</code>, starting with "DEFECT-001 live re-verification (BUZZ-TC-024) and QC reclassification".</li>
+          <li><strong>Cross-account Edit Post enforcement (BUZZ-TC-027), added 2026-09-28:</strong> a temporary ESS account saw no Edit option on another account's post, and a direct <code>PUT</code> edit was rejected with HTTP 403, so the rule is enforced at both the UI and the server. PASS; see "BUZZ-TC-027 — RESOLVED" in the BUZZ-TC-027 section.</li>
         </ul>
       </div>
       <div>
@@ -538,7 +567,7 @@
         <ul class="tight">
           <li><strong>FAIL:</strong> tie-break "independent keys" claim (TC-020, test-design correction candidate, not a product defect). <em>TC-008 / DEFECT-002 was withdrawn after re-verification on 2026-09-27; see above.</em></li>
           <li><strong>BLOCKED (tooling):</strong> Share Post/repost modal (TC-014) — Claude Code permission classifier, not an app or policy issue. <em>Cross-reference (2026-09-28): the same dialog was opened successfully by the Milestone 5 Playwright suite (<code>automation/tests/post-interactions.spec.ts</code>, PASS); see <code>automation-execution-report.html</code>. Kept BLOCKED here as the historical record of this run.</em></li>
-          <li><strong>BLOCKED (policy):</strong> BUZZ-TC-027 only. The cross-account Edit Post enforcement question remains open; self-edit is confirmed (see the partial-closure note). <em>BUZZ-TC-021–026 were originally BLOCKED here too and are now PASS after the QC-authorized live verification on 2026-09-28; see "Fully validated".</em></li>
+          <li><em>BLOCKED (policy) — none remaining. BUZZ-TC-027 was the last case listed here; it was resolved to PASS on 2026-09-28 after the QC-authorized cross-account verification (see "Fully validated"). BUZZ-TC-021–026 were originally BLOCKED here too and are now PASS after the earlier live verification on 2026-09-28. TC-014 (tooling, above) is the sole remaining BLOCKED item.</em></li>
         </ul>
       </div>
     </div>
