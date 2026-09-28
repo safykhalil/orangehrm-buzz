@@ -7,7 +7,7 @@
 | 1 — PRD Generation | `prd-generation` v1.0 | 1 initial + 1 correction | `docs/PRD.md` | ✅ Complete, QC-reviewed |
 | 2 — UI Exploration | `ui-exploration` v2.0 | 1 initial + 1 cleanup | `docs/exploration-findings.md` | ✅ Complete, QC-reviewed |
 | 3 — Test Design | `test-design` v3.0 | 1 prompt, run twice (schema revision) | `test-design/test-design.csv` (27 cases) | ✅ Complete, QC-reviewed and filled (Valid in Scope / Needs Automation) |
-| 4 — Test Execution | `test-execution` v1.0 | 3 prompts total (initial + full re-run + DEFECT-002 targeted re-verification) | `execution/execution-report.html` + evidence | ✅ Complete — 23 PASS, 2 PASS†, 1 FAIL, 1 BLOCKED (TC-014 tooling only), 0 confirmed functional defects (DEFECT-001 reclassified 2026-09-28 as a UX inconsistency; BUZZ-TC-021-026 formally reclassified from policy-BLOCKED to PASS on 2026-09-28 after a QC-authorized live verification pass); DEFECT-002 investigated and withdrawn |
+| 4 — Test Execution | `test-execution` v1.0 | 3 prompts total (initial + full re-run + DEFECT-002 targeted re-verification) | `execution/execution-report.html` + evidence | ✅ Complete — 23 PASS, 2 PASS†, 1 FAIL, 1 BLOCKED (TC-014 tooling only), 0 confirmed functional defects (DEFECT-001 reclassified 2026-09-28 as a UX inconsistency; BUZZ-TC-021-026 formally reclassified from policy-BLOCKED to PASS on 2026-09-28 after a QC-authorized live verification pass; and BUZZ-TC-027's cross-account Edit Post enforcement was formally resolved (confirmed blocked at both UI and server level via a temporary second account)); DEFECT-002 investigated and withdrawn |
 | 5 — Playwright Automation | `playwright-automation` v3.2 | 1 prompt + 1 test-design correction follow-up | `automation/tests/*.spec.ts` + `automation-execution-report.html` + `healing-log.md` | ✅ Complete — 14 PASS, 1 defect (regression probe) |
 | Post-M5 follow-ups (2026-09-28) | — (QC-directed; no new skill run) | 10 prompts: 8-step QC-authorized live verification + 2 authorization messages, then 7 documentation/tooling updates (see "Post-Milestone 5 follow-ups") | `execution/execution-report.html`, `test-design/test-design.csv`, `automation/reports/automation-execution-report.html`, `automation/utils/build-report.js`, `logs/session-log.md` | ✅ Complete — DEFECT-001 reclassified as a UX inconsistency; BUZZ-TC-021–026 BLOCKED → PASS; TC-027 partially closed (self-edit confirmed, cross-account still BLOCKED) |
 
@@ -521,7 +521,7 @@ Record this run in logs/session-log.md, same convention as prior milestones.
 Follow the skill's stop condition exactly.
 ```
 
-[Editorial note, added 2026-09-28: the Milestone 4 counts cited in the prompt above are what was sent at the time. They were later superseded by the 2026-09-28 reclassifications (DEFECT-001 reclassified as a UX inconsistency; BUZZ-TC-021–026 moved from policy-BLOCKED to PASS). See the "Post-Milestone 5 follow-ups (2026-09-28)" section below. Current totals: 23 PASS, 2 PASS†, 1 FAIL, 1 BLOCKED.]
+[Editorial note, added 2026-09-28: the Milestone 4 counts cited in the prompt above are what was sent at the time. They were later superseded by the 2026-09-28 reclassifications (DEFECT-001 reclassified as a UX inconsistency; BUZZ-TC-021–026 moved from policy-BLOCKED to PASS; and BUZZ-TC-027's cross-account Edit Post enforcement was formally resolved (confirmed blocked at both UI and server level via a temporary second account)). See the "Post-Milestone 5 follow-ups (2026-09-28)" section below. Current totals: 23 PASS, 2 PASS†, 1 FAIL, 1 BLOCKED.]
 
 ---
 
