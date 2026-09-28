@@ -69,11 +69,15 @@
 
   <div class="summary">
     <div class="card"><div class="num">27</div><div class="label">In scope</div></div>
-    <div class="card pass"><div class="num">16</div><div class="label">Pass</div></div>
+    <div class="card pass"><div class="num">22</div><div class="label">Pass</div></div>
     <div class="card passt"><div class="num">2</div><div class="label">Pass†</div></div>
     <div class="card fail"><div class="num">1</div><div class="label">Fail</div></div>
-    <div class="card blocked"><div class="num">8</div><div class="label">Blocked</div></div>
+    <div class="card blocked"><div class="num">2</div><div class="label">Blocked</div></div>
     <div class="card"><div class="num">0</div><div class="label">Confirmed functional defects</div><div class="label" style="text-transform:none;letter-spacing:0">+1 UX inconsistency (DEFECT-001, reclassified)</div></div>
+  </div>
+
+  <div class="note info">
+    <strong>Update 2026-09-28 — BUZZ-TC-021 to BUZZ-TC-026 reclassified from BLOCKED (policy) to PASS.</strong> These six cases were BLOCKED by the interaction policy in the formal run. They were later executed in a follow-up, one-time live pass on 2026-09-28 under a QC-authorized policy override, with each created item deleted straight afterwards. This reclassification reuses that existing evidence; no new live actions were taken. Counts above were previously 16 PASS / 2 PASS† / 1 FAIL / 8 BLOCKED. The two remaining BLOCKED cases are TC-014 (tooling) and BUZZ-TC-027 (cross-account question only). See the new "BUZZ-TC-021 – BUZZ-TC-026" section below and the 2026-09-28 entries in <code>logs/session-log.md</code>.
   </div>
 
   <div class="note info">
@@ -333,15 +337,110 @@
   </section>
 
   <section>
-    <h2>BUZZ-TC-021 – BUZZ-TC-027 — BLOCKED (interaction-policy exclusion)</h2>
-    <p>Per the run's instructions, these 7 cases were classified <strong>BLOCKED — excluded by interaction policy</strong> without being attempted: each requires publishing content (post, photo, video, comment, repost) or probing another user's edit permission on this shared public demo instance.</p>
+    <h2>BUZZ-TC-021 – BUZZ-TC-026 — QC-authorized live verification (2026-09-28)</h2>
+    <div class="note">
+      <strong>Historical note.</strong> In the original formal run (2026-09-22), BUZZ-TC-021 to BUZZ-TC-027 were all classified <strong>BLOCKED — excluded by interaction policy</strong> and not attempted, because each one publishes content or probes another user's edit permission on the shared public demo. On 2026-09-28 the QC lead authorized a one-time policy override. Under it, TC-021 to TC-026 were executed live in a follow-up pass that was separate from the formal run. This is the same pattern as the TC-008 targeted re-verification above, where the original result is kept and the later run is recorded alongside it. Every post, comment and repost created in that pass was deleted straight afterwards. Each deletion was confirmed by a <code>DELETE</code> → 200 response and a feed reload showing the original 5 posts with unchanged IDs (see the "DEFECT-001 live re-verification" entry in <code>logs/session-log.md</code>). The results below were recorded from that evidence; no new live actions were taken for this reclassification. The test data and screenshots come from a single run of a one-off Playwright script, logged in as the demo Admin-role account (displayed this session as "Jason Sylvia Flores").
+    </div>
+
+    <details class="tc">
+      <summary><span class="id">BUZZ-TC-021</span><span class="title">Publish a new text post via composer</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Execution context:</strong> QC-authorized one-time policy override, 2026-09-28 (step 1 of the live run). Not part of the original formal run. The post was deleted during cleanup.</p>
+        <p><strong>Expected:</strong> Publishing a text post via the composer succeeds; the post appears in the feed with the submitted text.</p>
+        <p><strong>Steps:</strong> 1. Typed "All code is guilty until proven innocent." into "What's on your mind?". 2. Clicked "Post". 3. Observed the feed.</p>
+        <p><strong>Actual:</strong> A "Success — Successfully Saved" toast appeared. The new post (post 13 / share 15) showed at the top of the feed, dated 2026-09-28 07:12 AM, with exactly the submitted text and 0 Likes / 0 Comments / 0 Shares.</p>
+        <p><strong>Cleanup:</strong> <code>DELETE /api/v2/buzz/shares/16</code> (the TC-026 repost) → 200, then <code>/shares/15</code> → 200. After a reload the feed was back to its original 5 posts.</p>
+        <p><strong>Not covered:</strong> the empty and whitespace-only input variants mentioned in the CSV's Test Data column (Exploration §7 Open Question 3) were not exercised.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-021_R1_01_post_published.png"><figcaption>TC-021_R1_01_post_published.png</figcaption></figure>
+          <figure><img src="evidence/TC-021_R1_02_cleanup_confirmed.png"><figcaption>TC-021_R1_02_cleanup_confirmed.png (after cleanup of TC-021/025/026 items)</figcaption></figure>
+        </div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">BUZZ-TC-022</span><span class="title">Upload a photo via Share Photos and publish</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Execution context:</strong> QC-authorized one-time policy override, 2026-09-28 (step 6 of the live run). Not part of the original formal run. The post was deleted straight afterwards.</p>
+        <p><strong>Expected:</strong> Uploading a photo via Share Photos and submitting succeeds; the post appears in the feed with the image attached. No format/size validation issue was encountered with the test file used.</p>
+        <p><strong>Steps:</strong> 1. Clicked "Share Photos". 2. Attached <code>Testing-image.png</code> via "Add Photos". 3. Checked that the Share button was enabled once a photo was attached. 4. Clicked "Share".</p>
+        <p><strong>Actual:</strong> The image preview appeared in the dialog and Share was enabled. After submitting, a new post (share 17) showed at the top of the feed (07:15 AM) with the image attached. There was no format or size validation error for the test file.</p>
+        <p><strong>Cleanup:</strong> share 17 was deleted (→ 200). The feed was confirmed afterwards without it.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-022_R1_01_photo_attached.png"><figcaption>TC-022_R1_01_photo_attached.png</figcaption></figure>
+          <figure><img src="evidence/TC-022_R1_02_photo_post_in_feed.png"><figcaption>TC-022_R1_02_photo_post_in_feed.png</figcaption></figure>
+          <figure><img src="evidence/TC-022_R1_03_photo_post_deleted.png"><figcaption>TC-022_R1_03_photo_post_deleted.png</figcaption></figure>
+        </div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">BUZZ-TC-023</span><span class="title">Submit Share Video with a valid URL</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Execution context:</strong> QC-authorized one-time policy override, 2026-09-28 (step 7 of the live run). Not part of the original formal run. The post was deleted straight afterwards.</p>
+        <p><strong>Expected:</strong> Submitting Share Video with a valid URL succeeds; the post appears in the feed with the video.</p>
+        <p><strong>Steps:</strong> 1. Clicked "Share Video". 2. Entered a valid YouTube URL into "Video URL". 3. Clicked "Share". 4. Observed the feed.</p>
+        <p><strong>Actual:</strong> The dialog showed an embedded YouTube preview once the URL was entered. After submitting, a new post (share 18) showed at the top of the feed (07:16 AM) with the video embedded (YouTube player with title, thumbnail and play button). Playback itself was not tested.</p>
+        <p><strong>Cleanup:</strong> share 18 was deleted (→ 200). The feed was confirmed afterwards without it.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-023_R1_01_video_url_entered.png"><figcaption>TC-023_R1_01_video_url_entered.png</figcaption></figure>
+          <figure><img src="evidence/TC-023_R1_02_video_post_in_feed.png"><figcaption>TC-023_R1_02_video_post_in_feed.png</figcaption></figure>
+          <figure><img src="evidence/TC-023_R1_03_video_post_deleted.png"><figcaption>TC-023_R1_03_video_post_deleted.png</figcaption></figure>
+        </div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">BUZZ-TC-024</span><span class="title">Submit Share Video with an empty URL (DEFECT-001 verification)</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Execution context:</strong> QC-authorized one-time policy override, 2026-09-28 (step 8 of the live run). Not part of the original formal run. Nothing was created, so no cleanup was needed.</p>
+        <p><strong>Expected:</strong> Submitting Share Video with an empty URL does not create a broken or empty post, and does not silently no-op or return a server error. The client blocks the submission with a visible inline "Required" message and fires zero network requests.</p>
+        <p><strong>Steps:</strong> 1. Clicked "Share Video". 2. Left "Video URL" empty (value <code>""</code>); the Share button was enabled. 3. Clicked "Share" and monitored all network requests for 6 seconds. 4. Closed the dialog, reloaded, and compared the feed with the list recorded before the click.</p>
+        <p><strong>Actual:</strong> An inline "Required" message appeared under the field with a red border, and the dialog stayed open. Zero network requests fired (0 total, 0 non-GET). The feed held the same 5 posts with the same IDs before and after. This resolves the BUZZ-TC-019 defect candidate: invalid data is never submitted. DEFECT-001 was reclassified as a UX inconsistency; see the DEFECT-001 addendum under Formal Defects.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-024_R1_01_empty_url_before_click.png"><figcaption>TC-024_R1_01_empty_url_before_click.png</figcaption></figure>
+          <figure><img src="evidence/TC-024_R1_02_required_message_after_click.png"><figcaption>TC-024_R1_02_required_message_after_click.png</figcaption></figure>
+          <figure><img src="evidence/TC-024_R1_03_feed_unchanged_after.png"><figcaption>TC-024_R1_03_feed_unchanged_after.png</figcaption></figure>
+        </div>
+        <p>Network log: <code>evidence/TC-024_R1_network_log.json</code> (an empty list).</p>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">BUZZ-TC-025</span><span class="title">Submit a comment on a post</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Execution context:</strong> QC-authorized one-time policy override, 2026-09-28 (step 3 of the live run). Not part of the original formal run. The comment was removed during cleanup.</p>
+        <p><strong>Expected:</strong> Submitting a comment succeeds; the comment appears under the post and the comment count updates.</p>
+        <p><strong>Steps:</strong> 1. Expanded the comment box on this run's own test post (post 13 / share 15, created in TC-021). 2. Typed "Quality first, always." 3. Submitted it. 4. Observed the comment list and counter.</p>
+        <p><strong>Actual:</strong> A "Successfully Saved" toast appeared. The comment (comment 8) showed under the post with author, text and a 07:13 AM timestamp, plus Like / Edit / Delete links. The counter changed from "0 Comments" to "1 Comment". The post text reads "(edited)" because the BUZZ-TC-027 self-edit (step 2) ran before this step.</p>
+        <p><strong>Cleanup:</strong> the comment was removed together with its parent share 15 (<code>DELETE /api/v2/buzz/shares/15</code> → 200). See TC-021_R1_02_cleanup_confirmed.png.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-025_R1_01_comment_added.png"><figcaption>TC-025_R1_01_comment_added.png</figcaption></figure>
+        </div>
+      </div>
+    </details>
+
+    <details class="tc">
+      <summary><span class="id">BUZZ-TC-026</span><span class="title">Submit a repost via Share Post modal</span><span class="badge PASS">PASS</span></summary>
+      <div class="body">
+        <p><strong>Execution context:</strong> QC-authorized one-time policy override, 2026-09-28 (step 4 of the live run). Not part of the original formal run. The repost was deleted during cleanup.</p>
+        <p><strong>Expected:</strong> Submitting a repost via Share Post succeeds; the repost appears as its own feed entry, and the original post's Share count updates.</p>
+        <p><strong>Steps:</strong> 1. Clicked the Share (repost) icon on this run's own test post (share 15). 2. Left the caption empty. 3. Clicked "Share" in the "Share Post" dialog. 4. Observed the feed.</p>
+        <p><strong>Actual:</strong> The "Share Post" dialog showed the original post embedded (author, timestamp, text) with an optional caption field. After submitting, a new feed entry (share 16, 07:13 AM) appeared above the original, embedding it. The original post's counter changed from "0 Shares" to "1 Share".</p>
+        <p><strong>Cleanup:</strong> <code>DELETE /api/v2/buzz/shares/16</code> → 200. See TC-021_R1_02_cleanup_confirmed.png.</p>
+        <p><strong>Related:</strong> this run also opened the Share Post modal, which is what TC-014 checks. TC-014 is still recorded as BLOCKED, because its entry documents the tooling limitation from the formal run.</p>
+        <div class="evid">
+          <figure><img src="evidence/TC-026_R1_01_repost_dialog.png"><figcaption>TC-026_R1_01_repost_dialog.png</figcaption></figure>
+          <figure><img src="evidence/TC-026_R1_02_repost_in_feed.png"><figcaption>TC-026_R1_02_repost_in_feed.png</figcaption></figure>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section>
+    <h2>BUZZ-TC-027 — BLOCKED (interaction-policy exclusion; cross-account question only)</h2>
+    <p>In the original formal run, this case was classified <strong>BLOCKED — excluded by interaction policy</strong> without being attempted, together with BUZZ-TC-021–026 (now PASS, see above). It is the only case in that group that remains BLOCKED.</p>
     <ul class="tight">
-      <li><strong>BUZZ-TC-021</strong> — Publish a new text post via composer.</li>
-      <li><strong>BUZZ-TC-022</strong> — Upload a photo via Share Photos and publish.</li>
-      <li><strong>BUZZ-TC-023</strong> — Submit Share Video with a valid URL.</li>
-      <li><strong>BUZZ-TC-024</strong> — Submit Share Video with an empty URL (defect verification for DEFECT-001). <em>Executed 2026-09-28 outside this formal run, as a one-time QC-authorized live check. See the DEFECT-001 addendum.</em></li>
-      <li><strong>BUZZ-TC-025</strong> — Submit a comment on a post.</li>
-      <li><strong>BUZZ-TC-026</strong> — Submit a repost via Share Post modal.</li>
       <li><strong>BUZZ-TC-027</strong> — Verify server-side enforcement of Edit Post permission.</li>
     </ul>
     <div class="note info">
@@ -430,6 +529,7 @@
           <li>Composer structural presence, feed sort filters (including tie-break re-analysis), Read More, options-menu permission pattern (BR-005), Share Photos validation, photo lightbox, author/avatar non-interactivity, Help button, profile menu, no-pagination behavior.</li>
           <li>DEFECT-001 (Share Video validation asymmetry) re-confirmed reproducible across two independent runs. <em>Reclassified 2026-09-28 as a UX inconsistency, not a functional defect: an empty-URL submission is blocked on the client with no request sent. See the DEFECT-001 addendum.</em></li>
           <li>Like/Unlike toggle (TC-008). PASS on targeted re-verification 2026-09-27, with count, icon state and API calls all confirmed.</li>
+          <li><strong>Content-creating flows (BUZZ-TC-021–026), added 2026-09-28:</strong> text post, photo post, video post, empty-URL video submission (client-blocked), comment and repost. These were originally policy-BLOCKED. Coverage was later extended through a QC-authorized, one-time live verification with immediate cleanup. All 6 are PASS. For the full run detail (steps, IDs, cleanup confirmation), see the 2026-09-28 entries in <code>logs/session-log.md</code>, starting with "DEFECT-001 live re-verification (BUZZ-TC-024) and QC reclassification".</li>
         </ul>
       </div>
       <div>
@@ -437,7 +537,7 @@
         <ul class="tight">
           <li><strong>FAIL:</strong> tie-break "independent keys" claim (TC-020, test-design correction candidate, not a product defect). <em>TC-008 / DEFECT-002 was withdrawn after re-verification on 2026-09-27; see above.</em></li>
           <li><strong>BLOCKED (tooling):</strong> Share Post/repost modal (TC-014) — Claude Code permission classifier, not an app or policy issue.</li>
-          <li><strong>BLOCKED (policy):</strong> BUZZ-TC-021–027 — all content-creating/permission-probing actions on the shared public demo.</li>
+          <li><strong>BLOCKED (policy):</strong> BUZZ-TC-027 only. The cross-account Edit Post enforcement question remains open; self-edit is confirmed (see the partial-closure note). <em>BUZZ-TC-021–026 were originally BLOCKED here too and are now PASS after the QC-authorized live verification on 2026-09-28; see "Fully validated".</em></li>
         </ul>
       </div>
     </div>

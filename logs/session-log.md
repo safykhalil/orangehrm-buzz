@@ -567,3 +567,42 @@
 
 - `execution/execution-report.html`: a "BUZZ-TC-027 — Partial closure (2026-09-28)" note was added directly below the BUZZ-TC-021–027 BLOCKED list. The list item itself and the summary counts are unchanged.
 - `test-design/test-design.csv`, `automation/` and the evidence screenshots were not modified.
+
+---
+
+## Entry: BUZZ-TC-021–026 formal reclassification, BLOCKED → PASS (documentation only)
+
+- **Date:** 2026-09-28 (same session as the entries above)
+- **Requested by:** the human QC lead. **No new live actions were taken.** This reuses the evidence from the "DEFECT-001 live re-verification (BUZZ-TC-024) and QC reclassification" entry above, steps 1, 3, 4, 6, 7 and 8.
+
+### Status changes
+
+| TC ID | Before | After | Evidence (live-run step) |
+|---|---|---|---|
+| BUZZ-TC-021 | BLOCKED (policy) | PASS | Step 1: post 13 / share 15 published |
+| BUZZ-TC-022 | BLOCKED (policy) | PASS | Step 6: photo post, share 17 |
+| BUZZ-TC-023 | BLOCKED (policy) | PASS | Step 7: video post, share 18 |
+| BUZZ-TC-024 | BLOCKED (policy) | PASS | Step 8: inline "Required", 0 requests, no post |
+| BUZZ-TC-025 | BLOCKED (policy) | PASS | Step 3: comment 8, counter 0 → 1 |
+| BUZZ-TC-026 | BLOCKED (policy) | PASS | Step 4: repost share 16, Share counter 0 → 1 |
+
+TC-027 stays BLOCKED (cross-account question only; see the partial-closure entry). TC-014 is unchanged (BLOCKED, tooling-limitation record).
+
+### What changed
+
+- `test-design/test-design.csv`: the Expected Result cell of BUZZ-TC-021 to 026 was replaced with the live-confirmed expectation. This is a test-design correction, the same category as C-01/TC-020. No other column or row was changed.
+- `execution/evidence/`: 11 screenshots were copied from the live run's session scratchpad, using the `TC-0NN_R1_` names: TC-021 (post published, cleanup confirmed), TC-022 (photo attached, in feed, deleted), TC-023 (URL entered, in feed, deleted), TC-025 (comment added), TC-026 (repost dialog, repost in feed). The TC-024 evidence was already in the repo.
+- `execution/execution-report.html`:
+  - The six cases moved out of the grouped BLOCKED section into individual PASS entries. Each has steps, actual result, cleanup and evidence, and notes the QC-authorized override. A historical note records that they were originally BLOCKED.
+  - TC-027 now has its own BLOCKED section, with its partial-closure note unchanged.
+  - A dated update note was added at the top, and the Exit Assessment was updated.
+  - Nothing was deleted.
+
+### New summary totals
+
+27 in scope: **22 PASS, 2 PASS†, 1 FAIL, 2 BLOCKED** (TC-014 tooling, BUZZ-TC-027 cross-account). Previously 16 PASS / 2 PASS† / 1 FAIL / 8 BLOCKED.
+
+### Limitations
+
+- TC-021's empty and whitespace-only input variants (CSV Test Data column) were not exercised in the live run. The PASS covers the normal text-post case only.
+- The Milestone 5 automation report and `deliverables/QA-Pipeline-Milestone-Summary.xlsx` were not updated for these new counts.
