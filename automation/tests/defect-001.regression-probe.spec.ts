@@ -16,6 +16,16 @@ import { test, expect, evidence, note, TIER } from '../utils/fixtures';
  * disabled state only. Share is NEVER clicked — submitting is BUZZ-TC-024,
  * excluded by the interaction policy. The write guard also aborts any API
  * write from this test.
+ *
+ * RECLASSIFIED 2026-09-28: DEFECT-001 was reclassified from "confirmed
+ * functional defect" to "UX inconsistency, not a functional defect". See the
+ * DEFECT-001 addendum in execution/execution-report.html for full detail.
+ * Live verification (BUZZ-TC-024) confirmed that clicking Share with an empty
+ * Video URL fires zero network requests and creates no post. The button stays
+ * clickable, but no invalid data is ever actually submitted. This probe still
+ * checks the button's enabled state, because that fact is unchanged and still
+ * true. It is kept as a lightweight UI-consistency check, not because it still
+ * represents a functional risk.
  */
 const BANNER = '⚠ REGRESSION PROBE (DEFECT-001): PASS = defect still present; FAIL = symptom did not reproduce (human QC decision needed)';
 
