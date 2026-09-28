@@ -7,7 +7,7 @@
 | 1 — PRD Generation | `prd-generation` v1.0 | 1 initial + 1 correction | `docs/PRD.md` | ✅ Complete, QC-reviewed |
 | 2 — UI Exploration | `ui-exploration` v2.0 | 1 initial + 1 cleanup | `docs/exploration-findings.md` | ✅ Complete, QC-reviewed |
 | 3 — Test Design | `test-design` v3.0 | 1 prompt, run twice (schema revision) | `test-design/test-design.csv` (27 cases) | ✅ Complete, QC-reviewed and filled (Valid in Scope / Needs Automation) |
-| 4 — Test Execution | `test-execution` v1.0 | 3 prompts total (initial + full re-run + DEFECT-002 targeted re-verification) | `execution/execution-report.html` + evidence | ✅ Complete — 16 PASS, 2 PASS†, 1 FAIL, 8 BLOCKED, 1 open defect (DEFECT-001); DEFECT-002 investigated and withdrawn |
+| 4 — Test Execution | `test-execution` v1.0 | 3 prompts total (initial + full re-run + DEFECT-002 targeted re-verification) | `execution/execution-report.html` + evidence | ✅ Complete — 22 PASS, 2 PASS†, 1 FAIL, 2 BLOCKED (TC-014 tooling, TC-027 cross-account question only), 0 confirmed functional defects (DEFECT-001 reclassified 2026-09-28 as a UX inconsistency; BUZZ-TC-021-026 formally reclassified from policy-BLOCKED to PASS on 2026-09-28 after a QC-authorized live verification pass); DEFECT-002 investigated and withdrawn |
 | 5 — Playwright Automation | `playwright-automation` v3.2 | 1 prompt + 1 test-design correction follow-up | `automation/tests/*.spec.ts` + `automation-execution-report.html` + `healing-log.md` | ✅ Complete — 14 PASS, 1 defect (regression probe) |
 
 **How to read this file:** each milestone section below contains the exact,
@@ -491,7 +491,7 @@ to complete Milestone 5 of the OrangeHRM Buzz QA project.
 
 Application URL: https://opensource-demo.orangehrmlive.com/
 Test design CSV: test-design/test-design.csv, filtered to Needs Automation = Yes (15 cases)
-Milestone 4 execution report: execution/execution-report.html (final version — 16 PASS, 2 PASS†, 1 FAIL, 8 BLOCKED, 1 open defect: DEFECT-001; DEFECT-002 was investigated and withdrawn as a test-targeting error)
+Milestone 4 execution report: execution/execution-report.html (final version — 22 PASS, 2 PASS†, 1 FAIL, 2 BLOCKED (TC-014 tooling, TC-027 cross-account question only), 0 confirmed functional defects (DEFECT-001 reclassified 2026-09-28 as a UX inconsistency; BUZZ-TC-021-026 formally reclassified from policy-BLOCKED to PASS on 2026-09-28 after a QC-authorized live verification pass); DEFECT-002 was investigated and withdrawn as a test-targeting error)
 PRD: docs/PRD.md
 Exploration findings: docs/exploration-findings.md
 
