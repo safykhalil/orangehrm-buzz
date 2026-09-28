@@ -65,6 +65,8 @@ const DEFECT_001_RECLASSIFICATION = {
   tcNote: 'DEFECT-001 was reclassified from "confirmed functional defect" to <b>"UX inconsistency, not a functional defect"</b>. A live, QC-authorized check (BUZZ-TC-024) showed that clicking Share with an empty Video URL fires zero network requests and creates no post. The button is still enabled, so this probe\'s assertion still holds, and it is kept as a lightweight UI-consistency check. The original wording on this page is kept for audit. Full detail: the DEFECT-001 addendum in <code>execution/execution-report.html</code>.',
   // 3. "Reclassified <date>" row under Formal Defects.
   formalDefects: '<b>UX inconsistency, not a functional defect</b> (QC decision). In a live, QC-authorized check (BUZZ-TC-024), clicking Share with an empty Video URL showed an inline "Required" message, fired zero network requests and created no post. The button-state symptom above is unchanged, but no invalid data is submitted. The Status wording above is kept for audit, and the automation was not re-run. Full detail: the DEFECT-001 addendum in <code>execution/execution-report.html</code>.',
+  // Formal Defects "Severity / Priority" row (replaces the original High / High).
+  severityPriority: 'Low / Medium (lowered from High/High on 2026-09-28 - see execution-report.html\'s DEFECT-001 addendum)',
   // 4. Automation Health "Surfaced real defects" cell.
   healthCell: 'DEFECT-001 reclassified as a UX inconsistency, not a functional defect (see Formal Defects).',
 };
@@ -240,7 +242,7 @@ ${rows.map(tcSection).join('\n')}
   <dt>Actual</dt><dd>Share is enabled with an empty URL field (<code>toBeEnabled()</code> held; evidence TC-019).</dd>
   <dt>Expected</dt><dd>Share disabled while the URL is empty, matching Share Photos (BUZZ-TC-012, which passed this run with Share disabled).</dd>
   <dt>Probe boundary</dt><dd>Button state only, matching M4's writeup. Share is never clicked (submission is BUZZ-TC-024, policy-excluded), and the API write guard recorded zero write attempts during the probe.</dd>
-  <dt>Severity / priority</dt><dd>High / High (unchanged from M4)</dd>
+  ${R001 ? `<dt>Severity / Priority</dt><dd>${R001.severityPriority}</dd>` : '<dt>Severity / priority</dt><dd>High / High (unchanged from M4)</dd>'}
 </dl></div>
 <p class="muted">DEFECT-002 (Like/Unlike) was withdrawn in M4 re-verification, so it has no probe. BUZZ-TC-008 is automated as an ordinary state-changing test and passed. No new product defects were found by this automation run.</p>
 </section>
