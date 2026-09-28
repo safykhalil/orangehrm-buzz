@@ -466,7 +466,7 @@
         <dt>Actual</dt><dd>"Share" button remains enabled with an empty URL field.</dd>
         <dt>Expected</dt><dd>"Share" should be disabled while the URL field is empty, matching Share Photos' behavior (disabled until a photo is attached).</dd>
         <dt>Reproducibility</dt><dd>2/2 — confirmed in the prior same-day M4 run and reproduced again in this re-run.</dd>
-        <dt>Severity / Priority</dt><dd>Low / Medium — validation asymmetry vs. the equivalent Share Photos flow; downstream submission behavior (BUZZ-TC-024) remains unverified since submitting is excluded by policy. — lowered from High/High after the 2026-09-28 reclassification confirmed no invalid data is actually submitted (see the DEFECT-001 addendum below); the original High/High rating reflected the pre-reclassification defect-candidate assessment.</dd>
+        <dt>Severity / Priority</dt><dd>Low / Medium — validation asymmetry vs. the equivalent Share Photos flow; downstream submission behavior (BUZZ-TC-024) was confirmed 2026-09-28: no post is created, no request fires - see the addendum below. — lowered from High/High after the 2026-09-28 reclassification confirmed no invalid data is actually submitted (see the DEFECT-001 addendum below); the original High/High rating reflected the pre-reclassification defect-candidate assessment.</dd>
         <dt>Affected TCs</dt><dd>TC-019 (confirmed), BUZZ-TC-024 (confirmed 2026-09-28 - see the addendum below: no post is created, no request fires).</dd>
       </dl>
       <h4 style="margin:18px 0 8px;font-size:14px;border-top:1px solid var(--border);padding-top:14px">Addendum 2026-09-28 — Re-verification and reclassification (live, QC-authorized)</h4>
