@@ -492,7 +492,7 @@ to complete Milestone 5 of the OrangeHRM Buzz QA project.
 
 Application URL: https://opensource-demo.orangehrmlive.com/
 Test design CSV: test-design/test-design.csv, filtered to Needs Automation = Yes (15 cases)
-Milestone 4 execution report: execution/execution-report.html (final version — 22 PASS, 2 PASS†, 1 FAIL, 2 BLOCKED (TC-014 tooling, TC-027 cross-account question only), 0 confirmed functional defects (DEFECT-001 reclassified 2026-09-28 as a UX inconsistency; BUZZ-TC-021-026 formally reclassified from policy-BLOCKED to PASS on 2026-09-28 after a QC-authorized live verification pass); DEFECT-002 was investigated and withdrawn as a test-targeting error)
+Milestone 4 execution report: execution/execution-report.html (final version — 16 PASS, 2 PASS†, 1 FAIL, 8 BLOCKED, 1 open defect: DEFECT-001; DEFECT-002 was investigated and withdrawn as a test-targeting error)
 PRD: docs/PRD.md
 Exploration findings: docs/exploration-findings.md
 
@@ -520,6 +520,8 @@ Record this run in logs/session-log.md, same convention as prior milestones.
 
 Follow the skill's stop condition exactly.
 ```
+
+[Editorial note, added 2026-09-28: the Milestone 4 counts cited in the prompt above are what was sent at the time. They were later superseded by the 2026-09-28 reclassifications (DEFECT-001 reclassified as a UX inconsistency; BUZZ-TC-021–026 moved from policy-BLOCKED to PASS). See the "Post-Milestone 5 follow-ups (2026-09-28)" section below. Current totals: 22 PASS, 2 PASS†, 1 FAIL, 2 BLOCKED.]
 
 ---
 
