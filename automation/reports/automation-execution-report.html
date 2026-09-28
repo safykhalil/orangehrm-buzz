@@ -380,18 +380,18 @@
 </details>
 
 <details class="tc" open>
-  <summary><span class="id">TC-019</span><span class="title">Share Video 'Share' button not disabled despite empty Video URL (defect candidate)</span><span class="tier">Regression probe</span><span class="badge DEFECT">DEFECT</span></summary>
+  <summary><span class="id">TC-019</span><span class="title">Share Video 'Share' button stays enabled with empty Video URL, but submission is blocked client-side (confirmed, not a defect)</span><span class="tier">Regression probe</span><span class="badge DEFECT">DEFECT</span></summary>
   <div class="body">
     <div class="note probe">⚠ <b>REGRESSION PROBE, INVERTED ASSERTION.</b> Runner PASS = DEFECT-001 is <b>still present</b> (expected, not alarming). Runner FAIL = the symptom did not reproduce, which needs a human QC decision. Never flip this probe to expect success.</div>
     <div class="note info"><b>Update 2026-09-28 (documentation only; the probe was not re-run):</b> DEFECT-001 was reclassified from "confirmed functional defect" to <b>"UX inconsistency, not a functional defect"</b>. A live, QC-authorized check (BUZZ-TC-024) showed that clicking Share with an empty Video URL fires zero network requests and creates no post. The button is still enabled, so this probe's assertion still holds, and it is kept as a lightweight UI-consistency check. The original wording on this page is kept for audit. Full detail: the DEFECT-001 addendum in <code>execution/execution-report.html</code>.</div>
     <dl class="kv">
       <dt>Test</dt><dd><code>BUZZ-TC-019 - [REGRESSION PROBE, inverted] DEFECT-001 Share Video Share button still enabled with empty URL</code> (<code>tests/defect-001.regression-probe.spec.ts</code>)</dd>
-      <dt>Module / type</dt><dd>Buzz · Negative · Priority High</dd>
+      <dt>Module / type</dt><dd>Buzz · Negative · Priority Medium</dd>
       <dt>Execution time</dt><dd>4.1 s</dd>
       <dt>Classification</dt><dd>Category 2: Product Defect (known, DEFECT-001). Probe PASS = defect still present</dd>
       <dt>Assertion source</dt><dd>M4 TC-019 + DEFECT-001 (2/2 reproducible)</dd>
     </dl>
-    <h4>Expected (test-design CSV)</h4><p>DEFECT CANDIDATE: 'Share' button remains enabled/clickable despite the Video URL field being empty, unlike the equivalent Share Photos flow (BUZZ-TC-012), where Share is disabled with no photo attached. Flag for QC review as a validation asymmetry. The button was not clicked, so whether submission actually succeeds/fails with an empty URL is unconfirmed - see BUZZ-TC-024 (requires live confirmation).</p>
+    <h4>Expected (test-design CSV)</h4><p>The 'Share' button remains enabled/clickable despite the Video URL field being empty - this differs from Share Photos (BUZZ-TC-012), which disables Share with no photo attached, but is not itself incorrect. Confirmed live (BUZZ-TC-024, 2026-09-28): clicking Share with an empty Video URL shows a visible inline 'Required' validation message, fires zero network requests, and creates no post. The two Share dialogs use different but each individually valid client-side validation patterns (proactive disable vs. block-on-submit with inline message). Reclassified from 'defect candidate' to 'UX inconsistency, not a functional defect' - see execution-report.html's DEFECT-001 addendum for full detail.</p>
     <h4>What the automation asserts</h4><p>INVERTED: Share Video dialog with an empty &quot;Paste Video URL&quot; field has an ENABLED Share button (the defect symptom). Share is never clicked; closed via ×.</p>
     <h4>Actual</h4>
     <p>Share button was enabled with an empty Video URL field, so the defect symptom is present (probe PASS).</p>
