@@ -263,6 +263,7 @@
         <p><strong>Expected:</strong> Clicking the Share/repost icon opens a "Share Post" dialog with an optional caption and an enabled "Share" button (not clicked).</p>
         <p><strong>Actual:</strong> <strong>Not executed.</strong> The click on the repost icon was refused by the Claude Code tool's own permission classifier ("Modify Shared Resources") before the page was reached — a tooling-level restriction, not an application behavior or a skill-policy exclusion (opening this same class of non-submitting dialog succeeded for Share Photos/Share Video in TC-012/TC-019). No workaround was attempted, per the classifier's own guidance not to route around a denial.</p>
         <p>Classified BLOCKED (system-level dependency prevented reaching a definitive result), not FAIL/SKIP.</p>
+        <p><strong>Addendum (2026-09-28):</strong> this same action (opening the Share Post/repost dialog) was successfully automated in Milestone 5 using real Playwright test code (<code>automation/tests/post-interactions.spec.ts</code>), outside this MCP-based tool's permission restriction. This confirms the restriction was specific to this run's tooling, not the application or a policy exclusion. TC-014 remains BLOCKED here as an accurate historical record of what this specific run could reach - see <code>automation-execution-report.html</code> for the successful automated result.</p>
       </div>
     </details>
 
@@ -307,7 +308,7 @@
     </details>
 
     <details class="tc" open>
-      <summary><span class="id">TC-019</span><span class="title">Share Video 'Share' button not disabled despite empty Video URL</span><span class="badge PASS">PASS (defect confirmed)</span></summary>
+      <summary><span class="id">TC-019</span><span class="title">Share Video 'Share' button not disabled despite empty Video URL</span><span class="badge PASS">PASS (reclassified — not a functional defect)</span></summary>
       <div class="body">
         <p><strong>Expected:</strong> "Share" button remains enabled with an empty "Paste Video URL" field, unlike Share Photos (TC-012).</p>
         <p><strong>Actual:</strong> Confirmed — accessibility snapshot shows <code>button "Share"</code> with no <code>[disabled]</code> marker, while the URL field is empty. Reproduces the validation asymmetry first flagged in Exploration §3.4 and confirmed in the prior M4 run's DEFECT-001. Button was not clicked (would create content). See <strong>DEFECT-001</strong> below.</p>
@@ -536,7 +537,7 @@
         <h4 style="margin-bottom:6px;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;">Blocked / Failed / Out of scope</h4>
         <ul class="tight">
           <li><strong>FAIL:</strong> tie-break "independent keys" claim (TC-020, test-design correction candidate, not a product defect). <em>TC-008 / DEFECT-002 was withdrawn after re-verification on 2026-09-27; see above.</em></li>
-          <li><strong>BLOCKED (tooling):</strong> Share Post/repost modal (TC-014) — Claude Code permission classifier, not an app or policy issue.</li>
+          <li><strong>BLOCKED (tooling):</strong> Share Post/repost modal (TC-014) — Claude Code permission classifier, not an app or policy issue. <em>Cross-reference (2026-09-28): the same dialog was opened successfully by the Milestone 5 Playwright suite (<code>automation/tests/post-interactions.spec.ts</code>, PASS); see <code>automation-execution-report.html</code>. Kept BLOCKED here as the historical record of this run.</em></li>
           <li><strong>BLOCKED (policy):</strong> BUZZ-TC-027 only. The cross-account Edit Post enforcement question remains open; self-edit is confirmed (see the partial-closure note). <em>BUZZ-TC-021–026 were originally BLOCKED here too and are now PASS after the QC-authorized live verification on 2026-09-28; see "Fully validated".</em></li>
         </ul>
       </div>
