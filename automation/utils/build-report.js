@@ -67,6 +67,8 @@ const DEFECT_001_RECLASSIFICATION = {
   formalDefects: '<b>UX inconsistency, not a functional defect</b> (QC decision). In a live, QC-authorized check (BUZZ-TC-024), clicking Share with an empty Video URL showed an inline "Required" message, fired zero network requests and created no post. The button-state symptom above is unchanged, but no invalid data is submitted. The Status wording above is kept for audit, and the automation was not re-run. Full detail: the DEFECT-001 addendum in <code>execution/execution-report.html</code>.',
   // Formal Defects "Severity / Priority" row (replaces the original High / High).
   severityPriority: 'Low / Medium (lowered from High/High on 2026-09-28 - see execution-report.html\'s DEFECT-001 addendum)',
+  // Clause appended to the Formal Defects "Probe boundary" row (original text kept).
+  probeBoundaryNote: '(this probe\'s own scope never clicks Share, by design - this remains true. TC-024 itself has since been executed via a separate, one-off QC-authorized live check outside this automation suite; see execution-report.html for that result).',
   // 4. Automation Health "Surfaced real defects" cell.
   healthCell: 'DEFECT-001 reclassified as a UX inconsistency, not a functional defect (see Formal Defects).',
 };
@@ -241,7 +243,7 @@ ${rows.map(tcSection).join('\n')}
   <dt>Steps</dt><dd>1. Click "Share Video". 2. Leave "Paste Video URL" empty. 3. Observe the Share button's disabled state (do not click it).</dd>
   <dt>Actual</dt><dd>Share is enabled with an empty URL field (<code>toBeEnabled()</code> held; evidence TC-019).</dd>
   <dt>Expected</dt><dd>Share disabled while the URL is empty, matching Share Photos (BUZZ-TC-012, which passed this run with Share disabled).</dd>
-  <dt>Probe boundary</dt><dd>Button state only, matching M4's writeup. Share is never clicked (submission is BUZZ-TC-024, policy-excluded), and the API write guard recorded zero write attempts during the probe.</dd>
+  <dt>Probe boundary</dt><dd>Button state only, matching M4's writeup. Share is never clicked (submission is BUZZ-TC-024, policy-excluded), and the API write guard recorded zero write attempts during the probe.${R001 ? ' ' + R001.probeBoundaryNote : ''}</dd>
   ${R001 ? `<dt>Severity / Priority</dt><dd>${R001.severityPriority}</dd>` : '<dt>Severity / priority</dt><dd>High / High (unchanged from M4)</dd>'}
 </dl></div>
 <p class="muted">DEFECT-002 (Like/Unlike) was withdrawn in M4 re-verification, so it has no probe. BUZZ-TC-008 is automated as an ordinary state-changing test and passed. No new product defects were found by this automation run.</p>
