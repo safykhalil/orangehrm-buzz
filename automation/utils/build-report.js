@@ -56,6 +56,8 @@ const META = {
 const DEFECT_001_RECLASSIFICATION = {
   date: '2026-09-28',
   tc: 'BUZZ-TC-019',
+  // Badge text for the probe (label only; status, colour and counts stay DEFECT).
+  badgeLabel: 'DEFECT (reclassified)',
   // 1. Regression-probe tier card.
   tierCard: 'DEFECT-001 has been reclassified as a UX inconsistency, not a functional defect. See the DEFECT-001 note below.',
   // 2. Dated update note inside the TC-019 result.
@@ -85,7 +87,7 @@ function classify(id, r) {
   const tier = r.tags.find(t => TIER_LABEL[t]);
   if (tier === '@regression-probe') {
     return s === 'passed'
-      ? { status: 'DEFECT', cls: 'DEFECT', category: 'Category 2: Product Defect (known, DEFECT-001). Probe PASS = defect still present' }
+      ? { status: 'DEFECT', cls: 'DEFECT', label: R001 && id === R001.tc ? R001.badgeLabel : undefined, category: 'Category 2: Product Defect (known, DEFECT-001). Probe PASS = defect still present' }
       : { status: 'PROBE: NOT REPRODUCED', cls: 'FAIL', category: 'Probe FAIL = symptom did not reproduce. Human QC decision needed' };
   }
   if (s === 'passed') return { status: 'PASS', cls: 'PASS', category: '—' };
@@ -125,7 +127,7 @@ const tcSection = x => {
   const probe = x.tier === 'Regression probe';
   return `
 <details class="tc"${x.k.status !== 'PASS' ? ' open' : ''}>
-  <summary><span class="id">${x.id.replace('BUZZ-', '')}</span><span class="title">${esc(x.c.Title)}</span><span class="tier">${esc(x.tier)}</span><span class="badge ${x.k.cls}">${esc(x.k.status)}</span></summary>
+  <summary><span class="id">${x.id.replace('BUZZ-', '')}</span><span class="title">${esc(x.c.Title)}</span><span class="tier">${esc(x.tier)}</span><span class="badge ${x.k.cls}">${esc(x.k.label || x.k.status)}</span></summary>
   <div class="body">
     ${probe ? `<div class="note probe">⚠ <b>REGRESSION PROBE, INVERTED ASSERTION.</b> Runner PASS = DEFECT-001 is <b>still present</b> (expected, not alarming). Runner FAIL = the symptom did not reproduce, which needs a human QC decision. Never flip this probe to expect success.</div>` : ''}${R001 && x.id === R001.tc ? `
     <div class="note info"><b>Update ${R001.date} (${R001.tcNoteHeading}):</b> ${R001.tcNote}</div>` : ''}

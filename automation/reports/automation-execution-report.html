@@ -380,7 +380,7 @@
 </details>
 
 <details class="tc" open>
-  <summary><span class="id">TC-019</span><span class="title">Share Video 'Share' button stays enabled with empty Video URL, but submission is blocked client-side (confirmed, not a defect)</span><span class="tier">Regression probe</span><span class="badge DEFECT">DEFECT</span></summary>
+  <summary><span class="id">TC-019</span><span class="title">Share Video 'Share' button stays enabled with empty Video URL, but submission is blocked client-side (confirmed, not a defect)</span><span class="tier">Regression probe</span><span class="badge DEFECT">DEFECT (reclassified)</span></summary>
   <div class="body">
     <div class="note probe">⚠ <b>REGRESSION PROBE, INVERTED ASSERTION.</b> Runner PASS = DEFECT-001 is <b>still present</b> (expected, not alarming). Runner FAIL = the symptom did not reproduce, which needs a human QC decision. Never flip this probe to expect success.</div>
     <div class="note info"><b>Update 2026-09-28 (documentation only; the probe was not re-run):</b> DEFECT-001 was reclassified from "confirmed functional defect" to <b>"UX inconsistency, not a functional defect"</b>. A live, QC-authorized check (BUZZ-TC-024) showed that clicking Share with an empty Video URL fires zero network requests and creates no post. The button is still enabled, so this probe's assertion still holds, and it is kept as a lightweight UI-consistency check. The original wording on this page is kept for audit. Full detail: the DEFECT-001 addendum in <code>execution/execution-report.html</code>.</div>
