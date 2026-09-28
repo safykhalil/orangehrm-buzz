@@ -344,6 +344,14 @@
       <li><strong>BUZZ-TC-026</strong> — Submit a repost via Share Post modal.</li>
       <li><strong>BUZZ-TC-027</strong> — Verify server-side enforcement of Edit Post permission.</li>
     </ul>
+    <div class="note info">
+      <strong>BUZZ-TC-027 — Partial closure (2026-09-28)</strong>
+      <ul class="tight" style="margin:8px 0 0;padding-left:18px">
+        <li><strong>Confirmed:</strong> editing <em>one's own</em> post works. In the earlier QC-authorized live run on 2026-09-28, a post was created and then edited via "…" → Edit Post. The server accepted the edit (<code>PUT /api/v2/buzz/posts/13</code> → 200), and the edited text was still shown after a page reload. The post was deleted afterwards. See the TC-021/TC-027 steps in the DEFECT-001 re-verification entry of <code>logs/session-log.md</code>. The screenshots from that step were not copied into <code>execution/evidence/</code>; the session-log record is the evidence of record.</li>
+        <li><strong>Unconfirmed:</strong> whether the server independently blocks a <em>different</em> authenticated account from editing another account's post. This cross-account authorization check was not performed. It would need a second real demo account or a temporary one, and the QC lead decided not to pursue that at this time.</li>
+        <li><strong>QC decision:</strong> TC-027 stays <strong>BLOCKED</strong> for the cross-account question specifically, and the self-edit sub-question is now separately confirmed as working. This is a deliberate, explicit scope boundary, not an oversight.</li>
+      </ul>
+    </div>
   </section>
 
   <section>
