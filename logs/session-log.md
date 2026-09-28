@@ -477,3 +477,57 @@
 - H-03 (TC-007 visibility check) is open to QC review.
 - TC-014's expected result still rests on exploration evidence only.
 - No credential values were recorded in this log, the report, the healing log, the code, or any evidence file.
+
+---
+
+## Entry: DEFECT-001 live re-verification (BUZZ-TC-024) and QC reclassification
+
+- **Date/Time:** 2026-09-28, about 07:08–07:20 local time (post times in the demo showed 07:12–07:16 AM).
+- **Requested by:** the human QC lead, as an explicit, scoped, one-time authorization to run steps 0–8 live on the shared demo. It overrode the Interaction Policy's default exclusion for those actions only. This was not a formal milestone re-run.
+- **Method:** a one-off Playwright script in the session scratchpad, using the Playwright already installed in `automation/node_modules`. No file under `automation/` was changed. Logged in with the demo credentials shown on the login page; no values were recorded. Every write request was logged, and every delete ran behind a network guard that allowed only the one expected share ID.
+
+### What was authorized and done
+
+| Step | Action | Result |
+|---|---|---|
+| 0 | Clean up the QC lead's two manual test posts ("QA team shipped the 0813 leave flow 693679" / "…610494"), matching exact text only | **Neither found.** The feed held only 5 posts (IDs 14, 10, 9, 7, 6) and none contained "0813 leave flow", so the demo appeared freshly reset. **Nothing was deleted.** |
+| 1 | TC-021: post "All code is guilty until proven innocent." | Created post 13 / share 15 |
+| 2 | TC-027: Edit Post, appending " (edited)" | `PUT /api/v2/buzz/posts/13` → 200; edited text still shown after reload |
+| 3 | TC-025: comment "Quality first, always." | Comment 8 on share 15 |
+| 4 | TC-026: repost | Share 16, shown as a separate feed entry |
+| 5 | Clean up steps 1–4 | `DELETE /api/v2/buzz/shares/16` → 200, then `/shares/15` → 200 |
+| 6 | TC-022: Share Photos with `Testing-image.png` | Share 17 created with the image, then deleted (200) |
+| 7 | TC-023: Share Video with a valid YouTube URL | Share 18 created (the video embedded), then deleted (200) |
+| 8 | TC-024: Share Video with an **empty** URL | See below |
+
+**Cleanup confirmed:** everything created in steps 1–7 was deleted. The feed returned to its original 5 posts with the IDs unchanged (14, 10, 9, 7, 6). Post 14 ("Excited to collaborate…") belonged to another tester under the same shared identity and was not touched.
+
+### DEFECT-001 finding (step 8)
+
+- The URL field was empty (`""`) and the Share button was **enabled** before the click, so the original DEFECT-001 observation still holds.
+- After the click, an inline **"Required"** message appeared, the field got a red border, and the dialog stayed open.
+- **Zero network requests** of any kind fired in the 6 seconds after the click (0 total, 0 non-GET).
+- **No post was created.** The feed had the same 5 posts and IDs after the dialog was closed and the page reloaded.
+- **QC decision:** DEFECT-001 is reclassified from "confirmed functional defect" to **"UX inconsistency, not a functional defect"**. Share Photos disables the button in advance, while Share Video blocks the submission and shows an inline message. Each pattern is valid, and neither lets invalid data through.
+- **Residual item, NOT verified:** it was not tested whether the server rejects an empty Video URL when the API is called directly. That was outside the authorized, UI-only scope and is noted as a possible follow-up.
+- **Evidence (copied into the repo):** `execution/evidence/TC-024_R1_01_empty_url_before_click.png`, `TC-024_R1_02_required_message_after_click.png`, `TC-024_R1_03_feed_unchanged_after.png`, `TC-024_R1_network_log.json` (empty list). Screenshots for steps 0–7 stay in the session scratchpad only.
+
+### Changes made
+
+- `execution/execution-report.html`:
+  - A dated addendum added under DEFECT-001; the original writeup is unchanged.
+  - The heading now carries a status tag.
+  - A dated update note added at the top.
+  - The summary card now reads 0 confirmed functional defects + 1 UX inconsistency (was 1 open defect).
+  - Pointers added at TC-019 (badge unchanged), BUZZ-TC-024 and the Exit Assessment.
+- `test-design/test-design.csv` and `automation/` were not modified.
+
+### Flagged for later (not done now)
+
+- The Milestone 5 automation report (`automation/reports/`) and the DEFECT-001 regression probe (`automation/tests/defect-001.regression-probe.spec.ts`) still describe DEFECT-001 as a fully open functional defect. They have not been updated for this reclassification. This is flagged as a follow-up item for a separate review and was not changed as part of this update.
+
+### Errors / limitations encountered
+
+- The first login attempts timed out: the script waited for `/dashboard`, but after login the app redirects back to Buzz. No write had happened yet at that point.
+- In the first step-5 attempt, the delete guard's route handler threw a regex error before the DELETE request was sent. A read-only feed check confirmed nothing had been deleted, and the guard was fixed before retrying.
+- No credential values were recorded in this log, the report, or any evidence file.

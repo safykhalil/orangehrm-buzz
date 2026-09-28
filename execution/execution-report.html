@@ -73,7 +73,11 @@
     <div class="card passt"><div class="num">2</div><div class="label">Pass†</div></div>
     <div class="card fail"><div class="num">1</div><div class="label">Fail</div></div>
     <div class="card blocked"><div class="num">8</div><div class="label">Blocked</div></div>
-    <div class="card"><div class="num">1</div><div class="label">Open defects</div></div>
+    <div class="card"><div class="num">0</div><div class="label">Confirmed functional defects</div><div class="label" style="text-transform:none;letter-spacing:0">+1 UX inconsistency (DEFECT-001, reclassified)</div></div>
+  </div>
+
+  <div class="note info">
+    <strong>Update 2026-09-28 — DEFECT-001 re-verified live (BUZZ-TC-024) and reclassified as a UX inconsistency, not a functional defect.</strong> In a one-time, QC-authorized live check, clicking Share with an empty Video URL showed an inline "Required" message, sent zero network requests and created no post. The Share button does stay enabled, so the original observation stands, but no invalid data gets through. The open-defects count above was previously 1. The TC-019 badge is unchanged, because it records what was observed at the time. See the DEFECT-001 addendum below.
   </div>
 
   <div class="note info">
@@ -303,6 +307,7 @@
       <div class="body">
         <p><strong>Expected:</strong> "Share" button remains enabled with an empty "Paste Video URL" field, unlike Share Photos (TC-012).</p>
         <p><strong>Actual:</strong> Confirmed — accessibility snapshot shows <code>button "Share"</code> with no <code>[disabled]</code> marker, while the URL field is empty. Reproduces the validation asymmetry first flagged in Exploration §3.4 and confirmed in the prior M4 run's DEFECT-001. Button was not clicked (would create content). See <strong>DEFECT-001</strong> below.</p>
+        <p><strong>Current classification (2026-09-28):</strong> the badge above records the observation made at the time and is left unchanged. DEFECT-001 has since been re-verified live and reclassified as a <strong>UX inconsistency, not a functional defect</strong>. See the DEFECT-001 addendum under Formal Defects.</p>
         <div class="evid"><figure><img src="evidence/TC-019_01_share_video_empty_url.png"><figcaption>TC-019_01_share_video_empty_url.png</figcaption></figure></div>
       </div>
     </details>
@@ -334,7 +339,7 @@
       <li><strong>BUZZ-TC-021</strong> — Publish a new text post via composer.</li>
       <li><strong>BUZZ-TC-022</strong> — Upload a photo via Share Photos and publish.</li>
       <li><strong>BUZZ-TC-023</strong> — Submit Share Video with a valid URL.</li>
-      <li><strong>BUZZ-TC-024</strong> — Submit Share Video with an empty URL (defect verification for DEFECT-001).</li>
+      <li><strong>BUZZ-TC-024</strong> — Submit Share Video with an empty URL (defect verification for DEFECT-001). <em>Executed 2026-09-28 outside this formal run, as a one-time QC-authorized live check. See the DEFECT-001 addendum.</em></li>
       <li><strong>BUZZ-TC-025</strong> — Submit a comment on a post.</li>
       <li><strong>BUZZ-TC-026</strong> — Submit a repost via Share Post modal.</li>
       <li><strong>BUZZ-TC-027</strong> — Verify server-side enforcement of Edit Post permission.</li>
@@ -345,7 +350,7 @@
     <h2>Formal Defects</h2>
 
     <div class="defect">
-      <h3>DEFECT-001 — Share Video "Share" button not disabled despite empty Video URL</h3>
+      <h3>DEFECT-001 — Share Video "Share" button not disabled despite empty Video URL — RECLASSIFIED (UX inconsistency)</h3>
       <dl>
         <dt>Screen / Path</dt><dd>Buzz Newsfeed, Share Video modal — <code>/web/index.php/buzz/viewBuzz</code></dd>
         <dt>Preconditions</dt><dd>Logged in; on Buzz Newsfeed; composer visible.</dd>
@@ -356,6 +361,28 @@
         <dt>Severity / Priority</dt><dd>High / High — validation asymmetry vs. the equivalent Share Photos flow; downstream submission behavior (BUZZ-TC-024) remains unverified since submitting is excluded by policy.</dd>
         <dt>Affected TCs</dt><dd>TC-019 (confirmed), BUZZ-TC-024 (blocked, would resolve whether this results in a broken/empty post).</dd>
       </dl>
+      <h4 style="margin:18px 0 8px;font-size:14px;border-top:1px solid var(--border);padding-top:14px">Addendum 2026-09-28 — Re-verification and reclassification (live, QC-authorized)</h4>
+      <p style="font-size:13.5px;margin:0 0 10px">The original finding above is kept unchanged for audit.</p>
+      <dl>
+        <dt>What was re-verified</dt><dd>Whether clicking "Share" with an empty Video URL field actually submits or creates a post (BUZZ-TC-024).</dd>
+        <dt>Method</dt><dd>A live, one-time action authorized by the QC lead. This was not part of a formal milestone re-run. The Share Video dialog was opened with the URL field left empty (value <code>""</code>) and the Share button's state was recorded. All network requests from the page were then monitored for 6 seconds after clicking Share. Finally, the dialog was closed and the feed reloaded, and its post list was compared against the list recorded just before the click.</dd>
+        <dt>Result</dt><dd>
+          <ul class="tight" style="margin:0;padding-left:18px">
+            <li>The Share button was <strong>enabled</strong> before the click, so the original finding stands as observed.</li>
+            <li>Clicking it showed an inline <strong>"Required"</strong> message under the Video URL field (red border), and the dialog stayed open.</li>
+            <li><strong>Zero network requests</strong> of any kind fired in the 6 seconds after the click (0 total, 0 non-GET). The raw log is an empty list.</li>
+            <li><strong>No post was created.</strong> The feed held the same 5 posts, with the same IDs, before and after.</li>
+          </ul>
+          The originally suspected risk, that an invalid or empty-URL video post could be submitted, does not occur.</dd>
+        <dt>QC decision</dt><dd>Reclassified from <strong>"confirmed functional defect"</strong> to <strong>"UX inconsistency, not a functional defect"</strong>. The two Share dialogs use different client-side validation patterns, and each one is valid on its own. Share Photos disables the button until a photo is attached. Share Video blocks the submission and shows an inline message. Neither lets invalid data through.</dd>
+        <dt>Residual open item (NOT verified)</dt><dd>It was not tested whether the server itself would reject an empty Video URL if the API were called directly, bypassing the UI. That was outside the authorized scope, which covered UI-level testing only and no direct API calls. This is noted as a possible follow-up, not a current concern.</dd>
+        <dt>Evidence</dt><dd><code>evidence/TC-024_R1_01_empty_url_before_click.png</code>, <code>evidence/TC-024_R1_02_required_message_after_click.png</code>, <code>evidence/TC-024_R1_03_feed_unchanged_after.png</code>, <code>evidence/TC-024_R1_network_log.json</code> (the empty network log).</dd>
+      </dl>
+      <div class="evid">
+        <figure><img src="evidence/TC-024_R1_01_empty_url_before_click.png"><figcaption>TC-024_R1_01_empty_url_before_click.png</figcaption></figure>
+        <figure><img src="evidence/TC-024_R1_02_required_message_after_click.png"><figcaption>TC-024_R1_02_required_message_after_click.png</figcaption></figure>
+        <figure><img src="evidence/TC-024_R1_03_feed_unchanged_after.png"><figcaption>TC-024_R1_03_feed_unchanged_after.png</figcaption></figure>
+      </div>
     </div>
 
     <div class="defect">
@@ -393,7 +420,7 @@
         <h4 style="margin-bottom:6px;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;">Fully validated</h4>
         <ul class="tight">
           <li>Composer structural presence, feed sort filters (including tie-break re-analysis), Read More, options-menu permission pattern (BR-005), Share Photos validation, photo lightbox, author/avatar non-interactivity, Help button, profile menu, no-pagination behavior.</li>
-          <li>DEFECT-001 (Share Video validation asymmetry) re-confirmed reproducible across two independent runs.</li>
+          <li>DEFECT-001 (Share Video validation asymmetry) re-confirmed reproducible across two independent runs. <em>Reclassified 2026-09-28 as a UX inconsistency, not a functional defect: an empty-URL submission is blocked on the client with no request sent. See the DEFECT-001 addendum.</em></li>
           <li>Like/Unlike toggle (TC-008). PASS on targeted re-verification 2026-09-27, with count, icon state and API calls all confirmed.</li>
         </ul>
       </div>
