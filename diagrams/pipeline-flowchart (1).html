@@ -159,7 +159,7 @@
 
   <div class="facts">
     <div class="fact"><div class="k">27</div><div class="l">test cases designed</div></div>
-    <div class="fact"><div class="k">16 / 2 / 1 / 8</div><div class="l">M4: PASS / PASS† / FAIL / BLOCKED</div></div>
+    <div class="fact"><div class="k">22 / 2 / 1 / 2</div><div class="l">M4: PASS / PASS† / FAIL / BLOCKED (final)</div></div>
     <div class="fact"><div class="k">14 / 1</div><div class="l">M5: automated PASS / regression probe</div></div>
     <div class="fact"><div class="k">0</div><div class="l">confirmed functional defects (was 1 — see below)</div></div>
   </div>
@@ -177,6 +177,11 @@
         <div class="fdesc">16 PASS / 2 PASS† / 1 FAIL / 8 BLOCKED. DEFECT-001 reconfirmed. DEFECT-002 (Like/Unlike) was investigated and <b>withdrawn</b> — a test-targeting error (the probe clicked a display-only icon, not the real Like control), not a product defect.</div>
       </div>
     </div>
+  </div>
+
+  <div class="rail" style="margin-top:20px;">
+    <h4>6 policy-BLOCKED cases were later authorized and formally reclassified (2026-09-28)</h4>
+    <p>BUZZ-TC-021–026 (post, photo, video, comment, repost, and the DEFECT-001 empty-URL check) were BLOCKED by policy in the formal run. The QC lead later authorized a one-time, evidence-backed live pass — each action was executed, screenshotted, and immediately cleaned up (confirmed via API responses and a feed reload showing the original posts unchanged). All 6 are now PASS. TC-014 (tooling limitation) and TC-027 (cross-account permission question) remain BLOCKED — those weren't policy exclusions, and stay open on their own separate grounds.</p>
   </div>
 
   <div class="rail" style="margin-top:20px;">
