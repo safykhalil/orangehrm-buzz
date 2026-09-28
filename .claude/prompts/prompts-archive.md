@@ -561,3 +561,18 @@ correction in the healing log.
   and the skill files' own version history (`prd-generation` v1→v1 final,
   `ui-exploration` v1→v2, `test-design` v2.1→v3.0, `test-execution` v1.0)
   for what changed and why.
+
+---
+
+## Deliverables (a) and (b) — built directly, not via Claude Code prompts
+
+Unlike Milestones 1-5, the Excel summary (deliverable a,
+deliverables/QA-Pipeline-Milestone-Summary.xlsx) and the pipeline diagram
+(deliverable b, diagrams/pipeline-flowchart.html) were generated directly
+in the Claude.ai chat session used to plan and review this project,
+using its own code-execution tools — not by sending a prompt to Claude
+Code in this repo's terminal. There is no corresponding prompt to log for
+these two deliverables; their content was authored directly from the
+project's existing artifacts (PRD, exploration findings, test design CSV,
+execution report, automation report, and this session log) already
+committed to this repo at the time.
