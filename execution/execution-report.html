@@ -308,7 +308,7 @@
     </details>
 
     <details class="tc" open>
-      <summary><span class="id">TC-019</span><span class="title">Share Video 'Share' button not disabled despite empty Video URL</span><span class="badge PASS">PASS (reclassified — not a functional defect)</span></summary>
+      <summary><span class="id">TC-019</span><span class="title">Share Video 'Share' button not disabled despite empty Video URL — RECLASSIFIED (confirmed, not a defect)</span><span class="badge PASS">PASS (reclassified — not a functional defect)</span></summary>
       <div class="body">
         <p><strong>Expected:</strong> "Share" button remains enabled with an empty "Paste Video URL" field, unlike Share Photos (TC-012).</p>
         <p><strong>Actual:</strong> Confirmed — accessibility snapshot shows <code>button "Share"</code> with no <code>[disabled]</code> marker, while the URL field is empty. Reproduces the validation asymmetry first flagged in Exploration §3.4 and confirmed in the prior M4 run's DEFECT-001. Button was not clicked (would create content). See <strong>DEFECT-001</strong> below.</p>
