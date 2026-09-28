@@ -318,7 +318,7 @@
     </details>
 
     <details class="tc" open>
-      <summary><span class="id">TC-020</span><span class="title">'Most Liked' vs 'Most Commented' tie-break order differs</span><span class="badge FAIL">FAIL</span></summary>
+      <summary><span class="id">TC-020</span><span class="title">'Most Liked' vs 'Most Commented' tie-break order differs — CORRECTED (see C-01, same tie-break key)</span><span class="badge FAIL">FAIL</span></summary>
       <div class="body">
         <p><strong>Expected (per test-design CSV, carried from Exploration §3.5/§5 discrepancy 7):</strong> the two filters order same-count posts differently from each other, indicating independent secondary sort keys.</p>
         <p><strong>Actual:</strong> With the current 9-post live feed (all 9 tied at 0 Comments; 7 tied at 0 Likes), both filters produced the <strong>same</strong> relative tie-break order for every genuinely-tied group: ascending chronological (oldest-created first). Direct comparison:</p>
@@ -467,7 +467,7 @@
         <dt>Expected</dt><dd>"Share" should be disabled while the URL field is empty, matching Share Photos' behavior (disabled until a photo is attached).</dd>
         <dt>Reproducibility</dt><dd>2/2 — confirmed in the prior same-day M4 run and reproduced again in this re-run.</dd>
         <dt>Severity / Priority</dt><dd>Low / Medium — validation asymmetry vs. the equivalent Share Photos flow; downstream submission behavior (BUZZ-TC-024) remains unverified since submitting is excluded by policy. — lowered from High/High after the 2026-09-28 reclassification confirmed no invalid data is actually submitted (see the DEFECT-001 addendum below); the original High/High rating reflected the pre-reclassification defect-candidate assessment.</dd>
-        <dt>Affected TCs</dt><dd>TC-019 (confirmed), BUZZ-TC-024 (blocked, would resolve whether this results in a broken/empty post).</dd>
+        <dt>Affected TCs</dt><dd>TC-019 (confirmed), BUZZ-TC-024 (confirmed 2026-09-28 - see the addendum below: no post is created, no request fires).</dd>
       </dl>
       <h4 style="margin:18px 0 8px;font-size:14px;border-top:1px solid var(--border);padding-top:14px">Addendum 2026-09-28 — Re-verification and reclassification (live, QC-authorized)</h4>
       <p style="font-size:13.5px;margin:0 0 10px">The original finding above is kept unchanged for audit.</p>
