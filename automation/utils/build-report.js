@@ -48,6 +48,26 @@ const META = {
   'BUZZ-TC-020': { spec: 'feed-filters.spec.ts', source: 'CSV Title + Expected Result corrected 2026-09-27 (QC-approved test-design defect fix), matching M4 TC-020\'s re-analysis', asserts: 'After Most Liked, then Most Commented: each filter\'s primary count is non-increasing; inside every tie group the timestamps are non-decreasing (oldest first); every pair tied under both filters keeps the same relative order in both. No tie group → BLOCKED, not FAIL.', healing: ['H-04'], reconciliation: { id: 'C-01', text: 'the CSV Title and Expected Result were corrected with QC approval (previously BLOCKED as a test-design correction candidate).' } },
 };
 
+// ---------- DEFECT-001 status change (QC decision, documentation only) ----------
+// The single place to record DEFECT-001's reclassification. Each field below
+// is rendered at one spot in the report; set the whole object to null to drop
+// all four notes. Values are trusted HTML (not escaped). The original "Open,
+// still present" wording elsewhere is kept on purpose for audit.
+const DEFECT_001_RECLASSIFICATION = {
+  date: '2026-09-28',
+  tc: 'BUZZ-TC-019',
+  // 1. Regression-probe tier card.
+  tierCard: 'DEFECT-001 has been reclassified as a UX inconsistency, not a functional defect. See the DEFECT-001 note below.',
+  // 2. Dated update note inside the TC-019 result.
+  tcNoteHeading: 'documentation only; the probe was not re-run',
+  tcNote: 'DEFECT-001 was reclassified from "confirmed functional defect" to <b>"UX inconsistency, not a functional defect"</b>. A live, QC-authorized check (BUZZ-TC-024) showed that clicking Share with an empty Video URL fires zero network requests and creates no post. The button is still enabled, so this probe\'s assertion still holds, and it is kept as a lightweight UI-consistency check. The original wording on this page is kept for audit. Full detail: the DEFECT-001 addendum in <code>execution/execution-report.html</code>.',
+  // 3. "Reclassified <date>" row under Formal Defects.
+  formalDefects: '<b>UX inconsistency, not a functional defect</b> (QC decision). In a live, QC-authorized check (BUZZ-TC-024), clicking Share with an empty Video URL showed an inline "Required" message, fired zero network requests and created no post. The button-state symptom above is unchanged, but no invalid data is submitted. The Status wording above is kept for audit, and the automation was not re-run. Full detail: the DEFECT-001 addendum in <code>execution/execution-report.html</code>.',
+  // 4. Automation Health "Surfaced real defects" cell.
+  healthCell: 'DEFECT-001 reclassified as a UX inconsistency, not a functional defect (see Formal Defects).',
+};
+const R001 = DEFECT_001_RECLASSIFICATION;
+
 // ---------- Results ----------
 const walk = s => [...(s.specs || []).flatMap(sp => sp.tests.map(t => ({ sp, t }))), ...(s.suites || []).flatMap(walk)];
 const byTc = {};
@@ -107,7 +127,8 @@ const tcSection = x => {
 <details class="tc"${x.k.status !== 'PASS' ? ' open' : ''}>
   <summary><span class="id">${x.id.replace('BUZZ-', '')}</span><span class="title">${esc(x.c.Title)}</span><span class="tier">${esc(x.tier)}</span><span class="badge ${x.k.cls}">${esc(x.k.status)}</span></summary>
   <div class="body">
-    ${probe ? `<div class="note probe">⚠ <b>REGRESSION PROBE, INVERTED ASSERTION.</b> Runner PASS = DEFECT-001 is <b>still present</b> (expected, not alarming). Runner FAIL = the symptom did not reproduce, which needs a human QC decision. Never flip this probe to expect success.</div>` : ''}
+    ${probe ? `<div class="note probe">⚠ <b>REGRESSION PROBE, INVERTED ASSERTION.</b> Runner PASS = DEFECT-001 is <b>still present</b> (expected, not alarming). Runner FAIL = the symptom did not reproduce, which needs a human QC decision. Never flip this probe to expect success.</div>` : ''}${R001 && x.id === R001.tc ? `
+    <div class="note info"><b>Update ${R001.date} (${R001.tcNoteHeading}):</b> ${R001.tcNote}</div>` : ''}
     <dl class="kv">
       <dt>Test</dt><dd><code>${esc(x.r?.title || '—')}</code> (<code>tests/${esc(m.spec || '')}</code>)</dd>
       <dt>Module / type</dt><dd>${esc(x.c.Module)} · ${esc(x.c['Test Type'])} · Priority ${esc(x.c.Priority)}</dd>
@@ -198,7 +219,7 @@ const html = `<!doctype html>
 <div class="tiers">
   <div class="card"><div class="label">Read-only tier</div><div class="num">${tierCount('Read-only')}</div><div class="sub">${tierLine('Read-only')}. Observe only; API write guard recorded zero writes. Safe to run as often as needed.</div></div>
   <div class="card"><div class="label">State-changing tier</div><div class="num">${tierCount('State-changing')}</div><div class="sub">${tierLine('State-changing')}. Toggles a real Like on the shared demo and reverses it (reversal confirmed). Leaves more footprint than read-only, so run it less often.</div></div>
-  <div class="card"><div class="label">Regression-probe tier</div><div class="num">${tierCount('Regression probe')}</div><div class="sub">${tierLine('Regression probe')}. DEFECT-001 probe: PASS = defect still present. Not a pass/fail gate.</div></div>
+  <div class="card"><div class="label">Regression-probe tier</div><div class="num">${tierCount('Regression probe')}</div><div class="sub">${tierLine('Regression probe')}. DEFECT-001 probe: PASS = defect still present. Not a pass/fail gate.${R001 ? `<br><i>${R001.date}: ${R001.tierCard}</i>` : ''}</div></div>
 </div>
 
 <div class="note info"><b>Run tiers separately:</b> <code>npx playwright test --grep @read-only</code>, <code>--grep @state-changing</code>, <code>--grep @regression-probe</code> (from <code>automation/</code>). Total test time for the ${approved.length} cases: ${(totalMs / 1000).toFixed(1)} s. The final run's feed was the original 4-post baseline, logged in as "manda user", with the app's date format set to <code>Y-d-m</code>.</div>
@@ -210,7 +231,8 @@ ${rows.map(tcSection).join('\n')}
 <section><h2>Formal Defects</h2>
 <div class="defect"><h3>DEFECT-001 — Share Video "Share" button not disabled despite empty Video URL</h3>
 <dl>
-  <dt>Status</dt><dd><b>Open, still present.</b> The regression probe (BUZZ-TC-019) passed this run, meaning the symptom reproduced. That is one more automated observation on top of M4's 2/2 manual reproductions. It is not resolved.</dd>
+  <dt>Status</dt><dd><b>Open, still present.</b> The regression probe (BUZZ-TC-019) passed this run, meaning the symptom reproduced. That is one more automated observation on top of M4's 2/2 manual reproductions. It is not resolved.</dd>${R001 ? `
+  <dt>Reclassified ${R001.date}</dt><dd>${R001.formalDefects}</dd>` : ''}
   <dt>Screen / path</dt><dd>Buzz Newsfeed, Share Video modal — /web/index.php/buzz/viewBuzz</dd>
   <dt>Steps</dt><dd>1. Click "Share Video". 2. Leave "Paste Video URL" empty. 3. Observe the Share button's disabled state (do not click it).</dd>
   <dt>Actual</dt><dd>Share is enabled with an empty URL field (<code>toBeEnabled()</code> held; evidence TC-019).</dd>
@@ -245,7 +267,7 @@ ${rows.map(tcSection).join('\n')}
 <section><h2>Automation Health</h2>
 <div class="scroll"><table class="grid">
 <tr><th>No changes needed</th><th>Needed healing</th><th>Expected value reconciled</th><th>Surfaced real defects</th><th>Affected by data drift</th><th>Blocked</th></tr>
-<tr><td>9 (TC-001, 004, 005, 009, 011, 012, 014, 017, 019)</td><td>5 (TC-002, 003, 007, 008, 020)</td><td>2 (TC-010: R-01, pending QC · TC-020: C-01, QC-approved)</td><td>1 known, still present (TC-019 / DEFECT-001); 0 new</td><td>Date-format drift detected and handled (TC-002, 003, 020); 0 results affected</td><td>0</td></tr>
+<tr><td>9 (TC-001, 004, 005, 009, 011, 012, 014, 017, 019)</td><td>5 (TC-002, 003, 007, 008, 020)</td><td>2 (TC-010: R-01, pending QC · TC-020: C-01, QC-approved)</td><td>1 known, still present (TC-019 / DEFECT-001); 0 new${R001 ? `. <i>${R001.date}: ${R001.healthCell}</i>` : ''}</td><td>Date-format drift detected and handled (TC-002, 003, 020); 0 results affected</td><td>0</td></tr>
 </table></div>
 <p class="muted">Drift resilience built in: no test asserts a fixed post count, position or name. Targets are chosen at runtime by what the test needs (a visibly truncated post, a "0 Comments" post, a post not already liked by this shared identity, own vs. other author), and a missing precondition is reported as BLOCKED rather than FAIL. TC-008's cleanup records drift separately if the Like count after its own reversal differs from baseline.</p>
 <p class="muted">Cleanup timing (Hard Rule 5): the worst-case TC-008 reversal budget is 3 attempts × 33 s + 2 × 2 s delay = 103 s, and the <code>afterEach</code> hook raises its own timeout to 130 s. A check that runs when the spec file loads enforces budget &lt; hook timeout. A probe on Playwright 1.63 confirmed that without this, an <code>afterEach</code> overrunning the config timeout is killed mid-cleanup.</p>
