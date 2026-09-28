@@ -68,7 +68,7 @@ const DEFECT_001_RECLASSIFICATION = {
   // Formal Defects "Severity / Priority" row (replaces the original High / High).
   severityPriority: 'Low / Medium (lowered from High/High on 2026-09-28 - see execution-report.html\'s DEFECT-001 addendum)',
   // Clause appended to the Formal Defects "Probe boundary" row (original text kept).
-  probeBoundaryNote: '(this probe\'s own scope never clicks Share, by design - this remains true. TC-024 itself has since been executed via a separate, one-off QC-authorized live check outside this automation suite; see execution-report.html for that result).',
+  probeBoundaryNote: '(This probe\'s own scope never clicks Share, by design - this remains true. TC-024 itself has since been executed via a separate, one-off QC-authorized live check outside this automation suite; see execution-report.html for that result).',
   // 4. Automation Health "Surfaced real defects" cell.
   healthCell: 'DEFECT-001 reclassified as a UX inconsistency, not a functional defect (see Formal Defects).',
 };
