@@ -166,7 +166,7 @@ Counts: 4 posts in the feed (no pagination or load-more control observed — the
 | Share Video button | `getByRole('button', { name: 'Share Video' })` | Buzz Newsfeed main | Opens modal |
 | Most Recent Posts filter | `getByRole('button', { name: ' Most Recent Posts' })` | Buzz Newsfeed main | Default; carries `[active]` state when selected |
 | Most Liked Posts filter | `getByRole('button', { name: ' Most Liked Posts' })` | Buzz Newsfeed main | Confirmed descending like-count sort |
-| Most Commented Posts filter | `getByRole('button', { name: ' Most Commented Posts' })` | Buzz Newsfeed main | Tie-break order differs from Most Liked |
+| Most Commented Posts filter | `getByRole('button', { name: ' Most Commented Posts' })` | Buzz Newsfeed main | Tie-break order confirmed same as Most Liked for genuinely tied posts (corrected M4 BUZZ-TC-020, see execution-report.html) |
 | Post author name text | `getByText('<Author Name>')` | Post card header | Plain text, not a link; no navigation on click |
 | Post avatar image | `getByRole('img', { name: 'profile picture' }).nth(n)` | Post card header | Not a link; ordinal index shifts when feed re-sorts |
 | Post options ("...") button | icon-only `button ""`, e.g. `.orangehrm-buzz-post-header-config .oxd-icon-button` | Post card header | No accessible name; opens Edit/Delete (own) or Delete-only (others') menu |
