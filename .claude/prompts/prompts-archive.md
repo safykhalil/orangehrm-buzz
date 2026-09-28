@@ -1032,6 +1032,585 @@ Show me the final report's relevant sections (TC-001, the four notes) to
 confirm both survived together, then push.
 ```
 
+## Additional post-resolution fixes and BUZZ-TC-027 resolution (2026-09-28)
+
+Dated follow-ups sent after the "Post-Milestone 5 follow-ups" section above
+was added, in the order they were actually sent. Each prompt below was
+copied verbatim from the saved Claude Code session files (only the paste
+wrapper was removed). Short operational messages sent in the same sessions
+(the `git mv` file-rename request for the Excel summary and pipeline
+diagram) and the request that asked for this section itself are not
+included. Times are UTC.
+
+### Follow-up (archive: restore the verbatim M4 counts in the Milestone 5 prompt block)
+
+- Sent 2026-09-28 05:23 UTC.
+
+```
+One fix: revert the Milestone 5 prompt block's "Milestone 4 execution
+report:" input line back to its original verbatim text ("...16 PASS, 2
+PASS†, 1 FAIL, 8 BLOCKED, 1 open defect: DEFECT-001; DEFECT-002 was
+investigated and withdrawn as a test-targeting error") since that's what
+was actually sent at the time — this section is meant to be a strict
+verbatim record. Add a short bracketed editorial note immediately after
+that prompt block (outside the code fence, not inside it) saying the
+counts it cites were later superseded by the 2026-09-28 reclassifications
+documented in the "Post-Milestone 5 follow-ups" section above.
+
+Show me the diff, then commit and push.
+```
+
+### BUZZ-TC-019 test-design correction (Title and Expected Result)
+
+- Sent 2026-09-28 10:04 UTC. Based on the BUZZ-TC-024 live check; same correction category as C-01/TC-020.
+
+```
+Test-design correction (same category as C-01/TC-020), based on
+confirmed evidence from BUZZ-TC-024's live check.
+
+Update BUZZ-TC-019's Title and Expected Result in test-design.csv:
+
+New Title: "Share Video 'Share' button stays enabled with empty Video
+URL, but submission is blocked client-side (confirmed, not a defect)"
+
+New Expected Result: "The 'Share' button remains enabled/clickable
+despite the Video URL field being empty - this differs from Share
+Photos (BUZZ-TC-012), which disables Share with no photo attached, but
+is not itself incorrect. Confirmed live (BUZZ-TC-024, 2026-09-28):
+clicking Share with an empty Video URL shows a visible inline 'Required'
+validation message, fires zero network requests, and creates no post.
+The two Share dialogs use different but each individually valid
+client-side validation patterns (proactive disable vs. block-on-submit
+with inline message). Reclassified from 'defect candidate' to 'UX
+inconsistency, not a functional defect' - see execution-report.html's
+DEFECT-001 addendum for full detail."
+
+Do not touch any other column or row. Show me the diff, then commit and
+push.
+```
+
+### Follow-up (BUZZ-TC-019 Priority/Severity lowered + automation report rebuild)
+
+- Sent 2026-09-28 10:05 UTC.
+
+```
+Two follow-ups to the BUZZ-TC-019 correction (commit de5a829).
+
+## 1. Lower Priority/Severity
+
+In test-design.csv, BUZZ-TC-019's row: change Priority from High to
+Medium, and Severity from High to Low - reflecting the reclassification
+from "defect candidate" to "UX inconsistency, not a functional defect"
+(low real-world impact, but still worth fixing for consistency someday).
+Do not touch any other cell.
+
+## 2. Rebuild the automation report
+
+Run `npm run report` to regenerate automation-execution-report.html from
+the corrected CSV. Confirm: (a) TC-019's new Title/Expected Result wording
+appears correctly, (b) the four DEFECT-001 reclassification notes
+(generated via DEFECT_001_RECLASSIFICATION in build-report.js) are still
+present and correct after the rebuild, (c) the probe's badge itself is
+unchanged (still shows DEFECT, per its inverted-assertion design - only
+the wording context around it should differ).
+
+Show me the diff of test-design.csv and confirm all three checks in (2),
+then commit and push both together.
+```
+
+### Follow-up (regression-probe badge label: "DEFECT (reclassified)")
+
+- Sent 2026-09-28 10:08 UTC.
+
+```
+Update the DEFECT_001_RECLASSIFICATION-driven classify() logic in
+build-report.js so the regression probe's badge label reads "DEFECT
+(reclassified)" instead of a bare "DEFECT", when the reclassification
+config is active. Keep the badge's color/styling the same (this is a
+label text change only, not a status change) - the probe's underlying
+assertion and its inverted-PASS-means-defect-present design are
+unaffected.
+
+Rebuild with `npm run report` and confirm: the badge now reads "DEFECT
+(reclassified)" next to TC-019's title, the three previously-verified
+checks (TC-019 wording, the four notes, probe assertion) are still
+correct, and this label change is driven by the same config object (not
+a one-off hardcoded string), so turning off DEFECT_001_RECLASSIFICATION
+later would revert the label too.
+
+Show me the relevant line, then commit and push.
+```
+
+### DEFECT-001 Severity/Priority consistency fix in execution-report.html
+
+- Sent 2026-09-28 10:12 UTC.
+
+```
+Consistency fix, documentation only.
+
+In execution/execution-report.html, find DEFECT-001's formal defect entry
+(the one with "Severity / Priority: High / High — validation asymmetry vs.
+the equivalent Share Photos flow..."). This is now stale: test-design.csv
+lowered BUZZ-TC-019's Priority/Severity to Medium/Low after the 2026-09-28
+reclassification.
+
+Update that line's Severity/Priority to "Medium / Low", and append a short
+clause explaining why: "— lowered from High/High after the 2026-09-28
+reclassification confirmed no invalid data is actually submitted (see the
+DEFECT-001 addendum below); the original High/High rating reflected the
+pre-reclassification defect-candidate assessment."
+
+Do not change anything else in that entry, and do not touch DEFECT-002's
+(the withdrawn one's) severity/priority line - that one is a preserved
+historical record of a since-invalidated finding, which is a different
+situation.
+
+Search the rest of the file for any other Priority/Severity or "High/High"
+references tied to DEFECT-001 or TC-019 that might also be stale, and tell
+me what you find before changing anything beyond the one line above.
+
+Show me the diff, then commit and push.
+```
+
+### Follow-up (build-report.js: config-driven DEFECT-001 Severity/Priority line + rebuild)
+
+- Sent 2026-09-28 10:14 UTC.
+
+```
+Fix the last stale reference. In build-report.js, find the hardcoded
+"Severity / priority: High / High (unchanged from M4)" text in the
+DEFECT-001 Formal Defects block. Move this into the
+DEFECT_001_RECLASSIFICATION config object (same pattern already used for
+the badge label and the four notes), so it reads "Severity / Priority:
+Low / Medium (lowered from High/High on 2026-09-28 - see
+execution-report.html's DEFECT-001 addendum)" and is driven by config
+rather than hardcoded, consistent with how the rest of this
+reclassification is implemented.
+
+Rebuild with `npm run report` and confirm: the new severity/priority text
+appears, the badge label and four notes are still correct, and turning
+DEFECT_001_RECLASSIFICATION off (test only, then restore) reverts this
+text too, same as the other config-driven pieces.
+
+Show me the diff, then commit and push.
+```
+
+### Follow-up (automation report: probe boundary note)
+
+- Sent 2026-09-28 10:16 UTC.
+
+```
+Small clarifying addition, not a rewrite - same pattern as the other
+addendum notes in this file.
+
+In the automation report's DEFECT-001 block, find the "Probe boundary"
+line mentioning "BUZZ-TC-024, policy-excluded". Append a short clause:
+"(this probe's own scope never clicks Share, by design - this remains
+true. TC-024 itself has since been executed via a separate, one-off
+QC-authorized live check outside this automation suite; see
+execution-report.html for that result)."
+
+Move this into DEFECT_001_RECLASSIFICATION as another config-driven field
+(consistent with the rest), rebuild with `npm run report`, and confirm
+the clause appears alongside the existing text without altering it.
+
+Show me the diff, then commit and push.
+```
+
+### Follow-up (probe boundary note capitalization)
+
+- Sent 2026-09-28 10:18 UTC.
+
+```
+Capitalize the first letter of probeBoundaryNote's clause in
+DEFECT_001_RECLASSIFICATION - "(this probe's..." becomes "(This probe's...".
+Rebuild with npm run report, confirm the capitalization shows correctly
+and nothing else changed, then commit and push.
+```
+
+### Execution report labeling consistency (TC-019 badge, TC-014 Milestone 5 cross-reference)
+
+- Sent 2026-09-28 10:23 UTC.
+
+```
+Documentation-only consistency updates to execution/execution-report.html,
+matching the labeling style already used in automation-execution-report.html.
+
+## 1. DEFECT-001 / TC-019 badge
+
+TC-019's badge currently reads "PASS (defect confirmed)". Update it to
+"PASS (reclassified — not a functional defect)", matching the same
+honest-labeling approach used for the automation report's regression
+probe badge ("DEFECT (reclassified)"). Do not change anything else in
+TC-019's entry - the existing "Current classification (2026-09-28)" note
+already explains the reasoning; this is just aligning the badge word
+itself with that explanation.
+
+## 2. TC-014 — cross-reference Milestone 5's success
+
+TC-014 is currently BLOCKED (tooling-level restriction from Claude Code's
+own permission classifier during this specific M4 run). Do not change the
+badge or the original finding - add a short addendum directly below it,
+same pattern as the other addendums in this file:
+
+"Addendum (2026-09-28): this same action (opening the Share Post/repost
+dialog) was successfully automated in Milestone 5 using real Playwright
+test code (automation/tests/post-interactions.spec.ts), outside this
+MCP-based tool's permission restriction. This confirms the restriction
+was specific to this run's tooling, not the application or a policy
+exclusion. TC-014 remains BLOCKED here as an accurate historical record
+of what this specific run could reach - see automation-execution-
+report.html for the successful automated result."
+
+Update the Exit Assessment section's BLOCKED list entry for TC-014 to
+briefly note this cross-reference as well.
+
+Do not touch TC-027 - it stays BLOCKED as-is per the QC lead's decision to
+defer that question.
+
+Show me the diff, then commit and push.
+```
+
+### Follow-up (TC-019 title: RECLASSIFIED suffix)
+
+- Sent 2026-09-28 10:25 UTC.
+
+```
+Update TC-019's title in the summary line (currently "Share Video 'Share'
+button not disabled despite empty Video URL") by appending
+" — RECLASSIFIED (confirmed, not a defect)" at the end, matching the same
+pattern already used for DEFECT-001's own h3 heading elsewhere in this
+file. Do not otherwise rewrite the title or touch anything else in the
+entry.
+
+Show me the diff, then commit and push.
+```
+
+### TC-020 title and DEFECT-001 "Affected TCs" consistency fixes
+
+- Sent 2026-09-28 10:30 UTC.
+
+```
+Two small consistency fixes, matching the pattern already used for
+TC-019's title.
+
+## 1. TC-020's title
+
+Append " — CORRECTED (see C-01, same tie-break key)" to the end of
+TC-020's title in the summary line (currently "'Most Liked' vs 'Most
+Commented' tie-break order differs"). Do not touch the FAIL badge or
+anything else in the entry - the body's own "Re-analysis of the original
+finding" paragraph already explains this; this just makes the title match
+what the CSV was corrected to say.
+
+## 2. DEFECT-001's "Affected TCs" line
+
+Currently reads: "TC-019 (confirmed), BUZZ-TC-024 (blocked, would resolve
+whether this results in a broken/empty post)." Update to: "TC-019
+(confirmed), BUZZ-TC-024 (confirmed 2026-09-28 - see the addendum below:
+no post is created, no request fires)." Do not change anything else in
+the original defect entry.
+
+Show me the diff, then commit and push.
+```
+
+### Follow-up (DEFECT-001 Severity/Priority line: BUZZ-TC-024 now confirmed)
+
+- Sent 2026-09-28 10:36 UTC.
+
+```
+Update DEFECT-001's Severity/Priority line (line 469). Currently it says
+"downstream submission behavior (BUZZ-TC-024) remains unverified since
+submitting is excluded by policy." Replace that clause with: "downstream
+submission behavior (BUZZ-TC-024) was confirmed 2026-09-28: no post is
+created, no request fires - see the addendum below." Keep the rest of
+that line (the Low/Medium rating and its own explanation) unchanged.
+
+Show me the diff, then commit and push.
+```
+
+### Follow-up (Severity/Priority line punctuation cleanup)
+
+- Sent 2026-09-28 10:38 UTC.
+
+```
+Fix the punctuation join on line 469 - it currently reads "...see the
+addendum below. — lowered from High/High..." with an awkward double
+separator. Change it to a single clean transition, e.g. "...see the
+addendum below; lowered from High/High after the 2026-09-28
+reclassification confirmed no invalid data is actually submitted (see
+the DEFECT-001 addendum below); the original High/High rating reflected
+the pre-reclassification defect-candidate assessment." Just smooth the
+punctuation, don't change the meaning of either clause.
+
+Show me the diff, then commit and push.
+```
+
+### exploration-findings.md: M4 re-analysis notes on the tie-break finding (first two places)
+
+- Sent 2026-09-28 10:43 UTC.
+
+```
+Documentation-only addition to docs/exploration-findings.md, matching the
+"add, don't rewrite" pattern used throughout this project. Do not delete
+or reword the original finding.
+
+Find the two places describing the tie-break order discrepancy between
+"Most Liked Posts" and "Most Commented Posts" (one in the summary/
+highlights area around "Feed filters work as sort controls", and one in
+the detailed screen-by-screen findings comparing Sania/Rebecca's order).
+
+Immediately after each of these two passages, add a short italicized note:
+
+"[Note added 2026-09-27: this finding was re-analyzed in Milestone 4
+(BUZZ-TC-020) and found to be a misreading, not a genuine difference in
+sort keys - the original comparison used two posts with different Like
+counts (not a true tie). Both filters actually use the same tie-break key
+for genuinely tied posts. The test-design CSV's expected result was
+corrected accordingly (C-01). See execution/execution-report.html's
+TC-020 entry and test-design/test-design.csv for the corrected finding.]"
+
+Do not touch anything else in the file. Show me the diff (should show only
+two additions, nothing removed), then commit and push.
+```
+
+### Follow-up (exploration-findings.md: three more tie-break notes)
+
+- Sent 2026-09-28 10:44 UTC.
+
+```
+Add the same kind of short italicized note to three more places in
+docs/exploration-findings.md describing the same tie-break finding -
+same pattern as before, additions only, nothing removed or reworded:
+
+- Line 215 (§5 discrepancy #7, "sort tie-break inconsistency")
+- Line 221 (the FR-018 note about "exposed the tie-break inconsistency")
+- Line 250 (Open Question #4 about the secondary sort key)
+
+Use the same note text as before: "[Note added 2026-09-27: this finding
+was re-analyzed in Milestone 4 (BUZZ-TC-020) and found to be a
+misreading, not a genuine difference in sort keys - the original
+comparison used two posts with different Like counts (not a true tie).
+Both filters actually use the same tie-break key for genuinely tied
+posts. The test-design CSV's expected result was corrected accordingly
+(C-01). See execution/execution-report.html's TC-020 entry and
+test-design/test-design.csv for the corrected finding.]"
+
+Adjust only for grammatical fit if the surrounding sentence structure
+needs it (e.g. list item vs. prose paragraph vs. a question in Open
+Questions) - the substance of the note should stay the same.
+
+Show me the diff (should show only additions), then commit and push.
+```
+
+### Follow-up (exploration-findings.md: locator-table note correction)
+
+- Sent 2026-09-28 10:45 UTC.
+
+```
+One more instance found in docs/exploration-findings.md: the
+Locator/Selector Reference Table (around line 169), where the "Most
+Commented Posts filter" row's Notes column says "Tie-break order differs
+from Most Liked". This is a table cell, not a list item, so update it
+in place (this is a locator-table note, not prose - a short factual
+correction fits better here than a bracketed note) to: "Tie-break order
+confirmed same as Most Liked for genuinely tied posts (corrected M4
+BUZZ-TC-020, see execution-report.html)".
+
+Do not touch any other column or row in that table. Show me the diff,
+then commit and push.
+```
+
+### QC-authorized live cross-account Edit Post verification (BUZZ-TC-027)
+
+- Sent 2026-09-28 10:54 UTC. The one-time, scoped authorization to create a temporary employee + ESS system user, test the Edit option and a direct `PUT` as that account, then delete everything created.
+
+```
+Explicit, scoped, one-time QC authorization: verify cross-account Edit
+Post permission enforcement (BUZZ-TC-027) on
+https://opensource-demo.orangehrmlive.com/. This creates a temporary
+system user account for this test only, and everything created (post +
+account) must be deleted by the end of this run.
+
+## Step 1 — Create the test post (as the current Admin-role account)
+
+Log in with the demo credentials shown on the login page (do not record
+them). Publish a text post via the Buzz composer: "TC-027 cross-account
+test post - safe to delete." Screenshot confirming it appears in the
+feed. Note its post ID from the API response.
+
+## Step 2 — Create a temporary second user account
+
+Using Admin's own User Management (Admin > User Management > Add), create
+one new temporary employee + system user login, clearly named so it's
+unmistakably temporary (e.g. Employee "QA TempAccount", username
+"qa-temp-027"). Use a throwaway password you generate, do not reuse the
+real demo credentials. Screenshot confirming the new user was created.
+
+## Step 3 — Attempt cross-account edit
+
+Log out of the current session. Log in as the new temporary user
+(qa-temp-027). Navigate to Buzz, locate the post from Step 1 (it should
+still be visible - or note if it isn't, in case posts only show to their
+own author). Attempt to edit it:
+- First check whether an Edit option is even visible in that post's "..."
+  menu, from this different account's perspective.
+- If visible, click Edit and attempt to save a change to the text.
+- If not visible in the UI, additionally attempt the same PUT
+  /api/v2/buzz/posts/{id} edit request directly (same shape as the one
+  used in the earlier self-edit test), to check whether the server itself
+  rejects it (401/403) independent of the UI hiding the option.
+
+Screenshot every step: the menu state, any attempt, and the exact
+HTTP response code/body received.
+
+## Step 4 — Cleanup, in this order
+
+1. Log back in as the original Admin-role account.
+2. If the Step 1 post still exists with its original text (edit was
+   rejected), delete it via its own "..." menu. If the edit somehow
+   succeeded (a security finding - do not treat this as a failure of your
+   own work, report it clearly as the actual finding), still delete the
+   post afterward regardless of its current text.
+3. Screenshot confirming the post is gone from the feed.
+4. Go to Admin > User Management, locate the temporary user
+   (qa-temp-027), and delete it.
+5. Screenshot confirming the temporary user no longer appears in System
+   Users.
+
+## Reporting
+
+State clearly: was the Edit option visible to the temp account in the UI,
+did any edit attempt (UI or direct API) succeed or get rejected, the
+exact HTTP status code from any attempt, and confirm both cleanup steps
+(post deleted, temp account deleted) succeeded. Do not modify
+test-design.csv, execution-report.html, or any other project file as
+part of this - report back with findings and screenshots only, and wait
+for QC review before any report is updated.
+```
+
+### Follow-up (employee 429 cleanup clarification)
+
+- Sent 2026-09-28 11:09 UTC.
+
+```
+Quick clarification before I write up the report: you said "Along with it
+went temp employee 429" when describing the deletion of post 15 during
+attempt 2. Please confirm explicitly: was PIM employee record 429 ("QA
+TempAccount") actually deleted, verified by checking PIM's employee list
+afterward (e.g. searching for empNumber 429 or "QA TempAccount" and
+confirming "No Records Found" or equivalent)? Or is employee 429 still
+sitting in PIM right now, not yet cleaned up?
+
+If it was deleted, show me the verification check. If it was NOT deleted,
+please delete it now via PIM (Admin > PIM > search for empNumber 429 or
+"QA TempAccount", delete), and confirm with a follow-up check. Either
+way, tell me clearly which case this was.
+```
+
+### Formal BUZZ-TC-027 resolution (execution report, session log, evidence)
+
+- Sent 2026-09-28 11:12 UTC.
+
+```
+Formal resolution of BUZZ-TC-027, based on the QC-authorized live
+cross-account verification just completed (2026-09-28). Update
+execution/execution-report.html, logs/session-log.md, and copy relevant
+evidence.
+
+## 1. Copy evidence into the repo
+
+Copy the most relevant screenshots from the scratchpad (tc027/shots/,
+10 files across Steps 1-4, plus the verify/ folder) into
+execution/evidence/, prefixed TC-027_R1_. Use your judgment on which
+best evidence: the temp account creation, the missing Edit option in the
+UI for the temp account, the 403 API rejection, the final PIM verify
+screenshot, and the cleanup confirmations.
+
+## 2. Update TC-027's section (currently "BLOCKED — interaction-policy
+exclusion; cross-account question only")
+
+Change the section badge/status from BLOCKED to PASS. Do not delete the
+original BLOCKED framing or the earlier partial-closure note - add this
+as a new, clearly dated final resolution below both, same "add, don't
+delete" pattern used throughout this project.
+
+New content to add:
+
+**BUZZ-TC-027 — RESOLVED (2026-09-28): cross-account Edit Post
+enforcement confirmed at both UI and server levels.**
+
+- Method: a live, QC-authorized action creating one temporary employee +
+  system user account (qa-temp-027, ESS role), separate from the
+  original test post's author (Admin-role).
+- UI result: logged in as the temp account, the test post's card showed
+  no "..." options button at all - no Edit, no Delete. The feed API
+  confirmed this: {canUpdate: false, canDelete: false} for the temp
+  account, vs {canUpdate: true, canDelete: true} for the actual author.
+- Server result: since the UI offered no path, the same edit request
+  shape used by a genuine self-edit (PUT /api/v2/buzz/posts/{id}) was
+  sent directly as the temp account. Result: HTTP 403 "Unauthorized".
+  The post's text was confirmed unchanged afterward.
+- Conclusion: the server enforces this rule independently of the UI -
+  this is NOT merely a hidden button. No security finding.
+- Transparency note: during this run, the shared demo's live feed
+  organically added a comment (not created by this test) to the test
+  post. Deleting the post as cleanup necessarily removed that comment
+  too, as an unavoidable side effect of operating on a shared public
+  instance - not something this test could have prevented.
+- Operational notes (for completeness, not defects): the first live
+  attempt was aborted mid-way by a script bug and left one post
+  temporarily dangling; a second attempt had a scoping bug that
+  accidentally edited the test post's own text via a self-edit probe
+  that should have been blocked before sending. Both were fully cleaned
+  up (posts deleted, temporary PIM employee records 429 and 446 both
+  independently confirmed removed via direct API lookups returning 422
+  "Invalid Parameter", checked against both Current and Past Employees
+  filters - not just a UI list absence). The final clean run is the one
+  described above.
+- Evidence: [list the copied TC-027_R1_* files].
+
+## 3. Update the summary counts
+
+Change from 22 PASS / 2 PASS† / 1 FAIL / 2 BLOCKED to 23 PASS / 2 PASS† /
+1 FAIL / 1 BLOCKED (TC-014 tooling only remains). Add a dated note at the
+top (same style as prior updates) announcing this change and why.
+
+## 4. Update Exit Assessment
+
+Move BUZZ-TC-027 from the "Blocked/Failed/Out of scope" list into
+"Fully validated", with a one-line summary and pointer to the new
+resolution section. TC-014 remains the sole BLOCKED item there.
+
+## 5. Update session-log.md
+
+Add a full entry documenting this run: what was authorized, the temp
+account details, the UI+API findings, all cleanup verification
+(including the two employee records and their 422 confirmation), and the
+two operational hiccups and how they were resolved.
+
+Show me the new summary card numbers and confirm the TC-027 section reads
+correctly, then commit and push.
+```
+
+### Follow-up (TC-027 intro: "remains BLOCKED" wording fix)
+
+- Sent 2026-09-28 11:18 UTC.
+
+```
+Small wording fix for the stale line you flagged. In TC-027's intro
+paragraph, "It is the only case in that group that remains BLOCKED" is
+now factually wrong in present tense (TC-027 is resolved as of this
+commit). Change it to: "At that time, it was the only case in that group
+still BLOCKED - see the RESOLVED note below for the current status."
+This keeps the historical framing intact (same "add, don't delete"
+principle) while removing the false present-tense claim.
+
+Show me the diff, then commit and push.
+```
+
+---
+
 ---
 
 ## Notes on process
