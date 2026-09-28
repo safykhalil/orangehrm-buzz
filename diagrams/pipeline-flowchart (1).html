@@ -159,7 +159,7 @@
 
   <div class="facts">
     <div class="fact"><div class="k">27</div><div class="l">test cases designed</div></div>
-    <div class="fact"><div class="k">22 / 2 / 1 / 2</div><div class="l">M4: PASS / PASS† / FAIL / BLOCKED (final)</div></div>
+    <div class="fact"><div class="k">23 / 2 / 1 / 1</div><div class="l">M4: PASS / PASS† / FAIL / BLOCKED (final)</div></div>
     <div class="fact"><div class="k">14 / 1</div><div class="l">M5: automated PASS / regression probe</div></div>
     <div class="fact"><div class="k">0</div><div class="l">confirmed functional defects (was 1 — see below)</div></div>
   </div>
@@ -177,6 +177,11 @@
         <div class="fdesc">16 PASS / 2 PASS† / 1 FAIL / 8 BLOCKED. DEFECT-001 reconfirmed. DEFECT-002 (Like/Unlike) was investigated and <b>withdrawn</b> — a test-targeting error (the probe clicked a display-only icon, not the real Like control), not a product defect.</div>
       </div>
     </div>
+  </div>
+
+  <div class="rail" style="margin-top:20px;">
+    <h4>BUZZ-TC-027 was formally resolved (2026-09-28)</h4>
+    <p>The one remaining policy question — does the server block a <em>different</em> account from editing someone else's post? — was answered with a QC-authorized live check: a temporary second account was created, attempted to edit the original test post, and was rejected both in the UI (no Edit option shown) and by the server itself (HTTP 403 on a direct API attempt). Both the temporary account and its employee record were confirmed deleted afterward via direct API lookups (422 "not found"), checked against both current and past employee lists. TC-014 (a tooling limitation from this run's MCP permissions, not a policy exclusion) is now the only remaining BLOCKED case.</p>
   </div>
 
   <div class="rail" style="margin-top:20px;">
